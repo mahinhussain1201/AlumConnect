@@ -208,14 +208,17 @@ As we move forward, the key will be finding the right balance between technologi
             </h1>
             <div className="flex items-center space-x-6 text-gray-600">
               <div className="flex items-center space-x-3">
-                <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
-                  <Avatar className="h-12 w-12 cursor-pointer">
-                    <AvatarImage src={post.author_avatar} alt={post.author_name} />
-                    <AvatarFallback className="bg-gradient-to-br from-pink-100 to-blue-100 text-gray-700">
-                      {post.author_name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
+                 <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
+                   <Avatar className="h-12 w-12 cursor-pointer">
+                     <AvatarImage 
+                       src={post.author_avatar || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&auto=format&q=80&ixlib=rb-4.0.3&ixid=${post.author_id || post.id}`} 
+                       alt={post.author_name} 
+                     />
+                     <AvatarFallback className="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700">
+                       {post.author_name.split(' ').map(n => n[0]).join('')}
+                     </AvatarFallback>
+                   </Avatar>
+                 </Link>
                 <div>
                   <Link to={`/profile/${post.author_id || post.id}`} className="hover:text-blue-600 transition-colors">
                     <p className="font-medium text-gray-900">{post.author_name}</p>
@@ -253,14 +256,17 @@ As we move forward, the key will be finding the right balance between technologi
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-3 mb-4">
-                  <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
-                    <Avatar className="h-14 w-14 cursor-pointer">
-                      <AvatarImage src={post.author_avatar} alt={post.author_name} />
-                      <AvatarFallback className="bg-gradient-to-br from-pink-100 to-blue-100 text-gray-700 text-lg">
-                        {post.author_name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Link>
+                   <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
+                     <Avatar className="h-14 w-14 cursor-pointer">
+                       <AvatarImage 
+                         src={post.author_avatar || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&auto=format&q=80&ixlib=rb-4.0.3&ixid=${post.author_id || post.id}`} 
+                         alt={post.author_name} 
+                       />
+                       <AvatarFallback className="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 text-lg">
+                         {post.author_name.split(' ').map(n => n[0]).join('')}
+                       </AvatarFallback>
+                     </Avatar>
+                   </Link>
                   <div>
                     <Link to={`/profile/${post.author_id || post.id}`} className="hover:text-blue-600 transition-colors">
                       <p className="font-medium text-gray-900">{post.author_name}</p>

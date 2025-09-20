@@ -4,18 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { WavesBackground } from '@/components/ui/waves-background'
-import { BGPattern } from '@/components/ui/bg-pattern'
+import { StarsAnimation } from '@/components/ui/stars-animation'
 import { parseJsonField } from '@/lib/dataUtils'
 import { 
   ArrowRight, 
   Users, 
   BookOpen, 
   Briefcase, 
-  Star, 
-  TrendingUp,
   Lightbulb,
-  Target,
   Award,
   Globe,
   Loader2
@@ -33,14 +29,6 @@ interface Project {
   created_by_name: string
 }
 
-interface BlogPost {
-  id: number
-  title: string
-  content: string
-  category: string
-  created_at: string
-  author_name: string
-}
 
 interface Alumni {
   id: number
@@ -54,7 +42,6 @@ interface Alumni {
 export const LandingPage: React.FC = () => {
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([])
   const [alumniStories, setAlumniStories] = useState<Alumni[]>([])
-  const [recentBlogs, setRecentBlogs] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -63,35 +50,21 @@ export const LandingPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      // For now, using mock data. In real implementation, this would fetch from API
-      const mockAlumni: Alumni[] = [
-        {
-          id: 1,
-          name: "Dr. Sarah Johnson",
-          email: "sarah.johnson@techcorp.com",
-          graduation_year: 2015,
-          department: "Computer Science and Engineering",
-          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face"
-        },
-        {
-          id: 2,
-          name: "Rajesh Kumar",
-          email: "rajesh.kumar@chainlogix.com",
-          graduation_year: 2013,
-          department: "Electronics and Electrical Communication Engineering",
-          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
-        },
-        {
-          id: 3,
-          name: "Dr. Priya Sharma",
-          email: "priya.sharma@healthtech.com",
-          graduation_year: 2017,
-          department: "Mechanical Engineering",
-          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face"
-        }
-      ]
+      // Fetch projects and alumni in parallel
+      const [projectsResponse, alumniResponse] = await Promise.all([
+        fetch('http://localhost:5001/api/projects'),
+        fetch('http://localhost:5001/api/alumni')
+      ])
 
-      setAlumniStories(mockAlumni)
+      if (projectsResponse.ok) {
+        const projects = await projectsResponse.json()
+        setFeaturedProjects(projects.slice(0, 3)) // Show first 3 projects
+      }
+
+      if (alumniResponse.ok) {
+        const alumni = await alumniResponse.json()
+        setAlumniStories(alumni.slice(0, 3)) // Show first 3 alumni
+      }
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {
@@ -107,46 +80,43 @@ export const LandingPage: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen relative">
-      {/* Grid Background Pattern */}
-      <BGPattern 
-        variant="grid" 
-        size={32} 
-        fill="#e5e7eb" 
-        mask="fade-edges"
-        className="opacity-10 blur-[90%]"
-      />
-      
-      {/* Waves Background */}
-      <WavesBackground 
-        className="fixed inset-0 z-0 opacity-30" 
-        color="#e5e7eb" 
-        waveCount={2}
-        speed={15}
-      />
+     <div className="min-h-screen">
       
       {/* Hero Section */}
-      <section className="relative z-10 bg-gradient-to-br from-white/95 via-gray-50/95 to-white/95 backdrop-blur-sm py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-pink-100 to-blue-100 text-sm font-medium text-gray-700 mb-8 border border-gray-200">
-              🚀 Built by IIT Kharagpur Alumni
+      <section className="relative bg-white h-screen flex items-center justify-center overflow-hidden pt-16">
+        {/* Stars Animation - Only in hero section */}
+        <StarsAnimation 
+          className="opacity-70" 
+          starCount={150}
+          speed={1.5}
+        />
+        
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-30 animate-bounce"></div>
+        <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full opacity-25 animate-pulse"></div>
+        <div className="absolute top-60 right-1/3 w-8 h-8 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-40 animate-bounce"></div>
+        
+        <div className="container mx-auto px-4 w-full">
+          <div className="max-w-5xl mx-auto text-center -mt-16">
+            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-sm font-medium text-gray-700 mb-8 border border-blue-200 shadow-lg">
+              Built by IIT Kharagpur 
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
               The Future of{' '}
-              <span className="bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-transparent">Innovation</span>
+              <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent animate-pulse">Innovation</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
               Connect the brightest minds from IIT Kharagpur. Share projects, find co-founders, and build the next generation of startups.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white px-8 py-4 text-lg font-semibold shadow-lg shadow-pink-200/30 border-0" asChild>
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg shadow-blue-200/30 border-0" asChild>
                 <Link to="/projects">
                   Start Building
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg font-semibold" asChild>
+              <Button size="lg" variant="outline" className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50 px-8 py-4 text-lg font-semibold" asChild>
                 <Link to="/alumni-connect">
                   Find Co-founders
                   <Users className="ml-2 h-5 w-5" />
@@ -155,29 +125,36 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="relative z-10 py-20 bg-white/80 backdrop-blur-sm border-t border-gray-100">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="flex justify-center mb-6">
-                  <div className="p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-blue-50 group-hover:from-pink-100 group-hover:to-blue-100 transition-all duration-300 border border-gray-100">
-                    <stat.icon className="h-8 w-8 text-gray-700" />
-                  </div>
-                </div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 mb-3">{stat.value}</div>
-                <div className="text-sm font-medium text-gray-600">{stat.label}</div>
-              </div>
-            ))}
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-blue-300 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-blue-400 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
+        {/* Stats Section */}
+        <section className="py-24 bg-white border-t border-gray-100">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="flex justify-center mb-6">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 group-hover:from-blue-100 group-hover:to-blue-200 transition-all duration-300 border border-blue-100">
+                      <stat.icon className="h-8 w-8 text-blue-700" />
+                    </div>
+                  </div>
+                  <div className="text-4xl font-bold  mb-3">{stat.value}</div>
+                  <div className="text-sm font-medium text-gray-600">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
       {/* Featured Projects */}
-      <section className="relative z-10 py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
@@ -193,13 +170,25 @@ export const LandingPage: React.FC = () => {
               <span>Loading projects...</span>
             </div>
           </div>
-        ) : (
+        ) : featuredProjects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
               <Card key={project.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                    <Briefcase className="h-12 w-12 text-primary/50" />
+                  <img 
+                    src={`https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=300&fit=crop&crop=center&auto=format&q=80&ixlib=rb-4.0.3&ixid=${project.id}`}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (nextElement) {
+                        nextElement.style.display = 'flex';
+                      }
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 items-center justify-center hidden">
+                    <Briefcase className="h-12 w-12 text-blue-400" />
                   </div>
                 </div>
                 <CardHeader>
@@ -253,6 +242,14 @@ export const LandingPage: React.FC = () => {
               </Card>
             ))}
           </div>
+        ) : (
+          <div className="text-center py-12">
+            <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No projects available</h3>
+            <p className="text-muted-foreground">
+              Check back later for exciting new projects!
+            </p>
+          </div>
         )}
           
           <div className="text-center mt-12">
@@ -267,7 +264,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Alumni Success Stories */}
-      <section className="relative z-10 py-20 bg-muted/30 backdrop-blur-sm">
+      <section className="py-20 bg-muted/30 backdrop-blur-sm">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Alumni Success Stories</h2>
@@ -290,8 +287,11 @@ export const LandingPage: React.FC = () => {
                 <CardHeader className="text-center">
                   <div className="flex justify-center mb-4">
                     <Avatar className="h-20 w-20">
-                      <AvatarImage src={alumni.avatar} alt={alumni.name} />
-                      <AvatarFallback className="text-lg">
+                      <AvatarImage 
+                        src={alumni.avatar || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&auto=format&q=80&ixlib=rb-4.0.3&ixid=${alumni.id}`} 
+                        alt={alumni.name} 
+                      />
+                      <AvatarFallback className="text-lg bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700">
                         {alumni.name.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
@@ -325,7 +325,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="relative z-10 py-20">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -335,13 +335,13 @@ export const LandingPage: React.FC = () => {
               Join our community of innovators, entrepreneurs, and changemakers. Whether you're a student with a brilliant idea or an alumni looking to give back, there's a place for you here.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-200/30 border-0" asChild>
                 <Link to="/register">
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50" asChild>
                 <Link to="/blog">
                   Read Our Blog
                   <BookOpen className="ml-2 h-4 w-4" />

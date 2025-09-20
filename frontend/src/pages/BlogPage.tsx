@@ -184,9 +184,23 @@ export const BlogPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedPosts.map((post) => (
-            <Card key={post.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                <BookOpen className="h-12 w-12 text-muted-foreground" />
+            <Card key={post.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+              <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+                <img 
+                  src={post.cover_image || `https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=300&fit=crop&crop=center&auto=format&q=80&ixlib=rb-4.0.3&ixid=${post.id}`}
+                  alt={post.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                    if (nextElement) {
+                      nextElement.style.display = 'flex';
+                    }
+                  }}
+                />
+                <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 items-center justify-center hidden">
+                  <BookOpen className="h-12 w-12 text-blue-400" />
+                </div>
               </div>
               <CardHeader>
                 <div className="flex items-center space-x-2 mb-2">
@@ -199,14 +213,17 @@ export const BlogPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-3 mb-4">
-                  <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
-                    <Avatar className="h-8 w-8 cursor-pointer">
-                      <AvatarImage src={post.author_avatar} alt={post.author_name} />
-                      <AvatarFallback>
-                        {post.author_name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Link>
+                   <Link to={`/profile/${post.author_id || post.id}`} className="hover:opacity-80 transition-opacity">
+                     <Avatar className="h-8 w-8 cursor-pointer">
+                       <AvatarImage 
+                         src={post.author_avatar || `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&auto=format&q=80&ixlib=rb-4.0.3&ixid=${post.author_id || post.id}`} 
+                         alt={post.author_name} 
+                       />
+                       <AvatarFallback className="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 text-xs">
+                         {post.author_name.split(' ').map(n => n[0]).join('')}
+                       </AvatarFallback>
+                     </Avatar>
+                   </Link>
                   <div>
                     <Link to={`/profile/${post.author_id || post.id}`} className="hover:text-blue-600 transition-colors">
                       <p className="text-sm font-medium">{post.author_name}</p>

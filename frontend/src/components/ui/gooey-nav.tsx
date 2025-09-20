@@ -203,29 +203,29 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
       <style>
         {`
           .gooey-nav-container {
-            --nav-bg: #f8fafc;
-            --nav-border: #e2e8f0;
-            --nav-text: #374151;
-            --nav-text-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.05);
+            --nav-bg: #ffffff;
+            --nav-border: #e5e7eb;
+            --nav-text: #6b7280;
+            --nav-text-shadow: 0 1px 2px hsl(0deg 0% 0% / 0.05);
 
-            --bubble-bg: linear-gradient(135deg, #3b82f6, #60a5fa);
-            --active-text: white;
-            --particle-color: #3b82f6;
+            --bubble-bg: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+            --active-text: #1e40af;
+            --particle-color: #1e40af;
 
-            --filter-backdrop-bg: #f8fafc;
+            --filter-backdrop-bg: #ffffff;
             --filter-blend-mode: normal;
 
-            --linear-ease: linear(0, 0.068, 0.19 2.7%, 0.804 8.1%, 1.037, 1.199 13.2%, 1.245, 1.27 15.8%, 1.274, 1.272 17.4%, 1.249 19.1%, 0.996 28%, 0.949, 0.928 33.3%, 0.926, 0.933 36.8%, 1.001 45.6%, 1.013, 1.019 50.8%, 1.018 54.4%, 1 63.1%, 0.995 68%, 1.001 85%, 1);
+            --linear-ease: cubic-bezier(0.4, 0, 0.2, 1);
           }
           html.dark .gooey-nav-container {
             --nav-bg: #1f2937;
             --nav-border: #374151;
-            --nav-text: #d1d5db;
-            --nav-text-shadow: 0 1px 1px hsl(0deg 0% 100% / 0.05);
+            --nav-text: #9ca3af;
+            --nav-text-shadow: 0 1px 2px hsl(0deg 0% 100% / 0.05);
 
-            --bubble-bg: linear-gradient(135deg, #3b82f6, #60a5fa);
-            --active-text: #1f2937;
-            --particle-color: #3b82f6;
+            --bubble-bg: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+            --active-text: #60a5fa;
+            --particle-color: #60a5fa;
 
             --filter-backdrop-bg: #1f2937;
             --filter-blend-mode: normal;
@@ -239,7 +239,12 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
           .gooey-nav-container ul li {
             color: var(--nav-text);
             text-shadow: var(--nav-text-shadow);
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+          }
+          .gooey-nav-container ul li:hover {
+            color: #1e40af;
+            transform: translateY(-1px);
           }
           .gooey-nav-container ul li.active {
             color: var(--active-text);
@@ -250,15 +255,21 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             inset: 0;
             border-radius: 9999px;
-            background: var(--bubble-bg);
+            background: transparent;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), var(--bubble-bg);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s var(--linear-ease);
+            transform: scale(0.7);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: -1;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
           }
           .gooey-nav-container ul li.active::after {
             opacity: 1;
             transform: scale(1);
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
           }
 
           .gooey-nav-container .effect {
@@ -268,6 +279,8 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
             display: grid;
             place-items: center;
             z-index: 1;
+            overflow: hidden;
+            border-radius: 9999px;
           }
           .gooey-nav-container .effect.text {
             color: var(--active-text);
@@ -277,14 +290,14 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
             color: var(--active-text);
           }
           .gooey-nav-container .effect.filter {
-            filter: blur(7px) contrast(100);
+            filter: blur(4px) contrast(80);
             mix-blend-mode: var(--filter-blend-mode);
             isolation: isolate;
           }
           .gooey-nav-container .effect.filter::before {
             content: "";
             position: absolute;
-            inset: -75px;
+            inset: -20px;
             z-index: -2;
             background: var(--filter-backdrop-bg);
           }
@@ -292,16 +305,28 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
             content: "";
             position: absolute;
             inset: 0;
-            background: var(--bubble-bg);
+            background: transparent;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), var(--bubble-bg);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
             transform: scale(0);
             opacity: 0;
             z-index: -1;
             border-radius: 9999px;
           }
           .gooey-nav-container .effect.active::after {
-            animation: gooey-pill 0.3s var(--linear-ease) both;
+            animation: gooey-pill 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
           }
           @keyframes gooey-pill {
+            0% {
+              transform: scale(0.7);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+              opacity: 0.8;
+            }
             to {
               transform: scale(1);
               opacity: 1;
@@ -311,15 +336,15 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
           .gooey-nav-container .point {
             display: block;
             opacity: 0;
-            width: 20px;
-            height: 20px;
+            width: 12px;
+            height: 12px;
             border-radius: 9999px;
             transform-origin: center;
           }
           .gooey-nav-container .particle {
             position: absolute;
-            top: calc(50% - 10px);
-            left: calc(50% - 10px);
+            top: calc(50% - 6px);
+            left: calc(50% - 6px);
             animation: gooey-particle calc(var(--time)) ease 1 -350ms;
           }
           .gooey-nav-container .point {
@@ -331,7 +356,7 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
           @keyframes gooey-point { 0% { transform: scale(0); opacity: 0; animation-timing-function: cubic-bezier(.55,0,1,.45); } 25% { transform: scale(calc(var(--scale)*.25)); } 38% { opacity: 1; } 65% { transform: scale(var(--scale)); opacity: 1; animation-timing-function: ease; } 85% { transform: scale(var(--scale)); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
         `}
       </style>
-      <div className="gooey-nav-container relative" ref={containerRef} style={{ isolation: 'isolate' }}>
+      <div className="gooey-nav-container relative overflow-hidden" ref={containerRef} style={{ isolation: 'isolate', clipPath: 'inset(0)' }}>
         <nav
           className="flex relative"
           style={{ transform: "translate3d(0,0,0.01px)" }}

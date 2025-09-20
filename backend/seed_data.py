@@ -358,3 +358,4 @@ Don't fear AI - embrace it. The future belongs to those who can work alongside A
 
 if __name__ == '__main__':
     seed_database()
+

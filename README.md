@@ -1,4 +1,4 @@
-# IIT KGP Launchpad
+de th# IIT KGP Launchpad
 
 A comprehensive digital platform designed to showcase ongoing and completed startup projects from IIT Kharagpur, strengthen alumni-student collaboration, and provide knowledge-sharing opportunities.
 

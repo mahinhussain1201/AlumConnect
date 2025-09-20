@@ -38,39 +38,39 @@ export const Header: React.FC = () => {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-blue-200/40 bg-gradient-to-r from-blue-50/95 via-white/98 to-blue-50/95 backdrop-blur-lg supports-[backdrop-filter]:bg-gradient-to-r supports-[backdrop-filter]:from-blue-50/80 supports-[backdrop-filter]:via-white/90 supports-[backdrop-filter]:to-blue-50/80 shadow-lg shadow-blue-200/20">
+     <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg supports-[backdrop-filter]:bg-white/90 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-18 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600">
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">IIT KGP Launchpad</span>
+            <span className="text-xl font-bold text-gray-800">IIT KGP Launchpad</span>
           </Link>
 
           {/* Desktop Navigation with GooeyNav */}
-          <div className="hidden md:flex">
-            <GooeyNav 
-              items={navigationItems}
-              animationTime={600}
-              particleCount={12}
-              particleDistances={[80, 15]}
-              particleR={90}
-              timeVariance={200}
-              initialActiveIndex={0}
-            />
-          </div>
+           <div className="hidden md:flex">
+             <GooeyNav 
+               items={navigationItems}
+               animationTime={300}
+               particleCount={6}
+               particleDistances={[40, 15]}
+               particleR={50}
+               timeVariance={100}
+               initialActiveIndex={0}
+             />
+           </div>
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
-                <Button
-                  variant="outline"
-                  className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 shadow-sm"
-                  onClick={() => navigate(user.role === 'student' ? '/student-dashboard' : '/alumni-dashboard')}
-                >
+                  <Button
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm"
+                    onClick={() => navigate(user.role === 'student' ? '/student-dashboard' : '/alumni-dashboard')}
+                  >
                   Dashboard
                 </Button>
                 <DropdownMenu>
@@ -106,20 +106,20 @@ export const Header: React.FC = () => {
                 </DropdownMenu>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
-                <Button variant="ghost" className="text-blue-700 hover:bg-blue-100" asChild>
-                  <Link to="/login">Login</Link>
-                </Button>
-                <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-200/30 border-0" asChild>
-                  <Link to="/register">Get Started</Link>
-                </Button>
-              </div>
+               <div className="flex items-center space-x-3">
+                 <Button variant="ghost" className="text-gray-700 hover:bg-gray-100" asChild>
+                   <Link to="/login">Login</Link>
+                 </Button>
+                 <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-sm border-0" asChild>
+                   <Link to="/register">Get Started</Link>
+                 </Button>
+               </div>
             )}
 
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden text-blue-700 hover:bg-blue-100">
+                 <Button variant="ghost" size="icon" className="md:hidden text-gray-700 hover:bg-gray-100">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
@@ -130,7 +130,7 @@ export const Header: React.FC = () => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className="flex items-center space-x-2 text-lg font-medium text-blue-700 hover:text-blue-900 transition-colors"
+                       className="flex items-center space-x-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <item.icon className="h-5 w-5" />
@@ -139,12 +139,12 @@ export const Header: React.FC = () => {
                   ))}
                   {!user && (
                     <div className="flex flex-col space-y-2 pt-4 border-t">
-                      <Button variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50" asChild>
+                       <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50" asChild>
                         <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                           Login
                         </Link>
                       </Button>
-                      <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0" asChild>
+                      <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0" asChild>
                         <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
                           Get Started
                         </Link>
