@@ -12,6 +12,16 @@ import { BlogPostPage } from '@/pages/BlogPostPage'
 import { StudentDashboard } from '@/pages/StudentDashboard'
 import { AlumniDashboard } from '@/pages/AlumniDashboard'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { CreateProjectPage } from '@/pages/CreateProjectPage'
+import { CreateBlogPage } from '@/pages/CreateBlogPage'
+import { AlumniMenteesPage } from '@/pages/AlumniMenteesPage'
+import { AlumniProjectsPage } from '@/pages/AlumniProjectsPage'
+import { AlumniBlogsPage } from '@/pages/AlumniBlogsPage'
+import { AllBlogsPage } from '@/pages/AllBlogsPage'
+import { MessagesPage } from '@/pages/MessagesPage'
+import { ChatPage } from '@/pages/ChatPage'
+import { AlumniProjectApplicationsPage } from '@/pages/AlumniProjectApplicationsPage'
+import { DashboardRouter } from '@/pages/DashboardRouter'
 import { AuthProvider } from '@/contexts/AuthContext'
 
 function App() {
@@ -31,7 +41,18 @@ function App() {
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             <Route path="/alumni-dashboard" element={<AlumniDashboard />} />
+            <Route path="/dashboard" element={<DashboardRouter />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/alumni/create-project" element={<CreateProjectPage />} />
+            <Route path="/alumni/create-blog" element={<CreateBlogPage />} />
+            <Route path="/alumni/mentees" element={<AlumniMenteesPage />} />
+            <Route path="/alumni/projects" element={<AlumniProjectsPage />} />
+            <Route path="/alumni/blogs" element={<AlumniBlogsPage />} />
+            <Route path="/all-blogs" element={<AllBlogsPage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/:id" element={<ChatPage />} />
+            <Route path="/alumni/project-applications" element={<AlumniProjectApplicationsPage />} />
           </Routes>
         </Layout>
       </Router>

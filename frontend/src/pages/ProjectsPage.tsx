@@ -18,8 +18,14 @@ interface Project {
   status: string
   team_members: string[]
   tags: string[]
+  skills_required: string[]
+  stipend?: number
+  duration?: string
+  location?: string
+  work_type?: string
   created_at: string
   created_by_name: string
+  created_by_email: string
 }
 
 export const ProjectsPage: React.FC = () => {

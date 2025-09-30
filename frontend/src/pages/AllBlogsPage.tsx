@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -21,12 +20,11 @@ interface BlogPost {
   is_liked?: boolean
 }
 
-export const BlogPage: React.FC = () => {
-  const { token } = useAuth()
+export const AllBlogsPage: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [displayedPosts, setDisplayedPosts] = useState<BlogPost[]>([])
-  const [visibleCount, setVisibleCount] = useState(6)
+  const [visibleCount, setVisibleCount] = useState(9)
 
   useEffect(() => {
     fetchBlogPosts()
@@ -54,37 +52,20 @@ export const BlogPage: React.FC = () => {
     }
   }
 
-
-  const loadMore = () => {
-    setVisibleCount(prev => prev + 6)
+  const handleLike = (postId: number) => {
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { 
+            ...post, 
+            is_liked: !post.is_liked,
+            likes_count: post.is_liked ? (post.likes_count || 0) - 1 : (post.likes_count || 0) + 1
+          }
+        : post
+    ))
   }
 
-  const handleLike = async (postId: number) => {
-    if (!token) return
-    
-    try {
-      const response = await fetch(`http://localhost:5001/api/blog/${postId}/like`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setPosts(prev => prev.map(post =>
-          post.id === postId
-            ? {
-                ...post,
-                is_liked: data.is_liked,
-                likes_count: data.likes_count
-              }
-            : post
-        ))
-      }
-    } catch (error) {
-      console.error('Error toggling like:', error)
-    }
+  const loadMore = () => {
+    setVisibleCount(prev => prev + 9)
   }
 
   if (isLoading) {
@@ -104,10 +85,10 @@ export const BlogPage: React.FC = () => {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-tight">
-            Insights
+            All Articles
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover thought-provoking articles and insights from our alumni community
+            Discover thought-provoking articles and insights from our entire alumni community
           </p>
         </div>
 
@@ -160,12 +141,11 @@ export const BlogPage: React.FC = () => {
                         <div className="flex items-center space-x-4">
                           <button
                             onClick={() => handleLike(post.id)}
-                            disabled={!token}
                             className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
                               post.is_liked 
                                 ? 'bg-red-50 text-red-600 hover:bg-red-100' 
                                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                            } ${!token ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            }`}
                           >
                             <Heart className={`h-4 w-4 ${post.is_liked ? 'fill-current' : ''}`} />
                             <span className="text-sm font-medium">{post.likes_count || 0}</span>

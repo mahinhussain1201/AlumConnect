@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { GooeyNav } from '@/components/ui/gooey-nav'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Menu, GraduationCap, Users, BookOpen, User } from 'lucide-react'
+import { Menu, GraduationCap, Users, BookOpen, User, MessageCircle } from 'lucide-react'
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth()
@@ -31,11 +31,64 @@ export const Header: React.FC = () => {
     { label: 'About', href: '/about' },
   ]
 
-  const mobileNavigationItems = [
-    { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
-    { name: 'Blog', href: '/blog', icon: BookOpen },
-    { name: 'About', href: '/about', icon: GraduationCap },
-  ]
+  // Show different navigation based on user role and current page
+  const getNavigationItems = () => {
+    if (!user) {
+      return navigationItems
+    }
+    
+    if (user.role === 'alumni') {
+      return [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Messages', href: '/messages' },
+        { label: 'My Projects', href: '/alumni/projects' },
+        { label: 'My Blogs', href: '/alumni/blogs' },
+        { label: 'Mentees', href: '/alumni/mentees' },
+      ]
+    } else if (user.role === 'student') {
+      return [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Messages', href: '/messages' },
+        { label: 'Alumni Connect', href: '/alumni-connect' },
+        { label: 'Blog', href: '/blog' },
+      ]
+    }
+    
+    return navigationItems
+  }
+
+  const getMobileNavigationItems = () => {
+    if (!user) {
+      return [
+        { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+        { name: 'Blog', href: '/blog', icon: BookOpen },
+        { name: 'About', href: '/about', icon: GraduationCap },
+      ]
+    }
+    
+    if (user.role === 'alumni') {
+      return [
+        { name: 'Dashboard', href: '/dashboard', icon: GraduationCap },
+        { name: 'Messages', href: '/messages', icon: MessageCircle },
+        { name: 'My Projects', href: '/alumni/projects', icon: Users },
+        { name: 'My Blogs', href: '/alumni/blogs', icon: BookOpen },
+        { name: 'Mentees', href: '/alumni/mentees', icon: Users },
+      ]
+    } else if (user.role === 'student') {
+      return [
+        { name: 'Dashboard', href: '/dashboard', icon: GraduationCap },
+        { name: 'Messages', href: '/messages', icon: MessageCircle },
+        { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+        { name: 'Blog', href: '/blog', icon: BookOpen },
+      ]
+    }
+    
+    return [
+      { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+      { name: 'Blog', href: '/blog', icon: BookOpen },
+      { name: 'About', href: '/about', icon: GraduationCap },
+    ]
+  }
 
   return (
      <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 bg-white/95 backdrop-blur-lg supports-[backdrop-filter]:bg-white/90 shadow-sm">
@@ -52,7 +105,7 @@ export const Header: React.FC = () => {
           {/* Desktop Navigation with GooeyNav */}
            <div className="hidden md:flex">
              <GooeyNav 
-               items={navigationItems}
+               items={getNavigationItems()}
                animationTime={300}
                particleCount={6}
                particleDistances={[40, 15]}
@@ -69,7 +122,7 @@ export const Header: React.FC = () => {
                   <Button
                     variant="outline"
                     className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm"
-                    onClick={() => navigate(user.role === 'student' ? '/student-dashboard' : '/alumni-dashboard')}
+                    onClick={() => navigate('/dashboard')}
                   >
                   Dashboard
                 </Button>
@@ -92,11 +145,11 @@ export const Header: React.FC = () => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/profile/1')}>
+                            <DropdownMenuItem onClick={() => navigate('/profile')}>
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate(user.role === 'student' ? '/student-dashboard' : '/alumni-dashboard')}>
+                            <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                       Dashboard
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
@@ -126,7 +179,7 @@ export const Header: React.FC = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col space-y-4 mt-8">
-                  {mobileNavigationItems.map((item) => (
+                  {getMobileNavigationItems().map((item) => (
                     <Link
                       key={item.name}
                       to={item.href}
