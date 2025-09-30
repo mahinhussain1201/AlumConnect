@@ -38,12 +38,15 @@ export const BlogPage: React.FC = () => {
 
   const fetchBlogPosts = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/blog-posts')
+      console.log('Fetching blog posts...')
+      const response = await fetch('http://localhost:5001/api/blog')
+      console.log('Blog posts response:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Blog posts data:', data)
         setPosts(data)
       } else {
-        console.error('Failed to fetch blog posts')
+        console.error('Failed to fetch blog posts:', response.status)
         setPosts([])
       }
     } catch (error) {
@@ -60,9 +63,13 @@ export const BlogPage: React.FC = () => {
   }
 
   const handleLike = async (postId: number) => {
-    if (!token) return
+    if (!token) {
+      console.log('No token available for liking')
+      return
+    }
     
     try {
+      console.log('Liking post:', postId)
       const response = await fetch(`http://localhost:5001/api/blog/${postId}/like`, {
         method: 'POST',
         headers: {
@@ -70,8 +77,10 @@ export const BlogPage: React.FC = () => {
         }
       })
       
+      console.log('Like response status:', response.status)
       if (response.ok) {
         const data = await response.json()
+        console.log('Like response data:', data)
         setPosts(prev => prev.map(post =>
           post.id === postId
             ? {
@@ -81,6 +90,8 @@ export const BlogPage: React.FC = () => {
               }
             : post
         ))
+      } else {
+        console.error('Like request failed:', response.status)
       }
     } catch (error) {
       console.error('Error toggling like:', error)
@@ -115,7 +126,7 @@ export const BlogPage: React.FC = () => {
         {displayedPosts.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {displayedPosts.map((post) => (
+          {displayedPosts.map((post) => (
                 <article key={post.id} className="group">
                   <div className="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 overflow-hidden">
                     {/* Category Badge */}
@@ -126,7 +137,7 @@ export const BlogPage: React.FC = () => {
                       >
                         {post.category}
                       </Badge>
-                    </div>
+                </div>
 
                     {/* Content */}
                     <div className="px-6 pb-6">
@@ -138,12 +149,12 @@ export const BlogPage: React.FC = () => {
                       </p>
 
                       {/* Author Info */}
-                      <div className="flex items-center space-x-3 mb-4">
+                <div className="flex items-center space-x-3 mb-4">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-gray-100 text-gray-600 text-xs font-semibold">
                             {post.author_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                       </AvatarFallback>
+                     </Avatar>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">
                             {post.author_name}
@@ -152,8 +163,8 @@ export const BlogPage: React.FC = () => {
                             <Clock className="h-3 w-3" />
                             <span>{formatDate(post.created_at)}</span>
                           </div>
-                        </div>
-                      </div>
+                  </div>
+                </div>
 
                       {/* Actions */}
                       <div className="flex items-center justify-between">
@@ -180,17 +191,17 @@ export const BlogPage: React.FC = () => {
                           className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold" 
                           asChild
                         >
-                          <Link to={`/blog/${post.id}`}>
+                  <Link to={`/blog/${post.id}`}>
                             Read
                             <ArrowRight className="ml-1 h-4 w-4" />
-                          </Link>
-                        </Button>
+                  </Link>
+                </Button>
                       </div>
                     </div>
                   </div>
                 </article>
-              ))}
-            </div>
+          ))}
+        </div>
 
             {/* Load More Button */}
             {visibleCount < posts.length && (

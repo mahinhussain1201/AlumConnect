@@ -1,18 +1,25 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import sqlite3
 import os
 import json
+import uuid
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'your-secret-key-change-in-production'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 jwt = JWTManager(app)
 CORS(app)
+
+# Create uploads directory if it doesn't exist
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Add general request debugging
 @app.before_request
@@ -509,7 +516,7 @@ def get_blog_posts():
     try:
         cursor.execute('''
             SELECT b.id, b.title, b.content, b.category, b.created_at, b.updated_at,
-                   u.name as author_name
+                   u.name as author_name, b.author_id
             FROM blog_posts b
             LEFT JOIN users u ON b.author_id = u.id
             ORDER BY b.created_at DESC
@@ -517,14 +524,23 @@ def get_blog_posts():
         
         posts = []
         for row in cursor.fetchall():
+            post_id = row[0]
+            
+            # Get likes count for this post
+            cursor.execute('SELECT COUNT(*) FROM blog_likes WHERE blog_post_id = ?', (post_id,))
+            likes_count = cursor.fetchone()[0]
+            
             posts.append({
-                'id': row[0],
+                'id': post_id,
                 'title': row[1],
                 'content': row[2],
                 'category': row[3],
                 'created_at': row[4],
                 'updated_at': row[5],
-                'author_name': row[6]
+                'author_name': row[6],
+                'author_id': row[7],
+                'likes_count': likes_count,
+                'is_liked': False  # Will be updated if user is logged in
             })
         
         return jsonify(posts), 200
@@ -1756,6 +1772,57 @@ def toggle_blog_like(post_id):
         return jsonify({'error': str(e)}), 500
     finally:
         conn.close()
+
+# Profile picture upload endpoint
+@app.route('/api/profile/upload-picture', methods=['POST'])
+@jwt_required()
+def upload_profile_picture():
+    try:
+        user_id = get_user_id_from_jwt()
+        
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file provided'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        if file:
+            # Generate unique filename
+            filename = secure_filename(file.filename)
+            file_extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+            
+            if file_extension not in ['jpg', 'jpeg', 'png', 'gif']:
+                return jsonify({'error': 'Invalid file type. Only JPG, PNG, and GIF are allowed.'}), 400
+            
+            unique_filename = f"{user_id}_{uuid.uuid4().hex}.{file_extension}"
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            file.save(file_path)
+            
+            # Update user's avatar in database
+            conn = sqlite3.connect('launchpad.db')
+            cursor = conn.cursor()
+            
+            cursor.execute('UPDATE users SET avatar = ? WHERE id = ?', (unique_filename, user_id))
+            conn.commit()
+            conn.close()
+            
+            return jsonify({
+                'message': 'Profile picture uploaded successfully',
+                'filename': unique_filename,
+                'url': f'/api/profile/picture/{unique_filename}'
+            }), 200
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Serve profile pictures
+@app.route('/api/profile/picture/<filename>')
+def get_profile_picture(filename):
+    try:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except Exception as e:
+        return jsonify({'error': 'File not found'}), 404
 
 if __name__ == '__main__':
     init_db()

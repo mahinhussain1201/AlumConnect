@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { GraduationCap, Building, MapPin, Briefcase, Award, Globe, Code, MessageCircle, Star, Edit, Save, X, Plus, Trash2, Home, Calendar, Phone, User } from 'lucide-react'
+import { GraduationCap, Building, MapPin, Briefcase, Award, Globe, Code, MessageCircle, Star, Edit, Save, X, Plus, Trash2, Home, Calendar, Phone, User, Camera } from 'lucide-react'
 import { Loader2 } from 'lucide-react'
 
 interface Skill {
@@ -61,6 +61,7 @@ export const ProfilePage: React.FC = () => {
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [editForm, setEditForm] = useState<Profile | null>(null)
+  const [uploadingPicture, setUploadingPicture] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -144,6 +145,40 @@ export const ProfilePage: React.FC = () => {
     }
   }
 
+  const handlePictureUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file || !token) return
+
+    setUploadingPicture(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const res = await fetch('http://localhost:5001/api/profile/upload-picture', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      })
+
+      if (res.ok) {
+        // Reload profile to get updated avatar
+        const profileRes = await fetch('http://localhost:5001/api/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        if (profileRes.ok) {
+          const profileData = await profileRes.json()
+          setProfile(profileData)
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading picture:', error)
+    } finally {
+      setUploadingPicture(false)
+    }
+  }
+
   const addSkill = () => {
     if (!editForm) return
     setEditForm({
@@ -220,18 +255,37 @@ export const ProfilePage: React.FC = () => {
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative">
                 <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
-                  <AvatarImage src={currentProfile.avatar} alt={currentProfile.name} />
+                  <AvatarImage 
+                    src={currentProfile.avatar ? `http://localhost:5001/api/profile/picture/${currentProfile.avatar}` : undefined} 
+                    alt={currentProfile.name} 
+                  />
                   <AvatarFallback className="text-2xl bg-white text-blue-600">
                     {currentProfile.name.split(' ').map(n => n[0]).join('').slice(0,2)}
-                </AvatarFallback>
-              </Avatar>
-                {editing && (
-                  <div className="absolute -bottom-2 -right-2">
-                    <Button size="sm" className="rounded-full h-8 w-8 p-0 bg-white text-blue-600 hover:bg-gray-100">
-                      <Edit className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-2 -right-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePictureUpload}
+                    className="hidden"
+                    id="profile-picture-upload"
+                    disabled={uploadingPicture}
+                  />
+                  <label htmlFor="profile-picture-upload">
+                    <Button 
+                      size="sm" 
+                      className="rounded-full h-8 w-8 p-0 bg-white text-blue-600 hover:bg-gray-100 cursor-pointer"
+                      disabled={uploadingPicture}
+                    >
+                      {uploadingPicture ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Camera className="h-4 w-4" />
+                      )}
                     </Button>
-                  </div>
-                )}
+                  </label>
+                </div>
               </div>
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-4xl font-bold mb-2">{currentProfile.name}</h1>

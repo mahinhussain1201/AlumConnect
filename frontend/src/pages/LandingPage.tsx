@@ -256,9 +256,6 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project) => (
               <Card key={project.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="aspect-video bg-gradient-to-br from-blue-50 to-blue-100 rounded-t-lg flex items-center justify-center">
-                  <Briefcase className="h-12 w-12 text-blue-400" />
-                </div>
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
                     <Badge variant={project.status === 'active' ? 'default' : 'secondary'}>

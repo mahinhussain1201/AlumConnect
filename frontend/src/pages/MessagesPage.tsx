@@ -87,6 +87,7 @@ export const MessagesPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      console.log('Fetching messages data...')
       // Fetch conversations and available users in parallel
       const [conversationsRes, usersRes] = await Promise.all([
         fetch('http://localhost:5001/api/messages/conversations', {
@@ -97,14 +98,23 @@ export const MessagesPage: React.FC = () => {
         })
       ])
 
+      console.log('Conversations response:', conversationsRes.status)
+      console.log('Users response:', usersRes.status)
+
       if (conversationsRes.ok) {
         const conversationsData = await conversationsRes.json()
+        console.log('Conversations data:', conversationsData)
         setConversations(conversationsData)
+      } else {
+        console.error('Failed to fetch conversations:', conversationsRes.status)
       }
 
       if (usersRes.ok) {
         const usersData = await usersRes.json()
+        console.log('Available users data:', usersData)
         setAvailableUsers(usersData)
+      } else {
+        console.error('Failed to fetch available users:', usersRes.status)
       }
     } catch (error) {
       console.error('Error fetching messages data:', error)
@@ -115,6 +125,7 @@ export const MessagesPage: React.FC = () => {
 
   const startNewConversation = async (otherUserId: number) => {
     try {
+      console.log('Starting conversation with user:', otherUserId)
       const response = await fetch('http://localhost:5001/api/messages/conversations', {
         method: 'POST',
         headers: {
@@ -124,8 +135,10 @@ export const MessagesPage: React.FC = () => {
         body: JSON.stringify({ other_user_id: otherUserId })
       })
 
+      console.log('Start conversation response:', response.status)
       if (response.ok) {
         const newConversation = await response.json()
+        console.log('New conversation created:', newConversation)
         // Find the conversation in our list or create a new one
         const conversation = conversations.find(c => c.other_user_id === otherUserId) || {
           id: newConversation.id,
@@ -142,6 +155,8 @@ export const MessagesPage: React.FC = () => {
         setShowNewChat(false)
         // Update URL without navigation
         window.history.pushState({}, '', `/messages/${newConversation.id}`)
+      } else {
+        console.error('Failed to start conversation:', response.status)
       }
     } catch (error) {
       console.error('Error starting conversation:', error)
@@ -277,11 +292,13 @@ export const MessagesPage: React.FC = () => {
                     onClick={() => startNewConversation(alumni.id)}
                   >
                     <div className="flex items-center space-x-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
-                          {alumni.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <Link to={`/profile/${alumni.id}`} onClick={(e) => e.stopPropagation()}>
+                        <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                          <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
+                            {alumni.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">{alumni.name}</p>
                         <p className="text-sm text-gray-500 truncate">
@@ -315,11 +332,13 @@ export const MessagesPage: React.FC = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <div className="relative">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
-                            {conversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <Link to={`/profile/${conversation.other_user_id}`} onClick={(e) => e.stopPropagation()}>
+                          <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                            <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
+                              {conversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Link>
                         {conversation.is_online && (
                           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                         )}
@@ -381,11 +400,13 @@ export const MessagesPage: React.FC = () => {
               <div className="p-4 border-b border-gray-200 bg-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
-                        {selectedConversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link to={`/profile/${selectedConversation.other_user_id}`}>
+                      <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                        <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
+                          {selectedConversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                     <div>
                       <h3 className="font-semibold text-gray-900">{selectedConversation.other_user_name}</h3>
                       <p className="text-sm text-gray-500">

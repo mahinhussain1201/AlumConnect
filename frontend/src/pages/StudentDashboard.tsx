@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Loader2, Briefcase, ArrowRight, Users, BookOpen, Bell, UserPlus, Search } from 'lucide-react'
+import { Loader2, Briefcase, ArrowRight, BookOpen, UserPlus, Search, TrendingUp, Clock, CheckCircle, MessageCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface ProjectItem {
@@ -109,134 +109,158 @@ export const StudentDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Student Dashboard</h1>
-          <p className="text-muted-foreground">Track your applications, find mentors, and explore opportunities.</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {/* Header Section */}
+        <div className="relative mb-12 text-center">
+          <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4 leading-tight">
+            Student Dashboard
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Track your applications, find mentors, and explore exciting opportunities.
+          </p>
+          {/* Animated border decoration */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-green-400 to-blue-400 rounded-full animate-pulse"></div>
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Applied Projects</CardTitle>
-              <Briefcase className="h-4 w-4 text-muted-foreground" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium text-gray-700">Applied Projects</CardTitle>
+              <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
+                <Briefcase className="h-4 w-4 text-blue-600" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.applied_projects}</div>
-              <p className="text-xs text-muted-foreground">Total applications</p>
+            <CardContent className="relative z-10">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.applied_projects}</div>
+              <p className="text-sm text-gray-600">Total applications</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Accepted Projects</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium text-gray-700">Accepted Projects</CardTitle>
+              <div className="p-2 rounded-lg bg-green-100 group-hover:bg-green-200 transition-colors">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.accepted_projects}</div>
-              <p className="text-xs text-muted-foreground">Projects you're part of</p>
+            <CardContent className="relative z-10">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.accepted_projects}</div>
+              <p className="text-sm text-gray-600">Projects you're part of</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Mentorship Requests</CardTitle>
-              <UserPlus className="h-4 w-4 text-muted-foreground" />
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium text-gray-700">Mentorship Requests</CardTitle>
+              <div className="p-2 rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors">
+                <UserPlus className="h-4 w-4 text-purple-600" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.mentorship_requests}</div>
-              <p className="text-xs text-muted-foreground">Requests sent</p>
+            <CardContent className="relative z-10">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.mentorship_requests}</div>
+              <p className="text-sm text-gray-600">Requests sent</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Applications</CardTitle>
-              <Bell className="h-4 w-4 text-muted-foreground" />
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+              <CardTitle className="text-sm font-medium text-gray-700">Pending Applications</CardTitle>
+              <div className="p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 transition-colors">
+                <Clock className="h-4 w-4 text-orange-600" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.pending_applications}</div>
-              <p className="text-xs text-muted-foreground">Awaiting response</p>
+            <CardContent className="relative z-10">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.pending_applications}</div>
+              <p className="text-sm text-gray-600">Awaiting response</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Explore opportunities and connect with alumni</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <Button asChild className="h-20 flex flex-col items-center justify-center">
-                  <Link to="/projects">
-                    <Search className="h-6 w-6 mb-2" />
-                    <span className="text-sm">Browse Projects</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-20 flex flex-col items-center justify-center">
-                  <Link to="/alumni-connect">
-                    <UserPlus className="h-6 w-6 mb-2" />
-                    <span className="text-sm">Find Mentors</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-20 flex flex-col items-center justify-center">
-                  <Link to="/blog">
-                    <BookOpen className="h-6 w-6 mb-2" />
-                    <span className="text-sm">Read Blogs</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-20 flex flex-col items-center justify-center">
-                  <Link to="/profile">
-                    <Users className="h-6 w-6 mb-2" />
-                    <span className="text-sm">My Profile</span>
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Button asChild className="h-24 flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Link to="/projects">
+                <Search className="h-6 w-6 mb-2" />
+                <span className="text-sm font-semibold">Browse Projects</span>
+              </Link>
+            </Button>
+            <Button asChild className="h-24 flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Link to="/alumni-connect">
+                <UserPlus className="h-6 w-6 mb-2" />
+                <span className="text-sm font-semibold">Find Mentors</span>
+              </Link>
+            </Button>
+            <Button asChild className="h-24 flex flex-col items-center justify-center bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Link to="/blog">
+                <BookOpen className="h-6 w-6 mb-2" />
+                <span className="text-sm font-semibold">Read Blogs</span>
+              </Link>
+            </Button>
+            <Button asChild className="h-24 flex flex-col items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Link to="/messages">
+                <MessageCircle className="h-6 w-6 mb-2" />
+                <span className="text-sm font-semibold">Messages</span>
+              </Link>
+            </Button>
+          </div>
+        </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest applications and requests</CardDescription>
+        {/* Recent Activity & Applied Projects */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="relative z-10">
+              <CardTitle className="text-2xl font-bold text-gray-900">Recent Activity</CardTitle>
+              <CardDescription className="text-gray-600">Your latest applications and requests</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               <div className="space-y-4">
                 {loading ? (
-                  <div className="flex items-center justify-center py-4">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                   </div>
                 ) : appliedProjects.length === 0 && mentorshipRequests.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4">No recent activity</p>
+                  <div className="text-center py-8">
+                    <TrendingUp className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">No recent activity</p>
+                    <p className="text-sm text-gray-400 mt-1">Start exploring projects and connecting with alumni!</p>
+                  </div>
                 ) : (
                   <>
                     {appliedProjects.slice(0, 3).map((project) => (
-                      <div key={project.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <div key={project.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">Applied to {project.title}</p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-sm font-semibold text-gray-900">Applied to {project.title}</p>
+                          <p className="text-xs text-gray-500">
                             {new Date(project.applied_at).toLocaleDateString()}
                           </p>
                         </div>
-                        <Badge variant="outline" className="capitalize">{project.application_status}</Badge>
+                        <Badge variant={project.application_status === 'accepted' ? 'default' : 'secondary'} className="capitalize">
+                          {project.application_status}
+                        </Badge>
                       </div>
                     ))}
                     {mentorshipRequests.slice(0, 2).map((request) => (
-                      <div key={request.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <div key={request.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium">Mentorship request to {request.other_user_name}</p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-sm font-semibold text-gray-900">Mentorship request to {request.other_user_name}</p>
+                          <p className="text-xs text-gray-500">
                             {new Date(request.created_at).toLocaleDateString()}
                           </p>
                         </div>
-                        <Badge variant="outline" className="capitalize">{request.status}</Badge>
+                        <Badge variant={request.status === 'accepted' ? 'default' : 'secondary'} className="capitalize">
+                          {request.status}
+                        </Badge>
                       </div>
                     ))}
                   </>
@@ -244,48 +268,48 @@ export const StudentDashboard: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Applied Projects Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Applied Projects</CardTitle>
-              <CardDescription>Projects you have applied to</CardDescription>
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="relative z-10">
+              <CardTitle className="text-2xl font-bold text-gray-900">Applied Projects</CardTitle>
+              <CardDescription className="text-gray-600">Projects you have applied to</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                 </div>
               ) : appliedProjects.length === 0 ? (
                 <div className="text-center py-8">
-                  <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">No applications yet</p>
-                  <Button asChild>
+                  <Briefcase className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-4">No applications yet</p>
+                  <Button asChild className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
                     <Link to="/projects">Browse Projects</Link>
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {appliedProjects.slice(0, 3).map((project) => (
-                    <div key={project.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={project.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                       <div>
-                        <p className="font-medium">{project.title}</p>
-                        <p className="text-sm text-muted-foreground">{project.category}</p>
+                        <p className="font-semibold text-gray-900">{project.title}</p>
+                        <p className="text-sm text-gray-500">{project.category}</p>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="capitalize">{project.application_status}</Badge>
-                        <Button variant="ghost" size="sm" asChild>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant={project.application_status === 'accepted' ? 'default' : 'secondary'} className="capitalize">
+                          {project.application_status}
+                        </Badge>
+                        <Button variant="ghost" size="sm" asChild className="hover:bg-gray-200">
                           <Link to={`/projects/${project.id}`}>
-                            <ArrowRight className="h-3 w-3" />
+                            <ArrowRight className="h-4 w-4" />
                           </Link>
                         </Button>
                       </div>
                     </div>
                   ))}
                   {appliedProjects.length > 3 && (
-                    <Button variant="outline" className="w-full" asChild>
+                    <Button variant="outline" className="w-full border-gray-300 hover:bg-gray-50" asChild>
                       <Link to="/student/applications">View All Applications</Link>
                     </Button>
                   )}
@@ -293,38 +317,44 @@ export const StudentDashboard: React.FC = () => {
               )}
             </CardContent>
           </Card>
+        </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Mentorship Requests</CardTitle>
-              <CardDescription>Your mentorship requests to alumni</CardDescription>
+        {/* Mentorship Requests Section */}
+        <div className="mt-8">
+          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <CardHeader className="relative z-10">
+              <CardTitle className="text-2xl font-bold text-gray-900">Mentorship Requests</CardTitle>
+              <CardDescription className="text-gray-600">Your mentorship requests to alumni</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative z-10">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                 </div>
               ) : mentorshipRequests.length === 0 ? (
                 <div className="text-center py-8">
-                  <UserPlus className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">No mentorship requests yet</p>
-                  <Button asChild>
+                  <UserPlus className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-4">No mentorship requests yet</p>
+                  <Button asChild className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
                     <Link to="/alumni-connect">Find Alumni Mentors</Link>
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {mentorshipRequests.slice(0, 3).map((request) => (
-                    <div key={request.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={request.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                       <div>
-                        <p className="font-medium">{request.other_user_name}</p>
-                        <p className="text-sm text-muted-foreground">{request.message}</p>
+                        <p className="font-semibold text-gray-900">{request.other_user_name}</p>
+                        <p className="text-sm text-gray-500 truncate max-w-xs">{request.message}</p>
                       </div>
-                      <Badge variant="outline" className="capitalize">{request.status}</Badge>
+                      <Badge variant={request.status === 'accepted' ? 'default' : 'secondary'} className="capitalize">
+                        {request.status}
+                      </Badge>
                     </div>
                   ))}
                   {mentorshipRequests.length > 3 && (
-                    <Button variant="outline" className="w-full" asChild>
+                    <Button variant="outline" className="w-full border-gray-300 hover:bg-gray-50" asChild>
                       <Link to="/student/mentorship">View All Requests</Link>
                     </Button>
                   )}
