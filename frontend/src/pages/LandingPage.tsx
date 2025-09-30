@@ -104,10 +104,7 @@ export const LandingPage: React.FC = () => {
         <div className="absolute top-60 right-1/3 w-8 h-8 bg-gradient-to-r from-blue-200 to-blue-300 rounded-full opacity-40 animate-bounce"></div>
         
         <div className="container mx-auto px-4 w-full">
-          <div className="max-w-5xl mx-auto text-center -mt-16">
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-sm font-medium text-gray-700 mb-8 border border-blue-200 shadow-lg">
-              Built by IIT Kharagpur 
-            </div>
+          <div className="max-w-5xl mx-auto text-center -mt-16 -translate-y-10">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
               The Future of{' '}
               <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent animate-pulse">Innovation</span>

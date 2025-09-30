@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { GraduationCap, Mail, MapPin, Phone } from 'lucide-react'
 
 export const Footer: React.FC = () => {
@@ -18,9 +18,9 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Platform */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Quick Links</h3>
+            <h3 className="text-sm font-semibold">Platform</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/projects" className="text-muted-foreground hover:text-primary transition-colors">
@@ -28,8 +28,26 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/alumni-connect" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="alumni-dashboard" className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   Alumni Connect
+                </Link>
+              </li>
+              <li>
+                <Link to="/messages" className="text-muted-foreground hover:text-primary transition-colors">
+                  Messages
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* About Info */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold">About Info</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors">
+                  Team
                 </Link>
               </li>
               <li>
@@ -41,38 +59,6 @@ export const Footer: React.FC = () => {
                 <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
                   About
                 </Link>
-              </li>
-              <li>
-                <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors">
-                  Team
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Resources</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/student-dashboard" className="text-muted-foreground hover:text-primary transition-colors">
-                  Student Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link to="/alumni-dashboard" className="text-muted-foreground hover:text-primary transition-colors">
-                  Alumni Dashboard
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Mentorship Guide
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                  Startup Resources
-                </a>
               </li>
             </ul>
           </div>
@@ -102,10 +88,10 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} IIT KGP Launchpad. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+            <a href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+            <a href="/terms-of-service" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
             </a>
           </div>

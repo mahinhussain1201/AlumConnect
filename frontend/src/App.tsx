@@ -24,6 +24,8 @@ import { AlumniProjectApplicationsPage } from '@/pages/AlumniProjectApplications
 import { DashboardRouter } from '@/pages/DashboardRouter'
 import { AuthProvider } from '@/contexts/AuthContext'
 import Team from '@/pages/Team'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
             <Route path="/messages/:id" element={<ChatPage />} />
             <Route path="/alumni/project-applications" element={<AlumniProjectApplicationsPage />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
           </Routes>
         </Layout>
       </Router>
