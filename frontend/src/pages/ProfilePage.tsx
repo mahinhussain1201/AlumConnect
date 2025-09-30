@@ -341,7 +341,7 @@ export const ProfilePage: React.FC = () => {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+                  {/* <User className="h-5 w-5" /> */}
                   About
                 </CardTitle>
               </CardHeader>
@@ -442,10 +442,6 @@ export const ProfilePage: React.FC = () => {
                         <MessageCircle className="h-4 w-4 mr-2" />
                         Message
                       </Button>
-                      <Button variant="outline" className="w-full border-blue-200 text-blue-600 hover:bg-blue-50">
-                        <Star className="h-4 w-4 mr-2" />
-                        Follow
-                      </Button>
                     </div>
                   </>
                 )}
@@ -459,7 +455,7 @@ export const ProfilePage: React.FC = () => {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Briefcase className="h-5 w-5" />
+                  {/* <Briefcase className="h-5 w-5" /> */}
                   Professional Information
                 </CardTitle>
               </CardHeader>
@@ -631,7 +627,7 @@ export const ProfilePage: React.FC = () => {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Code className="h-5 w-5" />
+                  {/* <Code className="h-5 w-5" /> */}
                   Skills & Expertise
                 </CardTitle>
                 {editing && (
@@ -720,7 +716,7 @@ export const ProfilePage: React.FC = () => {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5" />
+                  {/* <Globe className="h-5 w-5" /> */}
                   Languages
                 </CardTitle>
                 {editing && (
@@ -789,7 +785,7 @@ export const ProfilePage: React.FC = () => {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Award className="h-5 w-5" />
+                  {/* <Award className="h-5 w-5" /> */}
                   Achievements
                 </CardTitle>
                 {editing && (

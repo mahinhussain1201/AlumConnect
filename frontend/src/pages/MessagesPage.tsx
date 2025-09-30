@@ -63,12 +63,39 @@ export const MessagesPage: React.FC = () => {
   const [sending, setSending] = useState(false)
   const [messagesLoading, setMessagesLoading] = useState(false)
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
+  const pollingIntervalRef = React.useRef<number | null>(null)
+  const conversationsPollingRef = React.useRef<number | null>(null)
 
   useEffect(() => {
     if (token) {
       fetchData()
+      
+      // Poll conversations list every 2 seconds
+      conversationsPollingRef.current = setInterval(() => {
+        fetchConversations()
+      }, 2000)
+    }
+
+    return () => {
+      if (conversationsPollingRef.current) {
+        clearInterval(conversationsPollingRef.current)
+      }
     }
   }, [token])
+
+  const fetchConversations = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/messages/conversations', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (response.ok) {
+        const conversationsData = await response.json()
+        setConversations(conversationsData)
+      }
+    } catch (error) {
+      console.error('Error fetching conversations:', error)
+    }
+  }
 
   // Handle URL parameter for conversation ID (but keep it inline)
   useEffect(() => {
@@ -80,10 +107,36 @@ export const MessagesPage: React.FC = () => {
     }
   }, [id, conversations])
 
-  // Auto-scroll to bottom when messages change
+  // Poll for new messages when a conversation is selected
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    if (selectedConversation) {
+      // Clear any existing interval
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+
+      pollingIntervalRef.current = setInterval(async () => {
+        try {
+          const response = await fetch(`http://localhost:5001/api/messages/conversations/${selectedConversation.id}/messages`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          if (response.ok) {
+            const messagesData = await response.json()
+            setMessages(messagesData)
+          }
+        } catch (error) {
+          console.error('Error polling messages:', error)
+        }
+      }, 2000)
+    }
+
+    // Cleanup on unmount or when conversation changes
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+    }
+  }, [selectedConversation, token])
 
   const fetchData = async () => {
     try {
@@ -155,6 +208,8 @@ export const MessagesPage: React.FC = () => {
         setShowNewChat(false)
         // Update URL without navigation
         window.history.pushState({}, '', `/messages/${newConversation.id}`)
+        // Refresh conversations list
+        fetchConversations()
       } else {
         console.error('Failed to start conversation:', response.status)
       }
@@ -201,6 +256,8 @@ export const MessagesPage: React.FC = () => {
         const newMsg = await response.json()
         setMessages(prev => [...prev, newMsg])
         setNewMessage('')
+        // Immediately update conversations list
+        fetchConversations()
       }
     } catch (error) {
       console.error('Error sending message:', error)
@@ -248,8 +305,8 @@ export const MessagesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex h-screen">
+    <div className="min-h-[80vh] bg-gray-100">
+      <div className="flex h-[80vh]">
         {/* Left Sidebar - Conversations List */}
         <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
           {/* Header */}
