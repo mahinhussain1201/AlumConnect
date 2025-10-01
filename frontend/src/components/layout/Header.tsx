@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
@@ -8,11 +8,33 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Menu, GraduationCap, Users, BookOpen, MessageCircle, LogOut, User, Settings } from 'lucide-react'
 
 export const Header: React.FC = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, token } = useAuth()
   const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [profileAvatar, setProfileAvatar] = useState<string | null>(null)
 
+  // Fetch profile avatar when user logs in
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      if (user && token) {
+        try {
+          const res = await fetch('http://localhost:5001/api/profile', {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+          if (res.ok) {
+            const profile = await res.json()
+            setProfileAvatar(profile.avatar)
+          }
+        } catch (error) {
+          console.error('Error fetching profile:', error)
+        }
+      } else {
+        setProfileAvatar(null)
+      }
+    }
+    fetchAvatar()
+  }, [user, token])
 
   const navigationItems = [
     { label: 'Alumni Connect', href: '/alumni-connect' },
@@ -122,7 +144,10 @@ export const Header: React.FC = () => {
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="" alt={user.name} />
+                    <AvatarImage 
+                      src={profileAvatar ? `http://localhost:5001/api/profile/picture/${profileAvatar}` : undefined} 
+                      alt={user.name} 
+                    />
                     <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </Button>

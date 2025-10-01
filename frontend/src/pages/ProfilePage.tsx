@@ -272,18 +272,17 @@ export const ProfilePage: React.FC = () => {
                     id="profile-picture-upload"
                     disabled={uploadingPicture}
                   />
-                  <label htmlFor="profile-picture-upload">
-                    <Button 
-                      size="sm" 
-                      className="rounded-full h-8 w-8 p-0 bg-white text-blue-600 hover:bg-gray-100 cursor-pointer"
-                      disabled={uploadingPicture}
-                    >
+                  <label 
+                    htmlFor="profile-picture-upload"
+                    className="inline-block cursor-pointer"
+                  >
+                    <div className="rounded-full h-8 w-8 p-0 bg-white text-blue-600 hover:bg-gray-100 flex items-center justify-center shadow-md border border-gray-200">
                       {uploadingPicture ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         <Camera className="h-4 w-4" />
                       )}
-                    </Button>
+                    </div>
                   </label>
                 </div>
               </div>
