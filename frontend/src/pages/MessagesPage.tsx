@@ -306,13 +306,15 @@ export const MessagesPage: React.FC = () => {
 
   return (
     <div className="min-h-[80vh] bg-gray-100">
-      <div className="flex h-[80vh]">
+      <div className="flex flex-col md:flex-row h-[80vh]">
         {/* Left Sidebar - Conversations List */}
-        <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
+        <div className={`${
+          selectedConversation ? 'hidden md:flex' : 'flex'
+        } w-full md:w-1/3 bg-white border-r border-gray-200 flex-col`}>
           {/* Header */}
-          <div className="p-4 border-b border-gray-200 bg-white">
+          <div className="p-3 md:p-4 border-b border-gray-200 bg-white">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-xl font-bold text-gray-900">Messages</h1>
+              <h1 className="text-lg md:text-xl font-bold text-gray-900">Messages</h1>
               <Button 
                 onClick={() => setShowNewChat(!showNewChat)}
                 size="sm"
@@ -357,8 +359,8 @@ export const MessagesPage: React.FC = () => {
                         </Avatar>
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">{alumni.name}</p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="font-medium text-gray-900 truncate text-sm md:text-base">{alumni.name}</p>
+                        <p className="text-xs md:text-sm text-gray-500 truncate">
                           {alumni.current_position && alumni.current_company 
                             ? `${alumni.current_position} at ${alumni.current_company}`
                             : alumni.department || 'Alumni'
@@ -402,7 +404,7 @@ export const MessagesPage: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="font-medium text-gray-900 truncate">{conversation.other_user_name}</p>
+                          <p className="font-medium text-gray-900 truncate text-sm md:text-base">{conversation.other_user_name}</p>
                           {conversation.unread_count > 0 && (
                             <Badge variant="destructive" className="text-xs">
                               {conversation.unread_count}
@@ -410,7 +412,7 @@ export const MessagesPage: React.FC = () => {
                           )}
                         </div>
                         {conversation.last_message && (
-                          <p className="text-sm text-gray-500 truncate">
+                          <p className="text-xs md:text-sm text-gray-500 truncate">
                             {conversation.last_message}
                           </p>
                         )}
@@ -429,8 +431,8 @@ export const MessagesPage: React.FC = () => {
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageCircle className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
-                <p className="text-gray-600 mb-4 text-sm">
+                <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
+                <p className="text-gray-600 mb-4 text-xs md:text-sm">
                   {user.role === 'student' 
                     ? 'Start a conversation with an alumni mentor'
                     : 'Students can reach out to you for mentorship'
@@ -450,23 +452,37 @@ export const MessagesPage: React.FC = () => {
         </div>
 
         {/* Right Side - Chat Interface */}
-        <div className="flex-1 flex flex-col">
+        <div className={`${
+          !selectedConversation ? 'hidden md:flex' : 'flex'
+        } flex-1 flex-col w-full`}>
           {selectedConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 border-b border-gray-200 bg-white">
+              <div className="p-3 md:p-4 border-b border-gray-200 bg-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedConversation(null)
+                        setMessages([])
+                        window.history.pushState({}, '', '/messages')
+                      }}
+                      className="md:hidden text-gray-500 hover:text-gray-700 p-1"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </Button>
                     <Link to={`/profile/${selectedConversation.other_user_id}`}>
-                      <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
+                      <Avatar className="h-8 w-8 md:h-10 md:w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                        <AvatarFallback className="bg-blue-100 text-blue-700 text-xs md:text-sm font-semibold">
                           {selectedConversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Link>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{selectedConversation.other_user_name}</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-semibold text-gray-900 text-sm md:text-base">{selectedConversation.other_user_name}</h3>
+                      <p className="text-xs md:text-sm text-gray-500">
                         {selectedConversation.other_user_role === 'alumni' ? 'Alumni Mentor' : 'Student'}
                       </p>
                     </div>
@@ -479,7 +495,7 @@ export const MessagesPage: React.FC = () => {
                       setMessages([])
                       window.history.pushState({}, '', '/messages')
                     }}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="hidden md:flex text-gray-500 hover:text-gray-700"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
@@ -487,13 +503,13 @@ export const MessagesPage: React.FC = () => {
               </div>
 
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+              <div className="flex-1 overflow-y-auto p-3 md:p-4 bg-gray-50">
                 {messagesLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <Loader2 className="h-6 w-6 animate-spin" />
                   </div>
                 ) : messages.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {messages.map((message) => {
                       const isOwnMessage = message.sender_id === user?.id
                       return (
@@ -502,13 +518,13 @@ export const MessagesPage: React.FC = () => {
                           className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
                         >
                           <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                            className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-2xl ${
                               isOwnMessage
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-white text-gray-900 border border-gray-200'
                             }`}
                           >
-                            <p className="text-sm">{message.content}</p>
+                            <p className="text-xs md:text-sm break-words">{message.content}</p>
                             <p className={`text-xs mt-1 ${
                               isOwnMessage ? 'text-blue-100' : 'text-gray-500'
                             }`}>
@@ -525,12 +541,12 @@ export const MessagesPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <MessageCircle className="h-8 w-8 text-gray-400" />
+                    <div className="text-center px-4">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <MessageCircle className="h-6 w-6 md:h-8 md:w-8 text-gray-400" />
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No messages yet</h3>
-                      <p className="text-gray-600">
+                      <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">No messages yet</h3>
+                      <p className="text-gray-600 text-xs md:text-sm">
                         Start the conversation by sending a message below.
                       </p>
                     </div>
@@ -539,20 +555,21 @@ export const MessagesPage: React.FC = () => {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t border-gray-200 bg-white">
-                <div className="flex items-center space-x-3">
+              <div className="p-3 md:p-4 border-t border-gray-200 bg-white">
+                <div className="flex items-center space-x-2 md:space-x-3">
                   <Input
                     placeholder="Type your message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     disabled={sending}
-                    className="flex-1"
+                    className="flex-1 text-sm md:text-base"
                   />
                   <Button
                     onClick={sendMessage}
                     disabled={!newMessage.trim() || sending}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
+                    size="sm"
                   >
                     {sending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -565,12 +582,12 @@ export const MessagesPage: React.FC = () => {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center bg-gray-50">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <MessageCircle className="h-12 w-12 text-gray-400" />
+              <div className="text-center px-4">
+                <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                  <MessageCircle className="h-8 w-8 md:h-12 md:w-12 text-gray-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Welcome to Messages</h3>
-                <p className="text-gray-600 max-w-md mx-auto mb-8">
+                <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Welcome to Messages</h3>
+                <p className="text-gray-600 max-w-md mx-auto mb-6 md:mb-8 text-sm md:text-base">
                   {user.role === 'student' 
                     ? 'Select a conversation or start a new chat with an alumni mentor to get guidance and support.'
                     : 'Select a conversation or start a new chat with a student to provide mentorship.'
@@ -579,6 +596,7 @@ export const MessagesPage: React.FC = () => {
                 <Button 
                   onClick={() => setShowNewChat(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
+                  size="sm"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Start New Chat
