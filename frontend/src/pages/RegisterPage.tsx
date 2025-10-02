@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { GraduationCap, Eye, EyeOff, Loader2, User, Mail, Lock } from 'lucide-react'
+import logo from "../images/logo.png";
 
 // Boxes Background Component
 const BoxesCore = ({ className = '' }) => {
@@ -182,8 +183,12 @@ export const RegisterPage = () => {
       <div className="relative z-30 w-full max-w-md">
         <div className="text-center mb-6">
           <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full bg-blue-500/20 backdrop-blur-sm border border-blue-400/30">
-              <GraduationCap className="h-10 w-10 text-blue-600" />
+            <div className="p-3 rounded-full backdrop-blur-sm">
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-16 w-16 object-contain"
+              />
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2">

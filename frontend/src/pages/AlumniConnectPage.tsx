@@ -80,6 +80,7 @@ export const AlumniConnectPage: React.FC = () => {
     }
   }
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const handleApply = async () => {
     if (!user || !selectedProject) return
     
@@ -100,6 +101,7 @@ export const AlumniConnectPage: React.FC = () => {
       if (response.ok) {
       setApplicationSubmitted(true)
       setApplicationMessage('')
+      setIsDialogOpen(false)
       } else {
         console.error('Failed to submit application')
       }
@@ -256,7 +258,7 @@ export const AlumniConnectPage: React.FC = () => {
                                 </Link>
                               </Button>
                               {user && user.role === 'student' && (
-                  <Dialog>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                       <Button 
                                       size="sm"
