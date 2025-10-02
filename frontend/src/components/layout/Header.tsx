@@ -123,7 +123,7 @@ export const Header: React.FC = () => {
               className="h-16 w-16 object-cover rounded-full"
             />
             </div>
-            <span className="text-xl font-bold text-gray-800">IIT KGP Launchpad</span>
+            <span className="text-xl font-bold text-gray-800">KGP Launchpad</span>
           </Link>
 
           {/* Desktop Navigation with GooeyNav */}

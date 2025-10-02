@@ -184,15 +184,17 @@ export const RegisterPage = () => {
         <div className="text-center mb-6">
           <div className="flex justify-center mb-4">
             <div className="p-3 rounded-full backdrop-blur-sm">
-              <img
-                src={logo}
-                alt="Logo"
-                className="h-16 w-16 object-contain"
-              />
+              <Link to='/'>
+                <img
+                  src={logo}
+                  alt="Logo"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Join IIT KGP Launchpad
+            Join KGP Launchpad
           </h1>
           <p className="text-gray-600">
             Create your account to get started

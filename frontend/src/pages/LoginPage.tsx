@@ -123,11 +123,13 @@ export const LoginPage = () => {
         <div className="text-center mb-6">
           <div className="flex justify-center mb-4">
             <div className="p-3 rounded-full backdrop-blur-sm">
-            <img
-              src={logo}
-              alt="Logo"
-              className="h-16 w-16 object-contain"
-            />
+            <Link to='/'>
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-16 w-16 object-contain"
+              />
+            </Link>
 
             </div>
           </div>
@@ -135,7 +137,7 @@ export const LoginPage = () => {
             Welcome Back
           </h1>
           <p className="text-gray-600">
-            Sign in to your IIT KGP Launchpad account
+            Sign in to your KGP Launchpad account
           </p>
         </div>
 
