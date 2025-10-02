@@ -3,6 +3,11 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import Mahin from '../images/Mahin.jpeg'
+import Bhawani from '../images/Bhawani.jpeg'
+import Priyanshu from '../images/Priyanshu.jpeg'
+import Sagnik from '../images/Sagnik.jpeg'
+
 import { 
   Mail, 
   Linkedin, 
@@ -13,78 +18,67 @@ import {
   Palette,
   Database,
   Zap,
-  Figma,
-  Dribbble
+  Figma
 } from 'lucide-react';
 
 const Team = () => {
   const teamMembers = [
     {
       id: 1,
-      name: "Amit Kumar",
-      designation: "Lead Developer",
-      email: "amit.kumar@example.com",
-      linkedin: "https://linkedin.com/in/amitkumar",
-      github: "https://github.com/amitkumar",
-      department: "Computer Science",
-      role: "Backend"
+      name: "Akshat Srivastava",
+      designation: "Full Stack Developer",
+      email: "Akshat2k24@gmail.com",
+      linkedin: "https://www.linkedin.com/in/akshat-srivastava-093456264/",
+      github: "https://github.com/lostNseeker",
+      image: Sagnik,
+      role: "Full Stack"
     },
     {
       id: 2,
-      name: "Priya Sharma",
-      designation: "UI/UX Designer",
-      email: "priya.sharma@example.com",
-      figma: "https://figma.com/@priyasharma",
-      behance: "https://behance.net/priyasharma",
-      department: "Design",
-      role: "Designer"
+      name: "Mahin Hussain",
+      designation: "Full Stack Developer",
+      email: "mahinhussain1201@gmail.com",
+      linkedin: "https://www.linkedin.com/in/mahin-hussain/",
+      github: "https://github.com/mahinhussain1201",
+      image: Mahin,
+      role: "Full Stack"
     },
     {
       id: 3,
-      name: "Rahul Verma",
+      name: "Bhawani Shankar",
       designation: "Full Stack Developer",
-      email: "rahul.verma@example.com",
-      linkedin: "https://linkedin.com/in/rahulverma",
-      github: "https://github.com/rahulverma",
-      department: "Computer Science",
+      email: "bhawaniola9@gmail.com",
+      linkedin: "https://www.linkedin.com/in/bhawani-shankar-4a264127a/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com/bhawaniola",
+      image: Bhawani,
       role: "Full Stack"
     },
     {
       id: 4,
-      name: "Sneha Patel",
-      designation: "Data Scientist",
-      email: "sneha.patel@example.com",
-      linkedin: "https://linkedin.com/in/snehapatel",
-      github: "https://github.com/snehapatel",
-      department: "Data Science",
-      role: "ML/AI"
+      name: "Sagnik Adhikary",
+      designation: "Full Stack Developer",
+      email: "adhikarysagnik04@gmail.com",
+      linkedin: "https://www.linkedin.com/in/sagnikadhikary04/",
+      github: "https://github.com/Sagnik-Adhikary",
+      image: Sagnik,
+      role: "Full Stack"
     },
     {
       id: 5,
-      name: "Vikram Singh",
-      designation: "DevOps Engineer",
-      email: "vikram.singh@example.com",
-      linkedin: "https://linkedin.com/in/vikramsingh",
-      github: "https://github.com/vikramsingh",
-      department: "Computer Science",
-      role: "Backend"
+      name: "Mahin Hussain",
+      designation: "UI/UX Designer",
+      email: "priyanshu2k4@gmail.com",
+      linkedin: "https://www.linkedin.com/in/priyanshu-verma00/",
+      figma: "https://www.figma.com/@ayopriyanshu",
+      image: Priyanshu,
+      role: "Designer"
     },
-    {
-      id: 6,
-      name: "Anjali Desai",
-      designation: "Frontend Developer",
-      email: "anjali.desai@example.com",
-      linkedin: "https://linkedin.com/in/anjalidesai",
-      github: "https://github.com/anjalidesai",
-      department: "Computer Science",
-      role: "Frontend"
-    }
   ];
 
   const getRoleIcon = (role) => {
     const roleLower = role?.toLowerCase() || '';
-    if (roleLower === 'backend') return Database;
-    if (roleLower === 'frontend') return Palette;
+    // if (roleLower === 'backend') return Database;
+    // if (roleLower === 'frontend') return Palette;
     if (roleLower === 'designer') return Palette;
     if (roleLower === 'full stack') return Code;
     if (roleLower.includes('ml') || roleLower.includes('ai')) return Zap;
@@ -93,11 +87,11 @@ const Team = () => {
 
   const getRoleColor = (role) => {
     const roleLower = role?.toLowerCase() || '';
-    if (roleLower === 'backend') return 'from-green-50 to-green-100 border-green-200';
-    if (roleLower === 'frontend') return 'from-purple-50 to-purple-100 border-purple-200';
+    // if (roleLower === 'backend') return 'from-green-50 to-green-100 border-green-200';
+    // if (roleLower === 'frontend') return 'from-purple-50 to-purple-100 border-purple-200';
     if (roleLower === 'designer') return 'from-pink-50 to-pink-100 border-pink-200';
     if (roleLower === 'full stack') return 'from-blue-50 to-blue-100 border-blue-200';
-    if (roleLower.includes('ml') || roleLower.includes('ai')) return 'from-orange-50 to-orange-100 border-orange-200';
+    // if (roleLower.includes('ml') || roleLower.includes('ai')) return 'from-orange-50 to-orange-100 border-orange-200';
     return 'from-gray-50 to-gray-100 border-gray-200';
   };
 
@@ -156,9 +150,9 @@ const Team = () => {
                     {/* Avatar */}
                     <div className="relative z-10 flex justify-center mb-4 mt-8">
                       <div className="relative group-hover:scale-110 transition-transform duration-300">
-                        <Avatar className="h-28 w-28 border-4 border-white shadow-xl">
+                        <Avatar className="h-56 w-56 border-4 border-white shadow-xl">
                           {member.image && <AvatarImage src={member.image} alt={member.name} />}
-                          <AvatarFallback className="text-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold">
+                          <AvatarFallback className="text-3xl bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold">
                             {member.name.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
@@ -175,11 +169,6 @@ const Team = () => {
                       <p className="text-sm font-medium text-blue-600">
                         {member.designation}
                       </p>
-                      {member.department && (
-                        <p className="text-xs text-gray-500">
-                          {member.department}
-                        </p>
-                      )}
                     </div>
                   </CardHeader>
                   
@@ -199,56 +188,20 @@ const Team = () => {
                     
                     {/* Social Links */}
                     <div className="flex gap-2">
-                      {member.figma && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300"
-                          asChild
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                        asChild
+                      >
+                        <a 
+                          href={member.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          <a 
-                            href={member.figma}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Figma className="h-4 w-4 hover:text-purple-600" />
-                          </a>
-                        </Button>
-                      )}
-                      
-                      {member.behance && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
-                          asChild
-                        >
-                          <a 
-                            href={member.behance}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Dribbble className="h-4 w-4 hover:text-blue-600" />
-                          </a>
-                        </Button>
-                      )}
-                      
-                      {member.linkedin && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
-                          asChild
-                        >
-                          <a 
-                            href={member.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Linkedin className="h-4 w-4 hover:text-blue-600" />
-                          </a>
-                        </Button>
-                      )}
+                          <Linkedin className="h-4 w-4 hover:text-blue-600" />
+                        </a>
+                      </Button>
                       
                       {member.github && (
                         <Button
@@ -263,6 +216,23 @@ const Team = () => {
                             rel="noopener noreferrer"
                           >
                             <Github className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                      
+                      {member.figma && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300"
+                          asChild
+                        >
+                          <a 
+                            href={member.figma}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Figma className="h-4 w-4 hover:text-purple-600" />
                           </a>
                         </Button>
                       )}
