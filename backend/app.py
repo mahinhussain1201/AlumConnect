@@ -52,7 +52,13 @@ def missing_token_callback(error_string):
 
 # Database initialization
 def init_db():
-    conn = sqlite3.connect('launchpad.db')
+    if os.environ.get("RENDER") == "true":  # Running on Render
+        base_dir = os.environ.get("RENDER_DATA_DIR", ".")
+        db_path = os.path.join(base_dir, "launchpad.db")
+    else:  # Local development
+        db_path = "launchpad.db"
+
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
     # Users table

@@ -5,10 +5,10 @@ services:
     region: oregon
     plan: free
     branch: main
-    buildCommand: |
-      pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt
+    startCommand: |
       python -c "from app import init_db; init_db()"
       python seed_data.py
-    startCommand: gunicorn app:app
+      gunicorn app:app
     autoDeploy: true
     healthCheckPath: /api/projects
