@@ -158,8 +158,8 @@ export const LandingPage: React.FC = () => {
               {stats.map((stat, index) => (
                 <div key={index} className="text-center group">
                   <div className="flex justify-center mb-6">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 group-hover:from-blue-100 group-hover:to-blue-200 transition-all duration-300 border border-blue-100">
-                      <img src={stat.icon} className="h-14 w-14 text-blue-700" />
+                    <div className="p-4 rounded-2xl bg-gradient-to-br  group-hover:from-blue-100 group-hover:to-blue-200 transition-all duration-300 ">
+                      <img src={stat.icon} className="h-20 w-20 text-blue-700" />
                     </div>
                   </div>
                   <div className="text-4xl font-bold mb-3">{stat.value}</div>
@@ -178,7 +178,7 @@ export const LandingPage: React.FC = () => {
                       <img 
                         src={project} 
                         alt="Project Collaboration" 
-                        className="h-16 w-16 text-green-600"
+                        className="h-18 w-18 text-green-600"
                       />
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
                         <Lightbulb className="h-3 w-3 text-yellow-800" />
@@ -204,7 +204,7 @@ export const LandingPage: React.FC = () => {
                       <img
                         src={mentorship}
                         alt="Expert Mentorship"
-                        className="h-16 w-16 text-purple-600"
+                        className="h-26 w-26 text-purple-600"
                       />
                       <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
                         <Award className="h-2 w-2 text-green-800" />
@@ -230,7 +230,7 @@ export const LandingPage: React.FC = () => {
                     <img
                         src={knowledge}
                         alt="Knowledge Sharing"
-                        className="h-16 w-16 text-orange-600"
+                        className="h-25 w-25 text-orange-600"
                       />
                       <div className="absolute -top-1 -left-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center">
                         <Globe className="h-2 w-2 text-blue-800" />
