@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { WavesBackground } from '@/components/ui/waves-background'
-import { BGPattern } from '@/components/ui/bg-pattern'
-import { parseJsonField } from '@/lib/dataUtils'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
+import { WavesBackground } from '../components/ui/waves-background'
+import { BGPattern } from '../components/ui/bg-pattern'
+import { parseJsonField } from '../lib/dataUtils'
 import { Briefcase, Search, Filter, ArrowRight, Loader2 } from 'lucide-react'
 
 interface Project {
@@ -63,7 +63,7 @@ export const ProjectsPage: React.FC = () => {
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(project => {
-        const tags = parseJsonField(project.tags);
+        const tags = project.tags.map(tag => parseJsonField(tag));
         return project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -169,14 +169,14 @@ export const ProjectsPage: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {parseJsonField(project.tags).slice(0, 3).map((tag: string) => (
+                  {project.tags.slice(0, 3).map((tag: string) => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}
                     </Badge>
                   ))}
-                  {parseJsonField(project.tags).length > 3 && (
+                  {project.tags.length > 3 && (
                     <Badge variant="outline" className="text-xs">
-                      +{parseJsonField(project.tags).length - 3}
+                      +{project.tags.length - 3}
                     </Badge>
                   )}
                 </div>

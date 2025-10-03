@@ -1,8 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
+import { Badge } from '../components/ui/badge';
 import Mahin from '../images/Mahin.jpeg'
 import Bhawani from '../images/Bhawani.jpeg'
 import Priyanshu from '../images/Priyanshu.jpeg'
@@ -16,7 +15,6 @@ import {
   Sparkles,
   Code,
   Palette,
-  Database,
   Zap,
   Figma
 } from 'lucide-react';
@@ -75,7 +73,7 @@ const Team = () => {
     },
   ];
 
-  const getRoleIcon = (role) => {
+  const getRoleIcon = (role: string) => {
     const roleLower = role?.toLowerCase() || '';
     // if (roleLower === 'backend') return Database;
     // if (roleLower === 'frontend') return Palette;
@@ -85,7 +83,7 @@ const Team = () => {
     return Sparkles;
   };
 
-  const getRoleColor = (role) => {
+  const getRoleColor = (role: string) => {
     const roleLower = role?.toLowerCase() || '';
     // if (roleLower === 'backend') return 'from-green-50 to-green-100 border-green-200';
     // if (roleLower === 'frontend') return 'from-purple-50 to-purple-100 border-purple-200';
@@ -124,7 +122,7 @@ const Team = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => {
+            {teamMembers.map((member) => {
               const RoleIcon = getRoleIcon(member.role);
               const roleColor = getRoleColor(member.role);
               

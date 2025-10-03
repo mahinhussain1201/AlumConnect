@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { useAuth } from '../contexts/AuthContext'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
 import { Loader2, Briefcase, Plus, Users, Eye, Calendar, MapPin, DollarSign, Clock, Code } from 'lucide-react'
 import { Link } from 'react-router-dom'
 

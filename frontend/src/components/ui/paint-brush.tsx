@@ -28,7 +28,7 @@ const PaintBrush: React.FC<PaintBrushProps> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const trailsRef = useRef<Trail[]>([])
   const trailIdRef = useRef(0)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number>(null)
 
   const updateTrails = useCallback(() => {
     const now = Date.now()

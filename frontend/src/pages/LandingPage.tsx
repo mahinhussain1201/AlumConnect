@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { StarsAnimation } from '@/components/ui/stars-animation'
-import { parseJsonField } from '@/lib/dataUtils'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Avatar, AvatarFallback } from '../components/ui/avatar'
+import { StarsAnimation } from '../components/ui/stars-animation'
+import { parseJsonField } from '../lib/dataUtils'
 import { 
   ArrowRight, 
   Users, 
@@ -267,29 +267,29 @@ export const LandingPage: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {parseJsonField(project.tags).slice(0, 3).map((tag: string) => (
+                    {(Array.isArray(project.tags) ? project.tags :parseJsonField(project.tags)).slice(0, 3).map((tag: string) => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}
                       </Badge>
                     ))}
-                    {parseJsonField(project.tags).length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{parseJsonField(project.tags).length - 3}
-                      </Badge>
-                    )}
+                    {(Array.isArray(project.tags) ? project.tags : parseJsonField(project.tags)).length > 3 && (
+                        <div className="h-8 w-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs">
+                          +{(Array.isArray(project.tags) ? project.tags : parseJsonField(project.tags)).length - 3}
+                        </div>
+                      )}
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex -space-x-2">
-                      {parseJsonField(project.team_members).slice(0, 3).map((member: string, index: number) => (
+                    {(Array.isArray(project.team_members) ? project.team_members : parseJsonField(project.team_members)).slice(0, 3).map((member: string, index: number) => (
                         <Avatar key={index} className="h-8 w-8 border-2 border-background">
                           <AvatarFallback className="text-xs">
                             {member.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
                       ))}
-                      {parseJsonField(project.team_members).length > 3 && (
+                      {(Array.isArray(project.team_members) ? project.team_members : parseJsonField(project.team_members)).length > 3 && (
                         <div className="h-8 w-8 rounded-full bg-muted border-2 border-background flex items-center justify-center text-xs">
-                          +{parseJsonField(project.team_members).length - 3}
+                          +{(Array.isArray(project.team_members) ? project.team_members : parseJsonField(project.team_members)).length - 3}
                         </div>
                       )}
                     </div>

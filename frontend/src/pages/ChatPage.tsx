@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { formatDate } from '@/lib/dataUtils'
-import { ArrowLeft, Send, Loader2, MessageCircle, Users, Clock } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { Card, CardContent } from '../components/ui/card'
+import { Button } from '../components/ui/button'
+import { Avatar, AvatarFallback } from '../components/ui/avatar'
+import { Input } from '../components/ui/input'
+import { Badge } from '../components/ui/badge'
+import { ArrowLeft, Send, Loader2, MessageCircle, Clock } from 'lucide-react'
 
 interface Message {
   id: number

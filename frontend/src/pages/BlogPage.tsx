@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { formatDate, truncateText } from '@/lib/dataUtils'
+import { useAuth } from '../contexts/AuthContext'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Avatar, AvatarFallback } from '../components/ui/avatar'
+import { formatDate, truncateText } from '../lib/dataUtils'
 import { BookOpen, ArrowRight, Loader2, Heart, Share2, Clock, Check } from 'lucide-react'
 
 interface BlogPost {

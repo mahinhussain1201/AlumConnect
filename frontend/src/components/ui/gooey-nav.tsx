@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface GooeyNavItem {
   label: string;
@@ -143,21 +143,21 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
     navigate(items[index].href);
   };
 
-  const handleLinkKeyDown = (
-    e: React.KeyboardEvent<HTMLAnchorElement>,
-    index: number
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      const liEl = e.currentTarget.parentElement as HTMLLIElement;
-      if (liEl) {
-        handleClick(
-          { currentTarget: liEl } as unknown as React.KeyboardEvent<HTMLLIElement>,
-          index
-        );
-      }
-    }
-  };
+  // const handleLinkKeyDown = (
+  //   e: React.KeyboardEvent<HTMLAnchorElement>,
+  //   index: number
+  // ) => {
+  //   if (e.key === "Enter" || e.key === " ") {
+  //     e.preventDefault();
+  //     const liEl = e.currentTarget.parentElement as HTMLLIElement;
+  //     if (liEl) {
+  //       handleClick(
+  //         { currentTarget: liEl } as unknown as React.KeyboardEvent<HTMLLIElement>,
+  //         index
+  //       );
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (!navRef.current || !containerRef.current || !textRef.current || !filterRef.current) return;

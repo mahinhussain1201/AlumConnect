@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface WavesBackgroundProps {
   className?: string;
@@ -54,7 +54,7 @@ export const WavesBackground: React.FC<WavesBackgroundProps> = ({
           </path>
         ))}
       </svg>
-      <style jsx>{`
+      <style>{`
         @keyframes wave-pulse {
           0%, 100% {
             opacity: 0.3;

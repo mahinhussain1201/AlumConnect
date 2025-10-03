@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { GraduationCap, Mail, MapPin, Phone } from 'lucide-react'
 
 export const Footer: React.FC = () => {

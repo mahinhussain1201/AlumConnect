@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { GooeyNav } from '@/components/ui/gooey-nav'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { useAuth } from '../../contexts/AuthContext'
+import { Button } from '../../components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
+import { GooeyNav } from '../../components/ui/gooey-nav'
+import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet'
 import { Menu, GraduationCap, Users, BookOpen, MessageCircle, LogOut, User, Settings } from 'lucide-react'
 import logo from "../../images/logo.png";
 

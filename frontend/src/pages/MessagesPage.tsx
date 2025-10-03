@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
-import { formatDate } from '@/lib/dataUtils'
-import { MessageCircle, Search, Plus, Users, UserPlus, Loader2, Send, Clock, MapPin, Building, GraduationCap, Star, ExternalLink, ArrowLeft } from 'lucide-react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { Badge } from '../components/ui/badge'
+import { Button } from '../components/ui/button'
+import { Avatar, AvatarFallback } from '../components/ui/avatar'
+import { Input } from '../components/ui/input'
+import { formatDate } from '../lib/dataUtils'
+import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft } from 'lucide-react'
+import { Link, useParams } from 'react-router-dom'
 
 interface Conversation {
   id: number
@@ -50,7 +49,6 @@ interface Message {
 
 export const MessagesPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
-  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [availableUsers, setAvailableUsers] = useState<User[]>([])
@@ -63,8 +61,8 @@ export const MessagesPage: React.FC = () => {
   const [sending, setSending] = useState(false)
   const [messagesLoading, setMessagesLoading] = useState(false)
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
-  const pollingIntervalRef = React.useRef<number | null>(null)
-  const conversationsPollingRef = React.useRef<number | null>(null)
+  const pollingIntervalRef = React.useRef<NodeJS.Timeout | null>(null)
+  const conversationsPollingRef = React.useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (token) {
