@@ -6,6 +6,7 @@ import Mahin from '../images/Mahin.jpeg'
 import Bhawani from '../images/Bhawani.jpeg'
 import Priyanshu from '../images/Priyanshu.jpeg'
 import Sagnik from '../images/Sagnik.jpeg'
+import Akshat from '../images/Akshat.jpeg'
 
 import { 
   Mail, 
@@ -16,6 +17,7 @@ import {
   Code,
   Palette,
   Zap,
+  Database,
   Figma
 } from 'lucide-react';
 
@@ -24,12 +26,12 @@ const Team = () => {
     {
       id: 1,
       name: "Akshat Srivastava",
-      designation: "Full Stack Developer",
+      designation: "Tech Product Manager",
       email: "Akshat2k24@gmail.com",
       linkedin: "https://www.linkedin.com/in/akshat-srivastava-093456264/",
       github: "https://github.com/lostNseeker",
-      image: Sagnik,
-      role: "Full Stack"
+      image: Akshat,
+      role: "Product"
     },
     {
       id: 2,
@@ -75,7 +77,7 @@ const Team = () => {
 
   const getRoleIcon = (role: string) => {
     const roleLower = role?.toLowerCase() || '';
-    // if (roleLower === 'backend') return Database;
+    if (roleLower === 'product') return Database;
     // if (roleLower === 'frontend') return Palette;
     if (roleLower === 'designer') return Palette;
     if (roleLower === 'full stack') return Code;
@@ -85,7 +87,7 @@ const Team = () => {
 
   const getRoleColor = (role: string) => {
     const roleLower = role?.toLowerCase() || '';
-    // if (roleLower === 'backend') return 'from-green-50 to-green-100 border-green-200';
+    if (roleLower === 'product') return 'from-green-50 to-green-100 border-green-200';
     // if (roleLower === 'frontend') return 'from-purple-50 to-purple-100 border-purple-200';
     if (roleLower === 'designer') return 'from-pink-50 to-pink-100 border-pink-200';
     if (roleLower === 'full stack') return 'from-blue-50 to-blue-100 border-blue-200';

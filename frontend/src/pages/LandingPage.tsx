@@ -6,6 +6,13 @@ import { Badge } from '../components/ui/badge'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { StarsAnimation } from '../components/ui/stars-animation'
 import { parseJsonField } from '../lib/dataUtils'
+import project from '../icons/software copy.png'
+import mentorship from '../icons/mentorship.png'
+import knowledge from '../icons/light-bulb.png'
+import Creative from '../icons/creative.png'
+import Mentors from '../icons/speaker.png'
+import Blog from '../icons/blog.png'
+import Dept from '../icons/school.png'
 import { 
   ArrowRight, 
   Users, 
@@ -79,10 +86,10 @@ export const LandingPage: React.FC = () => {
   }
 
   const stats = [
-    { label: "Active Projects", value: "5+", icon: Lightbulb },
-    { label: "Alumni Mentors", value: "3+", icon: Users },
-    { label: "Blog Posts", value: "4+", icon: Award },
-    { label: "Departments", value: "3+", icon: Globe }
+    { label: "Active Projects", value: "5+", icon: Creative },
+    { label: "Alumni Mentors", value: "3+", icon: Mentors },
+    { label: "Blog Posts", value: "4+", icon: Blog },
+    { label: "Departments", value: "3+", icon: Dept }
   ]
 
   return (
@@ -152,7 +159,7 @@ export const LandingPage: React.FC = () => {
                 <div key={index} className="text-center group">
                   <div className="flex justify-center mb-6">
                     <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 group-hover:from-blue-100 group-hover:to-blue-200 transition-all duration-300 border border-blue-100">
-                      <stat.icon className="h-8 w-8 text-blue-700" />
+                      <img src={stat.icon} className="h-14 w-14 text-blue-700" />
                     </div>
                   </div>
                   <div className="text-4xl font-bold mb-3">{stat.value}</div>
@@ -168,7 +175,11 @@ export const LandingPage: React.FC = () => {
                 <div className="relative mb-8">
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-green-50 to-green-100 rounded-full flex items-center justify-center border-4 border-green-200 group-hover:scale-105 transition-transform duration-300">
                     <div className="relative">
-                      <Briefcase className="h-12 w-12 text-green-600" />
+                      <img 
+                        src={project} 
+                        alt="Project Collaboration" 
+                        className="h-16 w-16 text-green-600"
+                      />
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
                         <Lightbulb className="h-3 w-3 text-yellow-800" />
                       </div>
@@ -190,7 +201,11 @@ export const LandingPage: React.FC = () => {
                 <div className="relative mb-8">
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-purple-50 to-purple-100 rounded-full flex items-center justify-center border-4 border-purple-200 group-hover:scale-105 transition-transform duration-300">
                     <div className="relative">
-                      <Users className="h-12 w-12 text-purple-600" />
+                      <img
+                        src={mentorship}
+                        alt="Expert Mentorship"
+                        className="h-16 w-16 text-purple-600"
+                      />
                       <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center">
                         <Award className="h-2 w-2 text-green-800" />
                       </div>
@@ -212,7 +227,11 @@ export const LandingPage: React.FC = () => {
                 <div className="relative mb-8">
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-orange-50 to-orange-100 rounded-full flex items-center justify-center border-4 border-orange-200 group-hover:scale-105 transition-transform duration-300">
                     <div className="relative">
-                      <BookOpen className="h-12 w-12 text-orange-600" />
+                    <img
+                        src={knowledge}
+                        alt="Knowledge Sharing"
+                        className="h-16 w-16 text-orange-600"
+                      />
                       <div className="absolute -top-1 -left-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center">
                         <Globe className="h-2 w-2 text-blue-800" />
                       </div>
