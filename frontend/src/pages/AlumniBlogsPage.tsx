@@ -25,7 +25,7 @@ export const AlumniBlogsPage: React.FC = () => {
       if (!token) return
       
       try {
-        const res = await fetch('http://localhost:5001/api/alumni/blog-posts', {
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/blog-posts', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {

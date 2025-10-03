@@ -27,7 +27,7 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
       if (!token) return
       
       try {
-        const res = await fetch('http://localhost:5001/api/alumni/project-applications', {
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/project-applications', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {
@@ -55,7 +55,7 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
     
     setProcessing(applicationId)
     try {
-      const res = await fetch(`http://localhost:5001/api/project-applications/${applicationId}/${action}`, {
+      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/${action}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })

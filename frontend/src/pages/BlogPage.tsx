@@ -40,7 +40,7 @@ export const BlogPage: React.FC = () => {
   const fetchBlogPosts = async () => {
     try {
       console.log('Fetching blog posts...')
-      const response = await fetch('http://localhost:5001/api/blog')
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/blog')
       console.log('Blog posts response:', response.status)
       if (response.ok) {
         const data = await response.json()
@@ -92,7 +92,7 @@ export const BlogPage: React.FC = () => {
     
     try {
       console.log('Liking post:', postId)
-      const response = await fetch(`http://localhost:5001/api/blog/${postId}/like`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

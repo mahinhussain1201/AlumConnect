@@ -53,7 +53,7 @@ export const StudentDashboard: React.FC = () => {
       
       try {
         // Load applied projects
-        const projectsRes = await fetch('http://localhost:5001/api/students/applied-projects', {
+        const projectsRes = await fetch('https://alumconnect-s4c7.onrender.com/api/students/applied-projects', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (projectsRes.ok) {
@@ -73,7 +73,7 @@ export const StudentDashboard: React.FC = () => {
         }
 
         // Load mentorship requests
-        const mentorshipRes = await fetch('http://localhost:5001/api/mentorship/requests', {
+        const mentorshipRes = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (mentorshipRes.ok) {

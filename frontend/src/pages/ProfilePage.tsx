@@ -67,7 +67,7 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/profile', {
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.ok) {
@@ -127,7 +127,7 @@ export const ProfilePage: React.FC = () => {
     
     setSaving(true)
     try {
-      const res = await fetch('http://localhost:5001/api/profile', {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ export const ProfilePage: React.FC = () => {
       const formData = new FormData()
       formData.append('file', file)
 
-      const res = await fetch('http://localhost:5001/api/profile/upload-picture', {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile/upload-picture', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -165,7 +165,7 @@ export const ProfilePage: React.FC = () => {
 
       if (res.ok) {
         // Reload profile to get updated avatar
-        const profileRes = await fetch('http://localhost:5001/api/profile', {
+        const profileRes = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (profileRes.ok) {
@@ -257,7 +257,7 @@ export const ProfilePage: React.FC = () => {
               <div className="relative">
                 <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                   <AvatarImage 
-                    src={currentProfile.avatar ? `http://localhost:5001/api/profile/picture/${currentProfile.avatar}` : undefined} 
+                    src={currentProfile.avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${currentProfile.avatar}` : undefined} 
                     alt={currentProfile.name} 
                   />
                   <AvatarFallback className="text-2xl bg-white text-blue-600">

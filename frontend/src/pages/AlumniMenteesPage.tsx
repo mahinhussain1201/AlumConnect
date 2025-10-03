@@ -29,7 +29,7 @@ export const AlumniMenteesPage: React.FC = () => {
       
       try {
         console.log('Fetching mentorship requests...')
-        const res = await fetch('http://localhost:5001/api/mentorship/requests', {
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', {
           headers: { Authorization: `Bearer ${token}` },
         })
         console.log('Response status:', res.status)
@@ -64,7 +64,7 @@ export const AlumniMenteesPage: React.FC = () => {
     
     setProcessing(requestId)
     try {
-      const res = await fetch(`http://localhost:5001/api/mentorship/${requestId}/${action}`, {
+      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/mentorship/${requestId}/${action}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })

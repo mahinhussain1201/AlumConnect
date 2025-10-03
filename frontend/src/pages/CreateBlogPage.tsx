@@ -45,7 +45,7 @@ export const CreateBlogPage: React.FC = () => {
         content: form.content
       }
       console.log('Sending blog data:', requestData)
-      const res = await fetch('http://localhost:5001/api/blog', {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/blog', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

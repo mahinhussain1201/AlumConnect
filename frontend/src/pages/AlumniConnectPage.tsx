@@ -60,7 +60,7 @@ export const AlumniConnectPage: React.FC = () => {
 
   const fetchAppliedProjects = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/students/applied-projects', {
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/students/applied-projects', {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (response.ok) {
@@ -79,8 +79,8 @@ export const AlumniConnectPage: React.FC = () => {
     try {
       // Fetch projects and blogs in parallel
       const [projectsResponse, blogsResponse] = await Promise.all([
-        fetch('http://localhost:5001/api/projects'),
-        fetch('http://localhost:5001/api/blog-posts')
+        fetch('https://alumconnect-s4c7.onrender.com/api/projects'),
+        fetch('https://alumconnect-s4c7.onrender.com/api/blog-posts')
       ])
 
       if (projectsResponse.ok) {
@@ -108,7 +108,7 @@ export const AlumniConnectPage: React.FC = () => {
     
     setIsSubmitting(true)
     try {
-      const response = await fetch('http://localhost:5001/api/project-applications', {
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/project-applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export const AlumniConnectPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/project-applications/${projectId}`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

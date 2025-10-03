@@ -58,8 +58,8 @@ export const LandingPage: React.FC = () => {
     try {
       // Fetch projects and alumni in parallel
       const [projectsResponse, alumniResponse] = await Promise.all([
-        fetch('http://localhost:5001/api/projects'),
-        fetch('http://localhost:5001/api/alumni')
+        fetch('https://alumconnect-s4c7.onrender.com/api/projects'),
+        fetch('https://alumconnect-s4c7.onrender.com/api/alumni')
       ])
 
       if (projectsResponse.ok) {

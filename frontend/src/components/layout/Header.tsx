@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
     const fetchAvatar = async () => {
       if (user && token) {
         try {
-          const res = await fetch('http://localhost:5001/api/profile', {
+          const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
             headers: { Authorization: `Bearer ${token}` }
           })
           if (res.ok) {
@@ -150,7 +150,7 @@ export const Header: React.FC = () => {
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage 
-                      src={profileAvatar ? `http://localhost:5001/api/profile/picture/${profileAvatar}` : undefined} 
+                      src={profileAvatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${profileAvatar}` : undefined} 
                       alt={user.name} 
                     />
                     <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>

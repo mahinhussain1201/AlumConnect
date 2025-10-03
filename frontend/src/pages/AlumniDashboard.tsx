@@ -43,7 +43,7 @@ export const AlumniDashboard: React.FC = () => {
       
       try {
         // Load dashboard stats
-        const statsRes = await fetch('http://localhost:5001/api/alumni/dashboard-stats', {
+        const statsRes = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/dashboard-stats', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (statsRes.ok) {
@@ -52,7 +52,7 @@ export const AlumniDashboard: React.FC = () => {
         }
 
         // Load recent activity
-        const activityRes = await fetch('http://localhost:5001/api/alumni/recent-activity', {
+        const activityRes = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/recent-activity', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (activityRes.ok) {

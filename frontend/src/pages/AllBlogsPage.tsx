@@ -37,7 +37,7 @@ export const AllBlogsPage: React.FC = () => {
 
   const fetchBlogPosts = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/blog-posts')
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/blog-posts')
       if (response.ok) {
         const data = await response.json()
         setPosts(data)

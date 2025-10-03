@@ -49,7 +49,7 @@ export const ProjectDetailPage: React.FC = () => {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/projects/${id}`)
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
       if (response.ok) {
         const data = await response.json()
         setProject(data)
@@ -67,7 +67,7 @@ export const ProjectDetailPage: React.FC = () => {
 
   const checkApplicationStatus = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/projects/${id}/application-status`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/application-status`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -87,7 +87,7 @@ export const ProjectDetailPage: React.FC = () => {
 
     setIsApplying(true)
     try {
-      const response = await fetch('http://localhost:5001/api/project-applications', {
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/project-applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

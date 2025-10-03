@@ -35,14 +35,14 @@ export const ProjectApplicationsPage: React.FC = () => {
       
       try {
         // Load project details
-        const projectRes = await fetch(`http://localhost:5001/api/projects/${id}`)
+        const projectRes = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
         if (projectRes.ok) {
           const projectData = await projectRes.json()
           setProject(projectData)
         }
 
         // Load applications for this specific project
-        const appsRes = await fetch(`http://localhost:5001/api/projects/${id}/applications`, {
+        const appsRes = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/applications`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (appsRes.ok) {
@@ -62,7 +62,7 @@ export const ProjectApplicationsPage: React.FC = () => {
     
     setProcessing(applicationId)
     try {
-      const res = await fetch(`http://localhost:5001/api/project-applications/${applicationId}/${action}`, {
+      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/${action}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })

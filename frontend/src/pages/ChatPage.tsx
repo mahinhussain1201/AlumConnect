@@ -56,10 +56,10 @@ export const ChatPage: React.FC = () => {
   const fetchConversationData = async () => {
     try {
       const [messagesRes, conversationRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/messages/conversations/${id}/messages`, {
+        fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}/messages`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch(`http://localhost:5001/api/messages/conversations/${id}`, {
+        fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
       ])
@@ -85,7 +85,7 @@ export const ChatPage: React.FC = () => {
 
     setSending(true)
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/conversations/${id}/messages`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

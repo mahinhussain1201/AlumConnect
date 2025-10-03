@@ -34,7 +34,7 @@ export const AlumniProjectsPage: React.FC = () => {
     const loadProjects = async () => {
       try {
         // Fetch ALL projects (same as ProjectsPage)
-        const res = await fetch('http://localhost:5001/api/projects')
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/projects')
         if (res.ok) {
           const data = await res.json()
           setProjects(data)

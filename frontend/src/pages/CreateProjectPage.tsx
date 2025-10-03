@@ -61,7 +61,7 @@ export const CreateProjectPage: React.FC = () => {
         work_type: form.work_type
       }
       console.log('Sending project data:', requestData)
-      const res = await fetch('http://localhost:5001/api/projects', {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

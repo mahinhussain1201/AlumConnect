@@ -85,7 +85,7 @@ export const MessagesPage: React.FC = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/messages/conversations', {
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.ok) {
@@ -117,7 +117,7 @@ export const MessagesPage: React.FC = () => {
 
       pollingIntervalRef.current = setInterval(async () => {
         try {
-          const response = await fetch(`http://localhost:5001/api/messages/conversations/${selectedConversation.id}/messages`, {
+          const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${selectedConversation.id}/messages`, {
             headers: { Authorization: `Bearer ${token}` },
           })
           if (response.ok) {
@@ -143,10 +143,10 @@ export const MessagesPage: React.FC = () => {
       console.log('Fetching messages data...')
       // Fetch conversations and available users in parallel
       const [conversationsRes, usersRes] = await Promise.all([
-        fetch('http://localhost:5001/api/messages/conversations', {
+        fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('http://localhost:5001/api/messages/available-users', {
+        fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
           headers: { Authorization: `Bearer ${token}` },
         })
       ])
@@ -179,7 +179,7 @@ export const MessagesPage: React.FC = () => {
   const startNewConversation = async (otherUserId: number) => {
     try {
       console.log('Starting conversation with user:', otherUserId)
-      const response = await fetch('http://localhost:5001/api/messages/conversations', {
+      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ export const MessagesPage: React.FC = () => {
     setSelectedConversation(conversation)
     setMessagesLoading(true)
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/conversations/${conversation.id}/messages`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${conversation.id}/messages`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.ok) {
@@ -243,7 +243,7 @@ export const MessagesPage: React.FC = () => {
 
     setSending(true)
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/conversations/${selectedConversation.id}/messages`, {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${selectedConversation.id}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
