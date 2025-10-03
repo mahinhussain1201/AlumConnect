@@ -65,7 +65,7 @@ const Team = () => {
     },
     {
       id: 5,
-      name: "Mahin Hussain",
+      name: "Priyanshu Verma",
       designation: "UI/UX Designer",
       email: "priyanshu2k4@gmail.com",
       linkedin: "https://www.linkedin.com/in/priyanshu-verma00/",
