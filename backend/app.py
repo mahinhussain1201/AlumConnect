@@ -1550,6 +1550,7 @@ def get_alumni_projects():
             return jsonify({'error': 'Only alumni can view their projects'}), 403
         
         # Get alumni's projects
+        
         cursor.execute('''
             SELECT p.id, p.title, p.description, p.category, p.status, p.team_members, p.tags, p.created_at,
                    (SELECT COUNT(*) FROM project_applications WHERE project_id = p.id) as application_count

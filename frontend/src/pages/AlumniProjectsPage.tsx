@@ -26,26 +26,33 @@ interface Project {
 }
 
 export const AlumniProjectsPage: React.FC = () => {
-  const { user, isLoading } = useAuth()
+  const { user, isLoading, token } = useAuth()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        // Fetch ALL projects (same as ProjectsPage)
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/projects')
+        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/projects', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
         if (res.ok) {
           const data = await res.json()
           setProjects(data)
+        } else {
+          console.error('Failed to fetch projects:', await res.text())
         }
+      } catch (error) {
+        console.error('Error fetching projects:', error)
       } finally {
         setLoading(false)
       }
     }
-    
-    loadProjects()
-  }, [])
+  
+    if (token) loadProjects()
+  }, [token])
 
   if (isLoading) {
     return (

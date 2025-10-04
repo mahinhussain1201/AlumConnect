@@ -86,7 +86,7 @@ export const LandingPage: React.FC = () => {
   }
 
   const stats = [
-    { label: "Active Projects", value: "5+", icon: Creative },
+    { label: "Active Projects", value: "5+", icon: project },
     { label: "Alumni Mentors", value: "3+", icon: Mentors },
     { label: "Blog Posts", value: "4+", icon: Blog },
     { label: "Departments", value: "3+", icon: Dept }
@@ -176,7 +176,7 @@ export const LandingPage: React.FC = () => {
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-green-50 to-green-100 rounded-full flex items-center justify-center border-4 border-green-200 group-hover:scale-105 transition-transform duration-300">
                     <div className="relative">
                       <img 
-                        src={project} 
+                        src={Creative} 
                         alt="Project Collaboration" 
                         className="h-18 w-18 text-green-600"
                       />
