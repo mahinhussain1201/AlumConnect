@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
 import { GooeyNav } from '../../components/ui/gooey-nav'
 import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet'
-import { Menu, GraduationCap, Users, BookOpen, MessageCircle, LogOut, User, Settings } from 'lucide-react'
+import { Menu, GraduationCap, Users, BookOpen, MessageCircle, LogOut, User } from 'lucide-react'
 import logo from "../../images/logo.png";
 
 export const Header: React.FC = () => {
@@ -175,14 +175,14 @@ export const Header: React.FC = () => {
                         <User className="mr-3 h-5 w-5 text-gray-400" />
                         Your Profile
                       </Link>
-                      <Link
+                      {/* <Link
                         to="/settings"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsProfileMenuOpen(false)}
                       >
                         <Settings className="mr-3 h-5 w-5 text-gray-400" />
                         Settings
-                      </Link>
+                      </Link> */}
                       <button
                         onClick={() => {
                           logout()

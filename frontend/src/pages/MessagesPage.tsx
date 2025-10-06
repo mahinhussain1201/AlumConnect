@@ -191,12 +191,13 @@ export const MessagesPage: React.FC = () => {
         const newConversation = await response.json()
         console.log('New conversation created:', newConversation)
         // Find the conversation in our list or create a new one
+        const otherUser = availableUsers.find(u => u.id === otherUserId)
         const conversation = conversations.find(c => c.other_user_id === otherUserId) || {
           id: newConversation.id,
           other_user_id: otherUserId,
-          other_user_name: availableUsers.find(u => u.id === otherUserId)?.name || 'Unknown',
-          other_user_email: availableUsers.find(u => u.id === otherUserId)?.email || '',
-          other_user_role: availableUsers.find(u => u.id === otherUserId)?.role || 'alumni',
+          other_user_name: otherUser?.name || 'Unknown',
+          other_user_email: otherUser?.email || '',
+          other_user_role: otherUser?.role || 'alumni',
           last_message: '',
           last_message_time: '',
           unread_count: 0,
@@ -271,6 +272,31 @@ export const MessagesPage: React.FC = () => {
     }
   }
 
+  const getUserDisplayInfo = (userObj: User) => {
+    if (userObj.role === 'alumni') {
+      if (userObj.current_position && userObj.current_company) {
+        return `${userObj.current_position} at ${userObj.current_company}`
+      }
+      return userObj.department || 'Alumni'
+    } else {
+      // Student
+      if (userObj.branch && userObj.graduation_year) {
+        return `${userObj.branch} • ${userObj.graduation_year}`
+      }
+      if (userObj.branch) return userObj.branch
+      if (userObj.department) return userObj.department
+      return 'Student'
+    }
+  }
+
+  const getRoleBadge = (role: string) => {
+    if (role === 'alumni') {
+      return <Badge variant="default" className="text-xs bg-blue-600">Alumni</Badge>
+    } else {
+      return <Badge variant="secondary" className="text-xs bg-green-600 text-white">Student</Badge>
+    }
+  }
+
   const filteredUsers = availableUsers.filter(u => 
     u.id !== user?.id && 
     (u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -325,7 +351,7 @@ export const MessagesPage: React.FC = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search alumni..."
+                  placeholder="Search users..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -342,36 +368,40 @@ export const MessagesPage: React.FC = () => {
               </div>
             ) : showNewChat ? (
               <div className="p-2">
-                {filteredUsers.map((alumni) => (
+                {filteredUsers.map((userObj) => (
                   <div
-                    key={alumni.id}
+                    key={userObj.id}
                     className="p-3 rounded-lg hover:bg-gray-50 cursor-pointer border border-gray-100 mb-2"
-                    onClick={() => startNewConversation(alumni.id)}
+                    onClick={() => startNewConversation(userObj.id)}
                   >
                     <div className="flex items-center space-x-3">
-                      <Link to={`/profile/${alumni.id}`} onClick={(e) => e.stopPropagation()}>
+                      <Link to={`/profile/${userObj.id}`} onClick={(e) => e.stopPropagation()}>
                         <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
-                          <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
-                            {alumni.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          <AvatarFallback className={`${
+                            userObj.role === 'alumni' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
+                          } text-sm font-semibold`}>
+                            {userObj.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                       </Link>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate text-sm md:text-base">{alumni.name}</p>
+                        <p className="font-medium text-gray-900 truncate text-sm md:text-base">{userObj.name}</p>
                         <p className="text-xs md:text-sm text-gray-500 truncate">
-                          {alumni.current_position && alumni.current_company 
-                            ? `${alumni.current_position} at ${alumni.current_company}`
-                            : alumni.department || 'Alumni'
-                          }
+                          {getUserDisplayInfo(userObj)}
                         </p>
                       </div>
-                      <Badge variant="default" className="text-xs">Alumni</Badge>
+                      {getRoleBadge(userObj.role)}
                     </div>
                   </div>
                 ))}
                 {filteredUsers.length === 0 && searchTerm && (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No alumni found</p>
+                    <p className="text-gray-500">No users found</p>
+                  </div>
+                )}
+                {filteredUsers.length === 0 && !searchTerm && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No available users</p>
                   </div>
                 )}
               </div>
@@ -391,7 +421,11 @@ export const MessagesPage: React.FC = () => {
                       <div className="relative">
                         <Link to={`/profile/${conversation.other_user_id}`} onClick={(e) => e.stopPropagation()}>
                           <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
-                            <AvatarFallback className="bg-blue-100 text-blue-700 text-sm font-semibold">
+                            <AvatarFallback className={`${
+                              conversation.other_user_role === 'alumni' 
+                                ? 'bg-blue-100 text-blue-700' 
+                                : 'bg-green-100 text-green-700'
+                            } text-sm font-semibold`}>
                               {conversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
@@ -402,7 +436,18 @@ export const MessagesPage: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="font-medium text-gray-900 truncate text-sm md:text-base">{conversation.other_user_name}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-gray-900 truncate text-sm md:text-base">
+                              {conversation.other_user_name}
+                            </p>
+                            <span className={`text-xs px-1.5 py-0.5 rounded ${
+                              conversation.other_user_role === 'alumni' 
+                                ? 'bg-blue-100 text-blue-700' 
+                                : 'bg-green-100 text-green-700'
+                            }`}>
+                              {conversation.other_user_role === 'alumni' ? 'Alumni' : 'Student'}
+                            </span>
+                          </div>
                           {conversation.unread_count > 0 && (
                             <Badge variant="destructive" className="text-xs">
                               {conversation.unread_count}
@@ -431,10 +476,7 @@ export const MessagesPage: React.FC = () => {
                 </div>
                 <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
                 <p className="text-gray-600 mb-4 text-xs md:text-sm">
-                  {user.role === 'student' 
-                    ? 'Start a conversation with an alumni mentor'
-                    : 'Students can reach out to you for mentorship'
-                  }
+                  Start a conversation with other users in the community
                 </p>
                 <Button 
                   onClick={() => setShowNewChat(true)}
@@ -473,15 +515,21 @@ export const MessagesPage: React.FC = () => {
                     </Button>
                     <Link to={`/profile/${selectedConversation.other_user_id}`}>
                       <Avatar className="h-8 w-8 md:h-10 md:w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-xs md:text-sm font-semibold">
+                        <AvatarFallback className={`${
+                          selectedConversation.other_user_role === 'alumni' 
+                            ? 'bg-blue-100 text-blue-700' 
+                            : 'bg-green-100 text-green-700'
+                        } text-xs md:text-sm font-semibold`}>
                           {selectedConversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Link>
                     <div>
-                      <h3 className="font-semibold text-gray-900 text-sm md:text-base">{selectedConversation.other_user_name}</h3>
+                      <h3 className="font-semibold text-gray-900 text-sm md:text-base">
+                        {selectedConversation.other_user_name}
+                      </h3>
                       <p className="text-xs md:text-sm text-gray-500">
-                        {selectedConversation.other_user_role === 'alumni' ? 'Alumni Mentor' : 'Student'}
+                        {selectedConversation.other_user_role === 'alumni' ? 'Alumni' : 'Student'}
                       </p>
                     </div>
                   </div>
@@ -586,10 +634,7 @@ export const MessagesPage: React.FC = () => {
                 </div>
                 <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">Welcome to Messages</h3>
                 <p className="text-gray-600 max-w-md mx-auto mb-6 md:mb-8 text-sm md:text-base">
-                  {user.role === 'student' 
-                    ? 'Select a conversation or start a new chat with an alumni mentor to get guidance and support.'
-                    : 'Select a conversation or start a new chat with a student to provide mentorship.'
-                  }
+                  Connect with alumni and students in the community. Select a conversation or start a new chat.
                 </p>
                 <Button 
                   onClick={() => setShowNewChat(true)}
