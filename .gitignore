@@ -6,6 +6,25 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+
+# Development documentation and notes
+PROJECT_DETAIL_ADDITIONS.txt
+SEED_DATA_UPDATED.md
+VERIFICATION_REPORT.md
+
+# PowerShell scripts
+*.ps1
+
+# Test and utility scripts
+backend/add_sample_positions.py
+backend/check_db.py
+backend/test_positions.py
+backend/verify_system.py
+
+# User uploads
+backend/uploads/
+uploads/
+
 # Runtime data
 pids
 *.pid
