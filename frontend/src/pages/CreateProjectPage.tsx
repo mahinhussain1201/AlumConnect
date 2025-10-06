@@ -6,8 +6,9 @@ import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Button } from '../components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { Badge } from '../components/ui/badge'
 
 export const CreateProjectPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
@@ -23,8 +24,18 @@ export const CreateProjectPage: React.FC = () => {
     stipend: '',
     duration: '',
     location: '',
-    work_type: 'remote'
+    work_type: 'remote',
+    is_recruiting: true,
+    images: '',
+    project_links: '',
+    jd_pdf: ''
   })
+  const [positions, setPositions] = useState<Array<{
+    title: string
+    description: string
+    required_skills: string
+    count: number
+  }>>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -58,7 +69,17 @@ export const CreateProjectPage: React.FC = () => {
         stipend: form.stipend ? parseInt(form.stipend) : null,
         duration: form.duration || null,
         location: form.location || null,
-        work_type: form.work_type
+        work_type: form.work_type,
+        is_recruiting: form.is_recruiting,
+        images: form.images ? form.images.split(',').map(t => t.trim()) : [],
+        project_links: form.project_links ? form.project_links.split(',').map(t => t.trim()) : [],
+        jd_pdf: form.jd_pdf || null,
+        positions: positions.map(p => ({
+          title: p.title,
+          description: p.description,
+          required_skills: p.required_skills ? p.required_skills.split(',').map(s => s.trim()) : [],
+          count: p.count
+        }))
       }
       console.log('Sending project data:', requestData)
       const res = await fetch('https://alumconnect-s4c7.onrender.com/api/projects', {
@@ -70,7 +91,7 @@ export const CreateProjectPage: React.FC = () => {
         body: JSON.stringify(requestData)
       })
       if (res.ok) {
-        navigate('/alumni-dashboard')
+        navigate('/founders-dashboard')
       } else {
         const data = await res.json()
         console.error('Project creation failed:', data)
@@ -216,6 +237,145 @@ export const CreateProjectPage: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+              <div>
+                <Label>Recruitment Status</Label>
+                <Select 
+                  value={form.is_recruiting ? 'recruiting' : 'not_recruiting'} 
+                  onValueChange={(v) => setForm(p => ({ ...p, is_recruiting: v === 'recruiting' }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recruiting">Currently Recruiting</SelectItem>
+                    <SelectItem value="not_recruiting">Not Recruiting</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="images">Project Images (comma-separated URLs)</Label>
+                <Input 
+                  id="images" 
+                  value={form.images} 
+                  onChange={handleChange} 
+                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" 
+                />
+              </div>
+              <div>
+                <Label htmlFor="project_links">Project Links (comma-separated URLs)</Label>
+                <Input 
+                  id="project_links" 
+                  value={form.project_links} 
+                  onChange={handleChange} 
+                  placeholder="https://github.com/project, https://demo.example.com" 
+                />
+              </div>
+              <div>
+                <Label htmlFor="jd_pdf">Job Description PDF URL</Label>
+                <Input 
+                  id="jd_pdf" 
+                  value={form.jd_pdf} 
+                  onChange={handleChange} 
+                  placeholder="https://example.com/jd.pdf" 
+                />
+              </div>
+              
+              {/* Positions Section */}
+              <div className="space-y-4 border-t pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Project Positions</h3>
+                    <p className="text-sm text-gray-600">Add multiple positions like Developer, Designer, etc.</p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPositions([...positions, { title: '', description: '', required_skills: '', count: 1 }])}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Position
+                  </Button>
+                </div>
+                
+                {positions.length > 0 && (
+                  <div className="space-y-4">
+                    {positions.map((position, index) => (
+                      <Card key={index} className="p-4 bg-gray-50">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Badge variant="secondary">Position {index + 1}</Badge>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setPositions(positions.filter((_, i) => i !== index))}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-sm">Position Title</Label>
+                              <Input
+                                value={position.title}
+                                onChange={(e) => {
+                                  const newPositions = [...positions]
+                                  newPositions[index].title = e.target.value
+                                  setPositions(newPositions)
+                                }}
+                                placeholder="e.g., Frontend Developer"
+                                className="h-10"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm">Number of Openings</Label>
+                              <Input
+                                type="number"
+                                min="1"
+                                value={position.count}
+                                onChange={(e) => {
+                                  const newPositions = [...positions]
+                                  newPositions[index].count = parseInt(e.target.value) || 1
+                                  setPositions(newPositions)
+                                }}
+                                className="h-10"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label className="text-sm">Description</Label>
+                            <Textarea
+                              value={position.description}
+                              onChange={(e) => {
+                                const newPositions = [...positions]
+                                newPositions[index].description = e.target.value
+                                setPositions(newPositions)
+                              }}
+                              placeholder="Describe the role and responsibilities"
+                              rows={2}
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm">Required Skills (comma separated)</Label>
+                            <Input
+                              value={position.required_skills}
+                              onChange={(e) => {
+                                const newPositions = [...positions]
+                                newPositions[index].required_skills = e.target.value
+                                setPositions(newPositions)
+                              }}
+                              placeholder="React, TypeScript, CSS"
+                              className="h-10"
+                            />
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
               <Button 
                 type="submit" 

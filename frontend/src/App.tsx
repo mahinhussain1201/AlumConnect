@@ -23,6 +23,7 @@ import { ChatPage } from './pages/ChatPage'
 import { AlumniProjectApplicationsPage } from './pages/AlumniProjectApplicationsPage'
 import { ProjectApplicationsPage } from './pages/ProjectApplicationsPage'
 import { DashboardRouter } from './pages/DashboardRouter'
+import { MentorsPage } from './pages/MentorsPage'
 import { AuthProvider } from './contexts/AuthContext'
 import Team from './pages/Team'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -40,11 +41,12 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
+            <Route path="/mentors" element={<MentorsPage />} />
             <Route path="/alumni-connect" element={<AlumniConnectPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/student-dashboard" element={<StudentDashboard />} />
-            <Route path="/alumni-dashboard" element={<AlumniDashboard />} />
+            <Route path="/founders-dashboard" element={<AlumniDashboard />} />
             <Route path="/dashboard" element={<DashboardRouter />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />

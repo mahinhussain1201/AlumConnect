@@ -31,6 +31,13 @@ interface Language {
   proficiency: 'beginner' | 'intermediate' | 'advanced' | 'native'
 }
 
+interface PastProject {
+  title: string
+  description?: string
+  technologies?: string[]
+  year?: string
+}
+
 interface Profile {
   id: number
   name: string
@@ -53,6 +60,12 @@ interface Profile {
   website?: string
   linkedin?: string
   github?: string
+  // Student-specific fields
+  program?: string
+  joining_year?: number
+  institute?: string
+  specialization?: string
+  past_projects?: PastProject[]
 }
 
 export const ProfilePage: React.FC = () => {
@@ -110,6 +123,7 @@ export const ProfilePage: React.FC = () => {
     } else {
       setLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   const handleEdit = () => {
@@ -228,6 +242,32 @@ export const ProfilePage: React.FC = () => {
     })
   }
 
+  const addPastProject = () => {
+    if (!editForm) return
+    setEditForm({
+      ...editForm,
+      past_projects: [...(editForm.past_projects || []), { title: '', description: '', technologies: [], year: '' }]
+    })
+  }
+
+  const removePastProject = (index: number) => {
+    if (!editForm) return
+    setEditForm({
+      ...editForm,
+      past_projects: editForm.past_projects?.filter((_, i) => i !== index) || []
+    })
+  }
+
+  const updatePastProject = (index: number, field: keyof PastProject, value: string | string[]) => {
+    if (!editForm) return
+    const updated = [...(editForm.past_projects || [])]
+    updated[index] = { ...updated[index], [field]: value }
+    setEditForm({
+      ...editForm,
+      past_projects: updated
+    })
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -292,7 +332,7 @@ export const ProfilePage: React.FC = () => {
                 <p className="text-blue-100 mb-4">{currentProfile.email}</p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                    {currentProfile.role === 'alumni' ? 'Alumni' : 'Student'}
+                    {currentProfile.role === 'alumni' ? 'Founder' : 'Student'}
                   </Badge>
                   {currentProfile.graduation_year && (
                     <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
@@ -494,26 +534,87 @@ export const ProfilePage: React.FC = () => {
                         className="bg-white/50"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="current_company">Current Company</Label>
-                      <Input
-                        id="current_company"
-                        value={currentProfile.current_company || ''}
-                        onChange={(e) => setEditForm({...currentProfile, current_company: e.target.value})}
-                        placeholder="Current Company"
-                        className="bg-white/50"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="current_position">Current Position</Label>
-                      <Input
-                        id="current_position"
-                        value={currentProfile.current_position || ''}
-                        onChange={(e) => setEditForm({...currentProfile, current_position: e.target.value})}
-                        placeholder="Current Position"
-                        className="bg-white/50"
-                      />
-                    </div>
+                    {/* Student-specific fields */}
+                    {currentProfile.role === 'student' && (
+                      <>
+                        <div>
+                          <Label htmlFor="program">Program *</Label>
+                          <Select
+                            value={currentProfile.program || ''}
+                            onValueChange={(value) => setEditForm({...currentProfile, program: value})}
+                          >
+                            <SelectTrigger className="bg-white/50">
+                              <SelectValue placeholder="Select program" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="B.Tech">B.Tech</SelectItem>
+                              <SelectItem value="M.Tech">M.Tech</SelectItem>
+                              <SelectItem value="PhD">PhD</SelectItem>
+                              <SelectItem value="Dual Degree">Dual Degree</SelectItem>
+                              <SelectItem value="Integrated M.Sc">Integrated M.Sc</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="institute">Institute *</Label>
+                          <Input
+                            id="institute"
+                            value={currentProfile.institute || ''}
+                            onChange={(e) => setEditForm({...currentProfile, institute: e.target.value})}
+                            placeholder="e.g., IIT Kharagpur"
+                            className="bg-white/50"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="joining_year">Year of Joining *</Label>
+                          <Input
+                            id="joining_year"
+                            type="number"
+                            value={currentProfile.joining_year || ''}
+                            onChange={(e) => setEditForm({...currentProfile, joining_year: parseInt(e.target.value)})}
+                            placeholder="e.g., 2020"
+                            className="bg-white/50"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="specialization">Specialization</Label>
+                          <Input
+                            id="specialization"
+                            value={currentProfile.specialization || ''}
+                            onChange={(e) => setEditForm({...currentProfile, specialization: e.target.value})}
+                            placeholder="e.g., Computer Science, AI/ML"
+                            className="bg-white/50"
+                          />
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Alumni-specific fields */}
+                    {currentProfile.role === 'alumni' && (
+                      <>
+                        <div>
+                          <Label htmlFor="current_company">Current Company</Label>
+                          <Input
+                            id="current_company"
+                            value={currentProfile.current_company || ''}
+                            onChange={(e) => setEditForm({...currentProfile, current_company: e.target.value})}
+                            placeholder="Current Company"
+                            className="bg-white/50"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="current_position">Current Position</Label>
+                          <Input
+                            id="current_position"
+                            value={currentProfile.current_position || ''}
+                            onChange={(e) => setEditForm({...currentProfile, current_position: e.target.value})}
+                            placeholder="Current Position"
+                            className="bg-white/50"
+                          />
+                        </div>
+                      </>
+                    )}
                     <div>
                       <Label htmlFor="location">Location</Label>
                       <Input
@@ -576,27 +677,83 @@ export const ProfilePage: React.FC = () => {
                         </div>
                       </div>
                     )}
-                    {currentProfile.current_company && (
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-orange-50">
-                        <div className="p-2 rounded-full bg-orange-100">
-                          <Building className="h-4 w-4 text-orange-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Company</p>
-                          <p className="text-sm text-muted-foreground">{currentProfile.current_company}</p>
-                        </div>
-                      </div>
+                    
+                    {/* Student-specific display fields */}
+                    {currentProfile.role === 'student' && (
+                      <>
+                        {currentProfile.program && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-cyan-50">
+                            <div className="p-2 rounded-full bg-cyan-100">
+                              <GraduationCap className="h-4 w-4 text-cyan-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Program</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.program}</p>
+                            </div>
+                          </div>
+                        )}
+                        {currentProfile.institute && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50">
+                            <div className="p-2 rounded-full bg-amber-100">
+                              <Building className="h-4 w-4 text-amber-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Institute</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.institute}</p>
+                            </div>
+                          </div>
+                        )}
+                        {currentProfile.joining_year && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-lime-50">
+                            <div className="p-2 rounded-full bg-lime-100">
+                              <Calendar className="h-4 w-4 text-lime-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Joining Year</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.joining_year}</p>
+                            </div>
+                          </div>
+                        )}
+                        {currentProfile.specialization && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-rose-50">
+                            <div className="p-2 rounded-full bg-rose-100">
+                              <Award className="h-4 w-4 text-rose-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Specialization</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.specialization}</p>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     )}
-                    {currentProfile.current_position && (
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-indigo-50">
-                        <div className="p-2 rounded-full bg-indigo-100">
-                          <Briefcase className="h-4 w-4 text-indigo-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Position</p>
-                          <p className="text-sm text-muted-foreground">{currentProfile.current_position}</p>
-                        </div>
-                      </div>
+                    
+                    {/* Alumni-specific display fields */}
+                    {currentProfile.role === 'alumni' && (
+                      <>
+                        {currentProfile.current_company && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-orange-50">
+                            <div className="p-2 rounded-full bg-orange-100">
+                              <Building className="h-4 w-4 text-orange-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Company</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.current_company}</p>
+                            </div>
+                          </div>
+                        )}
+                        {currentProfile.current_position && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-indigo-50">
+                            <div className="p-2 rounded-full bg-indigo-100">
+                              <Briefcase className="h-4 w-4 text-indigo-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Position</p>
+                              <p className="text-sm text-muted-foreground">{currentProfile.current_position}</p>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     )}
                     {currentProfile.location && (
                       <div className="flex items-center gap-3 p-3 rounded-lg bg-pink-50">
@@ -912,6 +1069,100 @@ export const ProfilePage: React.FC = () => {
                 )}
                 </CardContent>
               </Card>
+
+            {/* Past Projects Section - Only for Students */}
+            {currentProfile.role === 'student' && (
+              <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    Past Projects
+                  </CardTitle>
+                  {editing && (
+                    <Button size="sm" onClick={addPastProject} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Project
+                    </Button>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  {editing ? (
+                    <div className="space-y-4">
+                      {currentProfile.past_projects?.map((project, index) => (
+                        <div key={index} className="space-y-3 p-4 border rounded-lg bg-gray-50">
+                          <div className="flex gap-2 items-start">
+                            <div className="flex-1 space-y-3">
+                              <Input
+                                value={project.title}
+                                onChange={(e) => updatePastProject(index, 'title', e.target.value)}
+                                placeholder="Project title"
+                                className="bg-white"
+                              />
+                              <Textarea
+                                value={project.description || ''}
+                                onChange={(e) => updatePastProject(index, 'description', e.target.value)}
+                                placeholder="Project description"
+                                rows={2}
+                                className="bg-white"
+                              />
+                              <div className="flex gap-2">
+                                <Input
+                                  value={project.year || ''}
+                                  onChange={(e) => updatePastProject(index, 'year', e.target.value)}
+                                  placeholder="Year (e.g., 2023)"
+                                  className="bg-white w-32"
+                                />
+                                <Input
+                                  value={project.technologies?.join(', ') || ''}
+                                  onChange={(e) => updatePastProject(index, 'technologies', e.target.value.split(',').map(t => t.trim()))}
+                                  placeholder="Technologies (comma-separated)"
+                                  className="bg-white flex-1"
+                                />
+                              </div>
+                            </div>
+                            <Button size="sm" variant="outline" onClick={() => removePastProject(index)} className="text-red-600 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {(!currentProfile.past_projects || currentProfile.past_projects.length === 0) && (
+                        <p className="text-sm text-gray-500 text-center py-4">No past projects added yet. Click "Add Project" to get started.</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {currentProfile.past_projects?.map((project, i) => (
+                        <div key={i} className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-semibold text-gray-900">{project.title}</h4>
+                            {project.year && (
+                              <Badge variant="outline" className="text-xs bg-white/50">
+                                {project.year}
+                              </Badge>
+                            )}
+                          </div>
+                          {project.description && (
+                            <p className="text-sm text-gray-600 mb-3 leading-relaxed">{project.description}</p>
+                          )}
+                          {project.technologies && project.technologies.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies.map((tech, idx) => (
+                                <Badge key={idx} variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                                  {tech}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {(!currentProfile.past_projects || currentProfile.past_projects.length === 0) && (
+                        <p className="text-sm text-gray-500 text-center py-4">No past projects to display.</p>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

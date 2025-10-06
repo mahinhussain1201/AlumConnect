@@ -28,9 +28,9 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="alumni-dashboard" className="text-muted-foreground hover:text-primary transition-colors"
+                <Link to="founders-dashboard" className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Alumni Connect
+                  Founder's Connect
                 </Link>
               </li>
               <li>

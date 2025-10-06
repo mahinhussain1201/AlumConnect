@@ -6,8 +6,23 @@ import { Button } from '../components/ui/button'
 import { Textarea } from '../components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
-import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, Code, Building } from 'lucide-react'
+import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, Code, Building, UserCheck } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+
+interface Position {
+  id: number
+  title: string
+  description: string
+  required_skills: string[]
+  count: number
+  filled_count: number
+  is_active: boolean
+  selected_students: Array<{
+    id: number
+    name: string
+    email: string
+  }>
+}
 
 interface Project {
   id: number
@@ -26,6 +41,7 @@ interface Project {
   created_by_id: number
   created_by_name: string
   created_by_email: string
+  positions?: Position[]
 }
 
 export const ProjectDetailPage: React.FC = () => {
@@ -41,6 +57,7 @@ export const ProjectDetailPage: React.FC = () => {
   const [applicationStatus, setApplicationStatus] = useState<string | null>(null)
   const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
 
   useEffect(() => {
     if (id) {
@@ -99,6 +116,7 @@ export const ProjectDetailPage: React.FC = () => {
         },
         body: JSON.stringify({
           project_id: project.id,
+          position_id: selectedPosition,
           message: applicationMessage
         })
       })
@@ -108,6 +126,7 @@ export const ProjectDetailPage: React.FC = () => {
         setHasApplied(true)
         setApplicationStatus('pending')
         setApplicationMessage('')
+        setSelectedPosition(null)
       } else {
         const error = await response.json()
         console.error('Failed to submit application:', error.error)
@@ -324,6 +343,98 @@ export const ProjectDetailPage: React.FC = () => {
                         >
                           {tag}
                         </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Positions Section */}
+              {project.positions && project.positions.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-8">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                        <UserCheck className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <h2 className="text-2xl font-bold text-gray-900">Open Positions</h2>
+                    </div>
+                    <div className="space-y-4">
+                      {project.positions.map((position) => (
+                        <div 
+                          key={position.id}
+                          className="p-5 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-semibold text-gray-900 mb-1">{position.title}</h3>
+                              <p className="text-sm text-gray-600 mb-3">{position.description}</p>
+                            </div>
+                            <div className="flex flex-col items-end gap-2">
+                              <Badge 
+                                variant={position.is_active ? "default" : "secondary"}
+                                className="whitespace-nowrap"
+                              >
+                                {position.is_active ? 'Active' : 'Filled'}
+                              </Badge>
+                              <span className="text-xs text-gray-500">
+                                {position.filled_count}/{position.count} filled
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {position.required_skills && position.required_skills.length > 0 && (
+                            <div className="mb-3">
+                              <p className="text-xs font-medium text-gray-500 mb-2">Required Skills:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {position.required_skills.map((skill, idx) => (
+                                  <Badge 
+                                    key={idx} 
+                                    variant="outline" 
+                                    className="text-xs bg-blue-50 border-blue-200 text-blue-700"
+                                  >
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {position.selected_students && position.selected_students.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                              <p className="text-xs font-medium text-gray-500 mb-3">Selected Candidates:</p>
+                              <div className="space-y-2">
+                                {position.selected_students.map((student) => (
+                                  <div 
+                                    key={student.id}
+                                    className="flex items-center space-x-3 p-2 rounded-lg bg-green-50 border border-green-100"
+                                  >
+                                    <Avatar className="h-8 w-8">
+                                      <AvatarFallback className="bg-green-100 text-green-700 text-xs">
+                                        {student.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium text-gray-900">{student.name}</p>
+                                      <p className="text-xs text-gray-500">{student.email}</p>
+                                    </div>
+                                    <CheckCircle className="h-4 w-4 text-green-600" />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {user && user.role === 'student' && position.is_active && !hasApplied && (
+                            <Button
+                              size="sm"
+                              className="mt-3 w-full bg-purple-600 hover:bg-purple-700"
+                              onClick={() => setSelectedPosition(position.id)}
+                            >
+                              Apply for this position
+                            </Button>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>

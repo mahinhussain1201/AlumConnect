@@ -282,7 +282,7 @@ export const MessagesPage: React.FC = () => {
       if (userObj.current_position && userObj.current_company) {
         return `${userObj.current_position} at ${userObj.current_company}`
       }
-      return userObj.department || 'Alumni'
+      return userObj.department || 'Founder'
     } else {
       // Student
       if (userObj.branch && userObj.graduation_year) {
@@ -296,7 +296,7 @@ export const MessagesPage: React.FC = () => {
 
   const getRoleBadge = (role: string) => {
     if (role === 'alumni') {
-      return <Badge variant="default" className="text-xs bg-blue-600">Alumni</Badge>
+      return <Badge variant="default" className="text-xs bg-blue-600">Founder</Badge>
     } else {
       return <Badge variant="secondary" className="text-xs bg-green-600 text-white">Student</Badge>
     }
@@ -468,7 +468,7 @@ export const MessagesPage: React.FC = () => {
                                 ? 'bg-blue-100 text-blue-700' 
                                 : 'bg-green-100 text-green-700'
                             }`}>
-                              {conversation.other_user_role === 'alumni' ? 'Alumni' : 'Student'}
+                              {conversation.other_user_role === 'alumni' ? 'Founder' : 'Student'}
                             </span>
                           </div>
                           {conversation.unread_count > 0 && (
@@ -556,7 +556,7 @@ export const MessagesPage: React.FC = () => {
                         {selectedConversation.other_user_name}
                       </h3>
                       <p className="text-xs md:text-sm text-gray-500">
-                        {selectedConversation.other_user_role === 'alumni' ? 'Alumni' : 'Student'}
+                        {selectedConversation.other_user_role === 'alumni' ? 'Founder' : 'Student'}
                       </p>
                     </div>
                   </div>

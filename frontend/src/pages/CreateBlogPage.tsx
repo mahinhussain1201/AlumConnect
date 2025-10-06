@@ -54,7 +54,7 @@ export const CreateBlogPage: React.FC = () => {
         body: JSON.stringify(requestData)
       })
       if (res.ok) {
-        navigate('/alumni-dashboard')
+        navigate('/founders-dashboard')
       } else {
         const data = await res.json()
         console.error('Blog creation failed:', data)

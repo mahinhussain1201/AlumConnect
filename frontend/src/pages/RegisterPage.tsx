@@ -267,7 +267,7 @@ export const RegisterPage = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-white border-blue-200">
                     <SelectItem value="student">Current Student</SelectItem>
-                    <SelectItem value="alumni">Alumni</SelectItem>
+                    <SelectItem value="alumni">Founder</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -1,0 +1,160 @@
+/* ADD THESE SECTIONS IN ProjectDetailPage.tsx AFTER LINE 338 (after Team Members section closes, BEFORE the Tags section) */
+
+              {/* Image Carousel */}
+              {project.images && project.images.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Project Gallery</h2>
+                    <div className="relative">
+                      <img 
+                        src={project.images[currentImageIndex]} 
+                        alt={`Project ${currentImageIndex + 1}`}
+                        className="w-full h-96 object-cover rounded-xl"
+                      />
+                      {project.images.length > 1 && (
+                        <>
+                          <button
+                            onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? project.images!.length - 1 : prev - 1))}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all"
+                          >
+                            <ChevronLeft className="h-6 w-6 text-gray-700" />
+                          </button>
+                          <button
+                            onClick={() => setCurrentImageIndex((prev) => (prev === project.images!.length - 1 ? 0 : prev + 1))}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all"
+                          >
+                            <ChevronRight className="h-6 w-6 text-gray-700" />
+                          </button>
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                            {project.images.map((_, index) => (
+                              <button
+                                key={index}
+                                onClick={() => setCurrentImageIndex(index)}
+                                className={`h-2 rounded-full transition-all ${
+                                  index === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/50'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Project Links */}
+              {project.project_links && project.project_links.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Project Links</h2>
+                    <div className="space-y-3">
+                      {project.project_links.map((link: string, index: number) => (
+                        <a
+                          key={index}
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all group"
+                        >
+                          <span className="text-gray-700 group-hover:text-blue-700 font-medium truncate">
+                            {link}
+                          </span>
+                          <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-blue-600 flex-shrink-0 ml-2" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* JD PDF Download */}
+              {project.jd_pdf && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Job Description</h2>
+                    <a
+                      href={project.jd_pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-6 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 transition-all group"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="h-12 w-12 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                          <FileText className="h-6 w-6 text-red-600" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 group-hover:text-blue-700">Download JD PDF</p>
+                          <p className="text-sm text-gray-500">View detailed job description</p>
+                        </div>
+                      </div>
+                      <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-blue-600" />
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* Related Opportunities */}
+              {relatedProjects.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Opportunities</h2>
+                    <div className="space-y-4">
+                      {relatedProjects.map((relatedProject) => (
+                        <div
+                          key={relatedProject.id}
+                          onClick={() => navigate(`/projects/${relatedProject.id}`)}
+                          className="p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all cursor-pointer group"
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <h3 className="font-semibold text-gray-900 group-hover:text-blue-700 line-clamp-1">
+                              {relatedProject.title}
+                            </h3>
+                            <Badge variant="outline" className="ml-2 flex-shrink-0">
+                              {relatedProject.category}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                            {relatedProject.description}
+                          </p>
+                          {relatedProject.stipend && (
+                            <div className="flex items-center text-sm text-green-600 font-medium">
+                              <DollarSign className="h-4 w-4 mr-1" />
+                              ₹{relatedProject.stipend.toLocaleString()}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+/* ADD THIS IN THE SIDEBAR - Around line 385, after the Author Info card and BEFORE the Application Section */
+
+              {/* Edit Button for Project Creator */}
+              {user && user.id === project.created_by_id && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-6">
+                    <Button
+                      onClick={() => navigate(`/alumni/projects/${project.id}/edit`)}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Project
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+/* ADD THIS RECRUITMENT STATUS BADGE - Around line 195, after the category badge */
+
+                    {project.is_recruiting !== false ? (
+                      <Badge className="px-4 py-2 text-sm font-medium bg-green-100 text-green-700 border-green-300">
+                        Currently Recruiting
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-600 border-gray-300">
+                        Not Recruiting
+                      </Badge>
+                    )}

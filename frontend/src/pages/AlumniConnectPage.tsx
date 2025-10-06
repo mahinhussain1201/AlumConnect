@@ -55,12 +55,17 @@ export const AlumniConnectPage: React.FC = () => {
   const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [appliedProjects, setAppliedProjects] = useState<Set<number>>(new Set())
+  const [applicationStatuses, setApplicationStatuses] = useState<Map<number, string>>(new Map())
+
   useEffect(() => {
     fetchData()
     if (user && user.role === 'student' && token) {
       fetchAppliedProjects()
     }
-  }, [user, token])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const fetchAppliedProjects = async () => {
     try {
@@ -69,8 +74,8 @@ export const AlumniConnectPage: React.FC = () => {
       })
       if (response.ok) {
         const data = await response.json()
-        const appliedIds = new Set<number>(data.map((p: any) => p.id as number))
-        const statuses = new Map<number, string>(data.map((p: any) => [p.id, p.application_status]))
+        const appliedIds = new Set<number>(data.map((p: { id: number }) => p.id))
+        const statuses = new Map<number, string>(data.map((p: { id: number; application_status: string }) => [p.id, p.application_status]))
         setAppliedProjects(appliedIds)
         setApplicationStatuses(statuses)
       }
@@ -102,10 +107,6 @@ export const AlumniConnectPage: React.FC = () => {
       setIsLoading(false)
     }
   }
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [appliedProjects, setAppliedProjects] = useState<Set<number>>(new Set())
-  const [applicationStatuses, setApplicationStatuses] = useState<Map<number, string>>(new Map())
   
   const handleApply = async () => {
     if (!user || !selectedProject) return

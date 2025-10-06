@@ -101,7 +101,7 @@ export const AlumniDashboard: React.FC = () => {
         <div className="mb-12">
           <div className="relative">
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent mb-4 leading-tight">
-              Alumni Dashboard
+              Founder's Dashboard
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl leading-relaxed">
               Welcome back, {user.name}! Manage your projects, mentorship, and community engagement.
