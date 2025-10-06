@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { formatDate, truncateText } from '../lib/dataUtils'
 import { BookOpen, ArrowRight, Loader2, Heart, Share2, Clock, Check } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface BlogPost {
   id: number
@@ -28,6 +29,8 @@ export const BlogPage: React.FC = () => {
   const [displayedPosts, setDisplayedPosts] = useState<BlogPost[]>([])
   const [visibleCount, setVisibleCount] = useState(6)
   const [copiedId, setCopiedId] = useState<number | null>(null)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   useEffect(() => {
     fetchBlogPosts()
@@ -171,7 +174,15 @@ export const BlogPage: React.FC = () => {
                       </p>
 
                       {/* Author Info */}
-                <div className="flex items-center space-x-3 mb-4">
+                <div 
+                  className="flex items-center space-x-3 mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setProfileModalUserId(post.author_id)
+                    setIsProfileModalOpen(true)
+                  }}
+                >
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-gray-100 text-gray-600 text-xs font-semibold">
                             {post.author_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -181,18 +192,22 @@ export const BlogPage: React.FC = () => {
                           <p className="text-sm font-medium text-gray-900 truncate">
                             {post.author_name}
                           </p>
-                          <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-gray-500">
                             <Clock className="h-3 w-3" />
                             <span>{formatDate(post.created_at)}</span>
                           </div>
-                  </div>
-                </div>
+                        </div>
+                      </div>
 
                       {/* Actions */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <button
-                            onClick={() => handleLike(post.id)}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleLike(post.id)
+                            }}
                             disabled={!token}
                             className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
                               post.is_liked 
@@ -270,6 +285,18 @@ export const BlogPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Profile Modal */}
+      {profileModalUserId && (
+        <ProfileModal
+          userId={profileModalUserId}
+          isOpen={isProfileModalOpen}
+          onClose={() => {
+            setIsProfileModalOpen(false)
+            setProfileModalUserId(null)
+          }}
+        />
+      )}
     </div>
   )
 }

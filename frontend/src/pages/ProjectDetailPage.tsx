@@ -7,6 +7,7 @@ import { Textarea } from '../components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, Code, Building } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface Project {
   id: number
@@ -22,6 +23,7 @@ interface Project {
   location?: string
   work_type?: string
   created_at: string
+  created_by_id: number
   created_by_name: string
   created_by_email: string
 }
@@ -37,6 +39,8 @@ export const ProjectDetailPage: React.FC = () => {
   const [applicationSubmitted, setApplicationSubmitted] = useState(false)
   const [hasApplied, setHasApplied] = useState(false)
   const [applicationStatus, setApplicationStatus] = useState<string | null>(null)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -333,7 +337,13 @@ export const ProjectDetailPage: React.FC = () => {
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Project Creator</h3>
-                  <div className="flex items-center space-x-3">
+                  <div 
+                    className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                    onClick={() => {
+                      setProfileModalUserId(project.created_by_id)
+                      setIsProfileModalOpen(true)
+                    }}
+                  >
                     <Avatar className="h-12 w-12">
                       <AvatarFallback className="bg-gray-100 text-gray-600 text-lg font-semibold">
                         {project.created_by_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -445,6 +455,18 @@ export const ProjectDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {profileModalUserId && (
+        <ProfileModal
+          userId={profileModalUserId}
+          isOpen={isProfileModalOpen}
+          onClose={() => {
+            setIsProfileModalOpen(false)
+            setProfileModalUserId(null)
+          }}
+        />
+      )}
     </div>
   )
 }

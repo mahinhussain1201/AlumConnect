@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { formatDate } from '../lib/dataUtils'
 import { BookOpen, Share2, Heart, Loader2, ArrowLeft, Clock, Check } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface BlogPost {
   id: number
@@ -29,6 +30,8 @@ export const BlogPostPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [liking, setLiking] = useState(false)
   const [showCopied, setShowCopied] = useState(false)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -175,7 +178,13 @@ export const BlogPostPage: React.FC = () => {
             </h1>
             
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
+              <div 
+                className="flex items-center space-x-4 cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                onClick={() => {
+                  setProfileModalUserId(post.author_id)
+                  setIsProfileModalOpen(true)
+                }}
+              >
                 {/* Author Avatar */}
                 <Avatar className="h-12 w-12">
                   <AvatarFallback className="bg-gray-100 text-gray-600 text-lg font-semibold">
@@ -249,7 +258,13 @@ export const BlogPostPage: React.FC = () => {
           {/* Author Section */}
           <div className="mt-16">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-              <div className="flex items-center space-x-6">
+              <div 
+                className="flex items-center space-x-6 cursor-pointer hover:bg-gray-50 p-4 rounded-lg transition-colors"
+                onClick={() => {
+                  setProfileModalUserId(post.author_id)
+                  setIsProfileModalOpen(true)
+                }}
+              >
                 <Avatar className="h-16 w-16">
                   <AvatarFallback className="bg-gray-100 text-gray-600 text-xl font-semibold">
                     {post.author_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -265,6 +280,18 @@ export const BlogPostPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Profile Modal */}
+        {profileModalUserId && (
+          <ProfileModal
+            userId={profileModalUserId}
+            isOpen={isProfileModalOpen}
+            onClose={() => {
+              setIsProfileModalOpen(false)
+              setProfileModalUserId(null)
+            }}
+          />
+        )}
       </div>
     </div>
   )

@@ -949,7 +949,7 @@ def get_project_detail(project_id):
     try:
         cursor.execute('''
             SELECT p.id, p.title, p.description, p.category, p.status, p.team_members, p.tags, p.skills_required,
-                   p.stipend, p.duration, p.location, p.work_type, p.created_at, u.name as created_by_name, u.email as created_by_email
+                   p.stipend, p.duration, p.location, p.work_type, p.created_at, u.id as created_by_id, u.name as created_by_name, u.email as created_by_email
             FROM projects p
             LEFT JOIN users u ON p.created_by = u.id
             WHERE p.id = ?
@@ -974,8 +974,9 @@ def get_project_detail(project_id):
             'location': project_data[10],
             'work_type': project_data[11],
             'created_at': project_data[12],
-            'created_by_name': project_data[13],
-            'created_by_email': project_data[14]
+            'created_by_id': project_data[13],
+            'created_by_name': project_data[14],
+            'created_by_email': project_data[15]
         }
         
         return jsonify(project), 200

@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { formatDate, truncateText } from '../lib/dataUtils'
 import { BookOpen, ArrowRight, Loader2, Heart, Share2, Clock, Check } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface BlogPost {
   id: number
@@ -24,13 +25,14 @@ export const AllBlogsPage: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [displayedPosts, setDisplayedPosts] = useState<BlogPost[]>([])
-  const [visibleCount, setVisibleCount] = useState(9)
   const [copiedId, setCopiedId] = useState<number | null>(null)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(9)
 
   useEffect(() => {
     fetchBlogPosts()
   }, [])
-
   useEffect(() => {
     setDisplayedPosts(posts.slice(0, visibleCount))
   }, [posts, visibleCount])
@@ -140,7 +142,15 @@ export const AllBlogsPage: React.FC = () => {
                       </p>
 
                       {/* Author Info */}
-                      <div className="flex items-center space-x-3 mb-4">
+                      <div 
+                        className="flex items-center space-x-3 mb-4 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setProfileModalUserId(post.author_id)
+                          setIsProfileModalOpen(true)
+                        }}
+                      >
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-gray-100 text-gray-600 text-xs font-semibold">
                             {post.author_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -238,6 +248,18 @@ export const AllBlogsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Profile Modal */}
+      {profileModalUserId && (
+        <ProfileModal
+          userId={profileModalUserId}
+          isOpen={isProfileModalOpen}
+          onClose={() => {
+            setIsProfileModalOpen(false)
+            setProfileModalUserId(null)
+          }}
+        />
+      )}
     </div>
   )
 }

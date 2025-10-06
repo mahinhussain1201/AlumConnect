@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
 import { Textarea } from '../components/ui/textarea'
 import { Briefcase, Clock, MapPin, DollarSign, ArrowRight, Loader2, Send, CheckCircle, BookOpen, Building, Heart, X } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface Project {
   id: number
@@ -23,6 +24,7 @@ interface Project {
   location?: string
   work_type?: string
   created_at: string
+  created_by_id: number
   created_by_name: string
   created_by_email: string
 }
@@ -50,6 +52,8 @@ export const AlumniConnectPage: React.FC = () => {
   const [applicationMessage, setApplicationMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [applicationSubmitted, setApplicationSubmitted] = useState(false)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -297,7 +301,15 @@ export const AlumniConnectPage: React.FC = () => {
 
                           {/* Actions */}
                           <div className="flex items-center justify-between pt-4 border-t">
-                            <div className="flex items-center space-x-3">
+                            <div 
+                              className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setProfileModalUserId(project.created_by_id)
+                                setIsProfileModalOpen(true)
+                              }}
+                            >
                               <Avatar className="h-8 w-8">
                                 <AvatarFallback className="bg-gray-100 text-gray-600 text-xs font-semibold">
                                   {project.created_by_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -476,7 +488,15 @@ export const AlumniConnectPage: React.FC = () => {
                             {post.content.substring(0, 100)}...
                           </p>
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
+                            <div 
+                              className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setProfileModalUserId(post.author_id)
+                                setIsProfileModalOpen(true)
+                              }}
+                            >
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="bg-gray-100 text-gray-600 text-xs">
                                   {post.author_name.split(' ').map(n => n[0]).join('').toUpperCase()}
@@ -539,6 +559,18 @@ export const AlumniConnectPage: React.FC = () => {
         </div>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {profileModalUserId && (
+        <ProfileModal
+          userId={profileModalUserId}
+          isOpen={isProfileModalOpen}
+          onClose={() => {
+            setIsProfileModalOpen(false)
+            setProfileModalUserId(null)
+          }}
+        />
+      )}
     </div>
   )
 }
