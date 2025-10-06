@@ -6,7 +6,7 @@ import { Button } from '../components/ui/button'
 import { Textarea } from '../components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
-import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, Code, Building, UserCheck } from 'lucide-react'
+import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, Code, Building, UserCheck, Link as LinkIcon, FileText, ChevronLeft, ChevronRight, Edit } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
 
 interface Position {
@@ -42,11 +42,14 @@ interface Project {
   created_by_name: string
   created_by_email: string
   positions?: Position[]
+  images?: string[]
+  links?: { label: string, url: string }[]
+  jd_url?: string
 }
 
 export const ProjectDetailPage: React.FC = () => {
   const { id } = useParams()
-  const { user } = useAuth()
+  const { user, token } = useAuth()
   const navigate = useNavigate()
   const [project, setProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -58,6 +61,8 @@ export const ProjectDetailPage: React.FC = () => {
   const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
+  const [carouselIndex, setCarouselIndex] = useState(0)
+  const [related, setRelated] = useState<Project[]>([])
 
   useEffect(() => {
     if (id) {
@@ -74,6 +79,14 @@ export const ProjectDetailPage: React.FC = () => {
       if (response.ok) {
         const data = await response.json()
         setProject(data)
+        // Load related by same category
+        try {
+          const rel = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects?category=${encodeURIComponent(data.category)}`)
+          if (rel.ok) {
+            const relData = await rel.json()
+            setRelated(relData.filter((p: any) => p.id !== data.id).slice(0, 6))
+          }
+        } catch (_) {}
       } else {
         console.error('Failed to fetch project')
         setProject(null)
@@ -210,6 +223,16 @@ export const ProjectDetailPage: React.FC = () => {
                     >
                       {project.category}
                     </Badge>
+                    {user && (user.id === project.created_by_id || user.email === project.created_by_email) && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="ml-auto"
+                        onClick={() => navigate(`/alumni/projects/${project.id}/edit`)}
+                      >
+                        <Edit className="h-4 w-4 mr-2" /> Edit
+                      </Button>
+                    )}
                   </div>
 
                   {/* Title */}
@@ -217,10 +240,62 @@ export const ProjectDetailPage: React.FC = () => {
                     {project.title}
                   </h1>
 
+                  {/* Media Carousel */}
+                  {project.images && project.images.length > 0 && (
+                    <div className="mb-6 relative">
+                      <div className="rounded-xl overflow-hidden border border-gray-200">
+                        <img 
+                          src={project.images[carouselIndex]} 
+                          alt={`Project image ${carouselIndex + 1}`} 
+                          className="w-full h-64 object-cover"
+                        />
+                      </div>
+                      <div className="absolute inset-y-0 left-0 flex items-center">
+                        <button
+                          className="m-2 p-2 rounded-full bg-white/80 hover:bg-white shadow"
+                          onClick={() => setCarouselIndex((i) => (i - 1 + project.images!.length) % project.images!.length)}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </button>
+                      </div>
+                      <div className="absolute inset-y-0 right-0 flex items-center">
+                        <button
+                          className="m-2 p-2 rounded-full bg-white/80 hover:bg-white shadow"
+                          onClick={() => setCarouselIndex((i) => (i + 1) % project.images!.length)}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </button>
+                      </div>
+                      <div className="flex gap-2 mt-2 justify-center">
+                        {project.images.map((_, idx) => (
+                          <button
+                            key={idx}
+                            className={`h-2 w-2 rounded-full ${idx === carouselIndex ? 'bg-blue-600' : 'bg-gray-300'}`}
+                            onClick={() => setCarouselIndex(idx)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Description */}
-                  <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
                     {project.description}
                   </p>
+
+                  {/* External Links & JD */}
+                  <div className="flex flex-wrap gap-3 mb-8">
+                    {project.jd_url && (
+                      <a href={project.jd_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
+                        <FileText className="h-4 w-4 mr-2" /> Job Description
+                      </a>
+                    )}
+                    {project.links && project.links.map((l, i) => (
+                      <a key={i} href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
+                        <LinkIcon className="h-4 w-4 mr-2" /> {l.label || 'Link'}
+                      </a>
+                    ))}
+                  </div>
 
                   {/* Project Details Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -407,7 +482,11 @@ export const ProjectDetailPage: React.FC = () => {
                                 {position.selected_students.map((student) => (
                                   <div 
                                     key={student.id}
-                                    className="flex items-center space-x-3 p-2 rounded-lg bg-green-50 border border-green-100"
+                                    className="flex items-center space-x-3 p-2 rounded-lg bg-green-50 border border-green-100 cursor-pointer hover:bg-green-100"
+                                    onClick={() => {
+                                      setProfileModalUserId(student.id)
+                                      setIsProfileModalOpen(true)
+                                    }}
                                   >
                                     <Avatar className="h-8 w-8">
                                       <AvatarFallback className="bg-green-100 text-green-700 text-xs">
@@ -562,6 +641,26 @@ export const ProjectDetailPage: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Related Opportunities */}
+              {related.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Related Opportunities</h3>
+                    <div className="space-y-3">
+                      {related.map((rp) => (
+                        <div key={rp.id} className="p-3 rounded-lg hover:bg-gray-50 cursor-pointer border border-gray-100" onClick={() => navigate(`/projects/${rp.id}`)}>
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium text-gray-900 truncate mr-2">{rp.title}</p>
+                            <Badge variant="secondary" className="capitalize">{rp.status}</Badge>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1 truncate">{rp.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

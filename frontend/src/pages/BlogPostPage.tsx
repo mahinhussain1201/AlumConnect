@@ -265,7 +265,7 @@ export const BlogPostPage: React.FC = () => {
                     </>
                   )}
                 </button>
-                {user && user.id === post.author_id && (
+                {user && (user.id === post.author_id || user.email === post.author_name /* fallback if author email not exposed */) && (
                   <>
                     <button
                       onClick={() => navigate(`/alumni/blogs/${post.id}/edit`)}

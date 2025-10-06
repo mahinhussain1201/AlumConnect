@@ -30,6 +30,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import Team from './pages/Team'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
+import { EditProjectPage } from './pages/EditProjectPage'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
+            <Route path="/alumni/projects/:id/edit" element={<EditProjectPage />} />
             <Route path="/mentors" element={<MentorsPage />} />
             <Route path="/find-mentors" element={<FindMentorsPage />} />
             <Route path="/alumni-connect" element={<AlumniConnectPage />} />

@@ -874,6 +874,77 @@ def get_blog_post(post_id):
     finally:
         conn.close()
 
+# Update a blog post (author only)
+@app.route('/api/blog/<int:post_id>', methods=['PUT'])
+@jwt_required()
+def update_blog_post(post_id):
+    try:
+        user_id = get_user_id_from_jwt()
+    except Exception as e:
+        return jsonify({'error': f'JWT Error: {str(e)}'}), 422
+    data = request.get_json()
+    conn = sqlite3.connect('launchpad.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT author_id FROM blog_posts WHERE id = ?', (post_id,))
+        row = cursor.fetchone()
+        if not row:
+            return jsonify({'error': 'Blog post not found'}), 404
+        if row[0] != user_id:
+            return jsonify({'error': 'Only the author can update this post'}), 403
+        fields = []
+        values = []
+        if 'title' in data:
+            fields.append('title = ?')
+            values.append(data['title'])
+        if 'content' in data:
+            fields.append('content = ?')
+            values.append(data['content'])
+        if 'category' in data:
+            fields.append('category = ?')
+            values.append(data['category'])
+        if not fields:
+            return jsonify({'error': 'No fields to update'}), 400
+        fields.append('updated_at = CURRENT_TIMESTAMP')
+        query = f"UPDATE blog_posts SET {', '.join(fields)} WHERE id = ?"
+        values.append(post_id)
+        cursor.execute(query, values)
+        conn.commit()
+        return jsonify({'message': 'Blog post updated successfully'}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
+
+# Delete a blog post (author only)
+@app.route('/api/blog/<int:post_id>', methods=['DELETE'])
+@jwt_required()
+def delete_blog_post(post_id):
+    try:
+        user_id = get_user_id_from_jwt()
+    except Exception as e:
+        return jsonify({'error': f'JWT Error: {str(e)}'}), 422
+    conn = sqlite3.connect('launchpad.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT author_id FROM blog_posts WHERE id = ?', (post_id,))
+        row = cursor.fetchone()
+        if not row:
+            return jsonify({'error': 'Blog post not found'}), 404
+        if row[0] != user_id:
+            return jsonify({'error': 'Only the author can delete this post'}), 403
+        cursor.execute('DELETE FROM blog_posts WHERE id = ?', (post_id,))
+        # Clean up likes for this post
+        cursor.execute('DELETE FROM blog_likes WHERE blog_post_id = ?', (post_id,))
+        conn.commit()
+        return jsonify({'message': 'Blog post deleted successfully'}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
+
 @app.route('/api/profile', methods=['GET'])
 @jwt_required()
 def get_profile():
