@@ -25,13 +25,14 @@ interface BlogPost {
 export const BlogPostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { token } = useAuth()
+  const { token, user } = useAuth()
   const [post, setPost] = useState<BlogPost | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [liking, setLiking] = useState(false)
   const [showCopied, setShowCopied] = useState(false)
   const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -106,6 +107,30 @@ export const BlogPostPage: React.FC = () => {
       document.body.removeChild(textarea)
       setShowCopied(true)
       setTimeout(() => setShowCopied(false), 2000)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!post || !token) return
+    const confirmed = window.confirm('Are you sure you want to delete this blog post?')
+    if (!confirmed) return
+    setDeleting(true)
+    try {
+      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (response.ok) {
+        navigate('/alumni/blogs')
+      } else {
+        const data = await response.json().catch(() => ({}))
+        alert(data.error || 'Failed to delete blog post')
+      }
+    } catch (error) {
+      console.error('Error deleting blog post:', error)
+      alert('Failed to delete blog post')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -240,6 +265,23 @@ export const BlogPostPage: React.FC = () => {
                     </>
                   )}
                 </button>
+                {user && user.id === post.author_id && (
+                  <>
+                    <button
+                      onClick={() => navigate(`/alumni/blogs/${post.id}/edit`)}
+                      className="flex items-center space-x-2 px-6 py-3 rounded-full transition-all duration-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    >
+                      <span className="font-semibold">Edit</span>
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      disabled={deleting}
+                      className={`flex items-center space-x-2 px-6 py-3 rounded-full transition-all duration-200 ${deleting ? 'opacity-60 cursor-not-allowed' : ''} bg-red-50 text-red-700 hover:bg-red-100`}
+                    >
+                      <span className="font-semibold">{deleting ? 'Deleting...' : 'Delete'}</span>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -248,9 +290,7 @@ export const BlogPostPage: React.FC = () => {
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-12">
               <div className="prose prose-lg max-w-none">
-                <div className="whitespace-pre-wrap text-gray-700 leading-relaxed text-lg">
-                  {post.content}
-                </div>
+                <div className="text-gray-700 leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: post.content }} />
               </div>
             </div>
           </div>

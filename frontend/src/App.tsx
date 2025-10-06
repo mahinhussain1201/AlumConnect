@@ -17,6 +17,7 @@ import { CreateBlogPage } from './pages/CreateBlogPage'
 import { AlumniMenteesPage } from './pages/AlumniMenteesPage'
 import { AlumniProjectsPage } from './pages/AlumniProjectsPage'
 import { AlumniBlogsPage } from './pages/AlumniBlogsPage'
+import { EditBlogPage } from './pages/EditBlogPage'
 import { AllBlogsPage } from './pages/AllBlogsPage'
 import { MessagesPage } from './pages/MessagesPage'
 import { ChatPage } from './pages/ChatPage'
@@ -47,6 +48,7 @@ function App() {
             <Route path="/alumni-connect" element={<AlumniConnectPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
+            <Route path="/alumni/blogs/:id/edit" element={<EditBlogPage />} />
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             <Route path="/founders-dashboard" element={<AlumniDashboard />} />
             <Route path="/dashboard" element={<DashboardRouter />} />

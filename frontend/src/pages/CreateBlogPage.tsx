@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
+import { RichTextEditor } from '../components/ui/rich-text-editor'
 import { Button } from '../components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { Loader2 } from 'lucide-react'
@@ -132,16 +133,11 @@ export const CreateBlogPage: React.FC = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="content" className="text-base font-semibold">Content</Label>
-                <Textarea 
-                  id="content" 
-                  value={form.content} 
-                  onChange={handleChange} 
-                  rows={16} 
-                  required 
-                  placeholder="Write your blog post content here. Share your thoughts, experiences, and insights..."
-                  className="text-base leading-relaxed resize-none"
+                <RichTextEditor
+                  value={form.content}
+                  onChange={(html) => setForm(prev => ({ ...prev, content: html }))}
                 />
-                <p className="text-sm text-gray-500">Tip: Use clear paragraphs and engaging language to keep your readers interested</p>
+                <p className="text-sm text-gray-500">Tip: Use the toolbar to format text and insert images/links</p>
               </div>
               
               <Button 
