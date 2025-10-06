@@ -55,24 +55,157 @@ def seed_database():
         user_ids[user['email']] = cursor.lastrowid
 
     # ----------------- Projects -----------------
+    placeholder_imgs = [
+        'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1581093588401-16f2d7f3d8ac?q=80&w=1200&auto=format&fit=crop'
+    ]
     projects = [
-        {'title': 'AI-Powered Healthcare Diagnostics', 'description': 'Developing an ML platform for early disease detection using medical imaging and deep learning algorithms.', 'category': 'Healthcare AI', 'status': 'active', 'team_members': json.dumps(['Dr. Rajesh Kumar','Priya Sharma']), 'tags': json.dumps(['AI/ML','Healthcare','Computer Vision','Deep Learning']), 'created_by': user_ids['rajesh.kumar@iitkgp.ac.in'], 'skills_required': json.dumps(['Python','TensorFlow','Computer Vision','Medical Imaging']), 'stipend': 25000, 'duration': '6 months', 'location': 'Remote', 'work_type': 'remote'},
-        {'title': 'Sustainable Energy Management System', 'description': 'Building a smart grid optimization system for renewable energy distribution and management.', 'category': 'Clean Tech', 'status': 'active', 'team_members': json.dumps(['Priya Sharma']), 'tags': json.dumps(['IoT','Sustainability','Energy','Smart Grid']), 'created_by': user_ids['priya.sharma@iitkgp.ac.in'], 'skills_required': json.dumps(['IoT','Embedded Systems','Python','Data Analytics']), 'stipend': 20000, 'duration': '4 months', 'location': 'Bangalore', 'work_type': 'hybrid'},
-        {'title': 'EdTech Learning Platform', 'description': 'Creating adaptive AI-powered learning paths for K-12 education with personalized content delivery.', 'category': 'Education', 'status': 'completed', 'team_members': json.dumps(['Amit Singh']), 'tags': json.dumps(['EdTech','AI','Education','Personalization']), 'created_by': user_ids['amit.singh@iitkgp.ac.in'], 'skills_required': json.dumps(['React','Node.js','MongoDB','AI/ML']), 'stipend': 18000, 'duration': '5 months', 'location': 'Mumbai', 'work_type': 'onsite'},
-        {'title': 'Blockchain Supply Chain Tracker', 'description': 'Implementing blockchain-based secure and transparent supply chain tracking system.', 'category': 'FinTech', 'status': 'active', 'team_members': json.dumps(['Dr. Rajesh Kumar']), 'tags': json.dumps(['Blockchain','Supply Chain','Transparency','Security']), 'created_by': user_ids['rajesh.kumar@iitkgp.ac.in'], 'skills_required': json.dumps(['Blockchain','Solidity','Web3.js','Smart Contracts']), 'stipend': 30000, 'duration': '6 months', 'location': 'Remote', 'work_type': 'remote'},
-        {'title': 'Smart Agriculture Monitoring', 'description': 'IoT-based real-time monitoring system for crop health, soil conditions, and weather patterns.', 'category': 'AgriTech', 'status': 'active', 'team_members': json.dumps(['Ananya Iyer']), 'tags': json.dumps(['IoT','Agriculture','Monitoring','Data Analytics']), 'created_by': user_ids['ananya.iyer@iitkgp.ac.in'], 'skills_required': json.dumps(['IoT','Sensors','Python','Data Visualization']), 'stipend': 15000, 'duration': '3 months', 'location': 'Pune', 'work_type': 'hybrid'},
-        {'title': 'Urban Infrastructure Planning Tool', 'description': 'GIS-based tool for urban planning and infrastructure development with 3D visualization.', 'category': 'Civil Tech', 'status': 'active', 'team_members': json.dumps(['Vikram Patel']), 'tags': json.dumps(['GIS','Urban Planning','3D Modeling','Infrastructure']), 'created_by': user_ids['vikram.patel@iitkgp.ac.in'], 'skills_required': json.dumps(['GIS','AutoCAD','Python','3D Modeling']), 'stipend': 22000, 'duration': '5 months', 'location': 'Delhi', 'work_type': 'onsite'},
-        {'title': 'Chemical Process Optimization Platform', 'description': 'AI-driven platform for optimizing chemical manufacturing processes and reducing waste.', 'category': 'Chemical Engineering', 'status': 'active', 'team_members': json.dumps(['Meera Krishnan']), 'tags': json.dumps(['Process Engineering','AI','Optimization','Sustainability']), 'created_by': user_ids['meera.krishnan@iitkgp.ac.in'], 'skills_required': json.dumps(['Chemical Engineering','Python','Machine Learning','Process Simulation']), 'stipend': 20000, 'duration': '4 months', 'location': 'Chennai', 'work_type': 'hybrid'},
-        {'title': 'Robotics for Manufacturing Automation', 'description': 'Developing robotic systems for automated manufacturing and quality control.', 'category': 'Robotics', 'status': 'active', 'team_members': json.dumps(['Amit Singh']), 'tags': json.dumps(['Robotics','Automation','Manufacturing','AI']), 'created_by': user_ids['amit.singh@iitkgp.ac.in'], 'skills_required': json.dumps(['Robotics','ROS','Python','Computer Vision']), 'stipend': 28000, 'duration': '6 months', 'location': 'Hyderabad', 'work_type': 'onsite'}
+        {
+            'title': 'AI-Powered Healthcare Diagnostics',
+            'description': 'Developing an ML platform for early disease detection using medical imaging and deep learning algorithms.',
+            'category': 'Healthcare AI',
+            'status': 'active',
+            'team_members': json.dumps(['Dr. Rajesh Kumar','Priya Sharma']),
+            'tags': json.dumps(['AI/ML','Healthcare','Computer Vision','Deep Learning']),
+            'created_by': user_ids['rajesh.kumar@iitkgp.ac.in'],
+            'skills_required': json.dumps(['Python','TensorFlow','Computer Vision','Medical Imaging']),
+            'stipend': 25000,
+            'duration': '6 months',
+            'location': 'Remote',
+            'work_type': 'remote',
+            'images': json.dumps(placeholder_imgs[:2]),
+            'project_links': json.dumps([{'label': 'Website', 'url': 'https://example.com/ai-health'}, {'label': 'GitHub', 'url': 'https://github.com/example/ai-health'}]),
+            'jd_pdf': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+        },
+        {
+            'title': 'Sustainable Energy Management System',
+            'description': 'Building a smart grid optimization system for renewable energy distribution and management.',
+            'category': 'Clean Tech',
+            'status': 'active',
+            'team_members': json.dumps(['Priya Sharma']),
+            'tags': json.dumps(['IoT','Sustainability','Energy','Smart Grid']),
+            'created_by': user_ids['priya.sharma@iitkgp.ac.in'],
+            'skills_required': json.dumps(['IoT','Embedded Systems','Python','Data Analytics']),
+            'stipend': 20000,
+            'duration': '4 months',
+            'location': 'Bangalore',
+            'work_type': 'hybrid',
+            'images': json.dumps(placeholder_imgs[1:]),
+            'project_links': json.dumps([{'label': 'Pitch', 'url': 'https://example.com/clean-tech'}]),
+            'jd_pdf': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+        },
+        {
+            'title': 'EdTech Learning Platform',
+            'description': 'Creating adaptive AI-powered learning paths for K-12 education with personalized content delivery.',
+            'category': 'Education',
+            'status': 'completed',
+            'team_members': json.dumps(['Amit Singh']),
+            'tags': json.dumps(['EdTech','AI','Education','Personalization']),
+            'created_by': user_ids['amit.singh@iitkgp.ac.in'],
+            'skills_required': json.dumps(['React','Node.js','MongoDB','AI/ML']),
+            'stipend': 18000,
+            'duration': '5 months',
+            'location': 'Mumbai',
+            'work_type': 'onsite',
+            'images': json.dumps(placeholder_imgs[:1]),
+            'project_links': json.dumps([]),
+            'jd_pdf': None
+        },
+        {
+            'title': 'Blockchain Supply Chain Tracker',
+            'description': 'Implementing blockchain-based secure and transparent supply chain tracking system.',
+            'category': 'FinTech',
+            'status': 'active',
+            'team_members': json.dumps(['Dr. Rajesh Kumar']),
+            'tags': json.dumps(['Blockchain','Supply Chain','Transparency','Security']),
+            'created_by': user_ids['rajesh.kumar@iitkgp.ac.in'],
+            'skills_required': json.dumps(['Blockchain','Solidity','Web3.js','Smart Contracts']),
+            'stipend': 30000,
+            'duration': '6 months',
+            'location': 'Remote',
+            'work_type': 'remote',
+            'images': json.dumps(placeholder_imgs),
+            'project_links': json.dumps([{'label': 'Docs', 'url': 'https://example.com/scm-docs'}]),
+            'jd_pdf': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+        },
+        {
+            'title': 'Smart Agriculture Monitoring',
+            'description': 'IoT-based real-time monitoring system for crop health, soil conditions, and weather patterns.',
+            'category': 'AgriTech',
+            'status': 'active',
+            'team_members': json.dumps(['Ananya Iyer']),
+            'tags': json.dumps(['IoT','Agriculture','Monitoring','Data Analytics']),
+            'created_by': user_ids['ananya.iyer@iitkgp.ac.in'],
+            'skills_required': json.dumps(['IoT','Sensors','Python','Data Visualization']),
+            'stipend': 15000,
+            'duration': '3 months',
+            'location': 'Pune',
+            'work_type': 'hybrid',
+            'images': json.dumps(placeholder_imgs[::2]),
+            'project_links': json.dumps([{'label': 'Dashboard', 'url': 'https://example.com/agri-dash'}]),
+            'jd_pdf': None
+        },
+        {
+            'title': 'Urban Infrastructure Planning Tool',
+            'description': 'GIS-based tool for urban planning and infrastructure development with 3D visualization.',
+            'category': 'Civil Tech',
+            'status': 'active',
+            'team_members': json.dumps(['Vikram Patel']),
+            'tags': json.dumps(['GIS','Urban Planning','3D Modeling','Infrastructure']),
+            'created_by': user_ids['vikram.patel@iitkgp.ac.in'],
+            'skills_required': json.dumps(['GIS','AutoCAD','Python','3D Modeling']),
+            'stipend': 22000,
+            'duration': '5 months',
+            'location': 'Delhi',
+            'work_type': 'onsite',
+            'images': json.dumps(placeholder_imgs[:2]),
+            'project_links': json.dumps([]),
+            'jd_pdf': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+        },
+        {
+            'title': 'Chemical Process Optimization Platform',
+            'description': 'AI-driven platform for optimizing chemical manufacturing processes and reducing waste.',
+            'category': 'Chemical Engineering',
+            'status': 'active',
+            'team_members': json.dumps(['Meera Krishnan']),
+            'tags': json.dumps(['Process Engineering','AI','Optimization','Sustainability']),
+            'created_by': user_ids['meera.krishnan@iitkgp.ac.in'],
+            'skills_required': json.dumps(['Chemical Engineering','Python','Machine Learning','Process Simulation']),
+            'stipend': 20000,
+            'duration': '4 months',
+            'location': 'Chennai',
+            'work_type': 'hybrid',
+            'images': json.dumps(placeholder_imgs[1:]),
+            'project_links': json.dumps([{'label': 'Case Study', 'url': 'https://example.com/chem-case'}]),
+            'jd_pdf': None
+        },
+        {
+            'title': 'Robotics for Manufacturing Automation',
+            'description': 'Developing robotic systems for automated manufacturing and quality control.',
+            'category': 'Robotics',
+            'status': 'active',
+            'team_members': json.dumps(['Amit Singh']),
+            'tags': json.dumps(['Robotics','Automation','Manufacturing','AI']),
+            'created_by': user_ids['amit.singh@iitkgp.ac.in'],
+            'skills_required': json.dumps(['Robotics','ROS','Python','Computer Vision']),
+            'stipend': 28000,
+            'duration': '6 months',
+            'location': 'Hyderabad',
+            'work_type': 'onsite',
+            'images': json.dumps(placeholder_imgs),
+            'project_links': json.dumps([{'label': 'Spec', 'url': 'https://example.com/robotics-spec'}]),
+            'jd_pdf': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+        }
     ]
     
     project_ids = {}
     for project in projects:
         cursor.execute('''
-            INSERT INTO projects (title, description, category, status, team_members, tags, created_by, skills_required, stipend, duration, location, work_type)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO projects (title, description, category, status, team_members, tags, created_by, skills_required, stipend, duration, location, work_type, images, project_links, jd_pdf)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (project['title'], project['description'], project['category'], project['status'], project['team_members'], project['tags'], project['created_by'], 
-              project.get('skills_required'), project.get('stipend'), project.get('duration'), project.get('location'), project.get('work_type')))
+              project.get('skills_required'), project.get('stipend'), project.get('duration'), project.get('location'), project.get('work_type'), project.get('images'), project.get('project_links'), project.get('jd_pdf')))
         project_ids[project['title']] = cursor.lastrowid
 
     # ----------------- Project Positions -----------------
