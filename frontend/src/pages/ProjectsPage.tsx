@@ -7,7 +7,6 @@ import { Input } from '../components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { WavesBackground } from '../components/ui/waves-background'
 import { BGPattern } from '../components/ui/bg-pattern'
-import { parseJsonField } from '../lib/dataUtils'
 import { Briefcase, Search, Filter, ArrowRight, Loader2 } from 'lucide-react'
 
 interface Project {
@@ -60,13 +59,39 @@ export const ProjectsPage: React.FC = () => {
   const filterProjects = () => {
     let filtered = projects
 
-    // Filter by search term
-    if (searchTerm) {
+    // Filter by search term (searches across title, description, tags, team members, skills, and creator name)
+    if (searchTerm.trim()) {
       filtered = filtered.filter(project => {
-        const tags = project.tags.map(tag => parseJsonField(tag));
-        return project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        const searchLower = searchTerm.toLowerCase().trim()
+        
+        // Search in title
+        const titleMatch = project.title?.toLowerCase().includes(searchLower) || false
+        
+        // Search in description
+        const descMatch = project.description?.toLowerCase().includes(searchLower) || false
+        
+        // Search in tags
+        const tagMatch = Array.isArray(project.tags) && project.tags.length > 0 
+          ? project.tags.some(tag => tag && String(tag).toLowerCase().includes(searchLower))
+          : false
+        
+        // Search in team members
+        const memberMatch = Array.isArray(project.team_members) && project.team_members.length > 0
+          ? project.team_members.some(member => member && String(member).toLowerCase().includes(searchLower))
+          : false
+        
+        // Search in skills required
+        const skillMatch = Array.isArray(project.skills_required) && project.skills_required.length > 0
+          ? project.skills_required.some(skill => skill && String(skill).toLowerCase().includes(searchLower))
+          : false
+        
+        // Search in creator name
+        const creatorMatch = project.created_by_name?.toLowerCase().includes(searchLower) || false
+        
+        // Search in category
+        const categoryMatch = project.category?.toLowerCase().includes(searchLower) || false
+        
+        return titleMatch || descMatch || tagMatch || memberMatch || skillMatch || creatorMatch || categoryMatch
       })
     }
 
@@ -126,7 +151,7 @@ export const ProjectsPage: React.FC = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input 
-              placeholder="Search projects..." 
+              placeholder="Search by name, keywords, tags, members, or skills..." 
               className="pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
