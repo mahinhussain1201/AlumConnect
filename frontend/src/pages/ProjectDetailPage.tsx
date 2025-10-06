@@ -49,7 +49,7 @@ interface Project {
 
 export const ProjectDetailPage: React.FC = () => {
   const { id } = useParams()
-  const { user, token } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [project, setProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(true)
