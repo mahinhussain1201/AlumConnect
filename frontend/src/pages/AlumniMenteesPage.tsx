@@ -3,7 +3,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Loader2, User, Check, X, Mail } from 'lucide-react'
+import { Loader2, User, Check, X, Mail, Eye } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface RequestItem {
   id: number
@@ -12,6 +13,7 @@ interface RequestItem {
   created_at: string
   other_user_name: string
   other_user_email: string
+  other_user_id?: number
 }
 
 export const AlumniMenteesPage: React.FC = () => {
@@ -19,6 +21,35 @@ export const AlumniMenteesPage: React.FC = () => {
   const [items, setItems] = useState<RequestItem[]>([])
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<number | null>(null)
+  const [profileUserId, setProfileUserId] = useState<number | null>(null)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+
+  const openProfileForMentee = async (item: RequestItem) => {
+    if (item.other_user_id) {
+      setProfileUserId(item.other_user_id)
+      setIsProfileOpen(true)
+      return
+    }
+    // Fallback via available users endpoint by email
+    try {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const users = await res.json()
+        const match = users.find((u: any) => u.email && u.email.toLowerCase() === item.other_user_email.toLowerCase())
+        if (match?.id) {
+          setProfileUserId(match.id)
+          setIsProfileOpen(true)
+        } else {
+          alert('Unable to find user profile for this mentee.')
+        }
+      }
+    } catch (e) {
+      console.error('Failed to resolve user by email', e)
+      alert('Unable to open profile right now.')
+    }
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -152,6 +183,14 @@ export const AlumniMenteesPage: React.FC = () => {
                               Requested on {new Date(r.created_at).toLocaleDateString()}
                             </span>
                             <div className="flex space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => openProfileForMentee(r)}
+                              >
+                                <Eye className="mr-1 h-3 w-3" />
+                                View Profile
+                              </Button>
                               <Button 
                                 size="sm" 
                                 variant="outline"
@@ -232,6 +271,16 @@ export const AlumniMenteesPage: React.FC = () => {
                             <span className="text-xs text-muted-foreground">
                               Requested on {new Date(r.created_at).toLocaleDateString()}
                             </span>
+                            <div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => openProfileForMentee(r)}
+                              >
+                                <Eye className="mr-1 h-3 w-3" />
+                                View Profile
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -252,6 +301,13 @@ export const AlumniMenteesPage: React.FC = () => {
           </div>
         )}
       </div>
+      {profileUserId && (
+        <ProfileModal
+          userId={profileUserId}
+          isOpen={isProfileOpen}
+          onClose={() => { setIsProfileOpen(false); setProfileUserId(null) }}
+        />
+      )}
     </div>
   )
 }

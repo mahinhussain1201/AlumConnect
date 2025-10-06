@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Loader2, User, Check, X, Mail, ArrowLeft } from 'lucide-react'
+import { Loader2, User, Check, X, Mail, ArrowLeft, Eye } from 'lucide-react'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface ProjectApplication {
   id: number
@@ -13,6 +14,7 @@ interface ProjectApplication {
   created_at: string
   student_name: string
   student_email: string
+  student_id?: number
 }
 
 interface Project {
@@ -28,6 +30,36 @@ export const ProjectApplicationsPage: React.FC = () => {
   const [applications, setApplications] = useState<ProjectApplication[]>([])
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<number | null>(null)
+  const [profileUserId, setProfileUserId] = useState<number | null>(null)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+
+  const openProfileForApplicant = async (app: ProjectApplication) => {
+    if (app.student_id) {
+      setProfileUserId(app.student_id)
+      setIsProfileOpen(true)
+      return
+    }
+
+    // Fallback: fetch available users and match by email to get the user id
+    try {
+      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const users = await res.json()
+        const match = users.find((u: any) => u.email && u.email.toLowerCase() === app.student_email.toLowerCase())
+        if (match?.id) {
+          setProfileUserId(match.id)
+          setIsProfileOpen(true)
+        } else {
+          alert('Unable to find user profile for this applicant.')
+        }
+      }
+    } catch (e) {
+      console.error('Failed to resolve user by email', e)
+      alert('Unable to open profile right now.')
+    }
+  }
 
   useEffect(() => {
     const loadData = async () => {
@@ -165,6 +197,14 @@ export const ProjectApplicationsPage: React.FC = () => {
                             Applied on {new Date(application.created_at).toLocaleDateString()}
                           </span>
                           <div className="flex space-x-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => openProfileForApplicant(application)}
+                            >
+                              <Eye className="mr-1 h-3 w-3" />
+                              View Profile
+                            </Button>
                             <Button 
                               size="sm" 
                               variant="outline"
@@ -245,6 +285,16 @@ export const ProjectApplicationsPage: React.FC = () => {
                           <span className="text-xs text-muted-foreground">
                             Applied on {new Date(application.created_at).toLocaleDateString()}
                           </span>
+                          <div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => openProfileForApplicant(application)}
+                            >
+                              <Eye className="mr-1 h-3 w-3" />
+                              View Profile
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -264,6 +314,16 @@ export const ProjectApplicationsPage: React.FC = () => {
           )}
         </div>
       </div>
+      {profileUserId && (
+        <ProfileModal
+          userId={profileUserId}
+          isOpen={isProfileOpen}
+          onClose={() => { setIsProfileOpen(false); setProfileUserId(null) }}
+        />
+      )}
     </div>
   )
 }
+
+// Profile Modal Mount
+// Render modal at root of component
