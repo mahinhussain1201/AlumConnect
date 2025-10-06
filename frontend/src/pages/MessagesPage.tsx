@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Input } from '../components/ui/input'
 import { formatDate } from '../lib/dataUtils'
-import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft } from 'lucide-react'
+import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft, Filter } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { ProfileModal } from '../components/ProfileModal'
 
@@ -58,6 +58,8 @@ export const MessagesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [showNewChat, setShowNewChat] = useState(false)
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('all')
+  const [selectedGraduationYear, setSelectedGraduationYear] = useState<string>('all')
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState('')
@@ -279,18 +281,28 @@ export const MessagesPage: React.FC = () => {
 
   const getUserDisplayInfo = (userObj: User) => {
     if (userObj.role === 'alumni') {
+      const parts = []
       if (userObj.current_position && userObj.current_company) {
-        return `${userObj.current_position} at ${userObj.current_company}`
+        parts.push(`${userObj.current_position} at ${userObj.current_company}`)
+      } else if (userObj.department) {
+        parts.push(userObj.department)
       }
-      return userObj.department || 'Founder'
+      if (userObj.graduation_year) {
+        parts.push(`Class of ${userObj.graduation_year}`)
+      }
+      return parts.length > 0 ? parts.join(' • ') : 'Founder'
     } else {
       // Student
-      if (userObj.branch && userObj.graduation_year) {
-        return `${userObj.branch} • ${userObj.graduation_year}`
+      const parts = []
+      if (userObj.branch) {
+        parts.push(userObj.branch)
+      } else if (userObj.department) {
+        parts.push(userObj.department)
       }
-      if (userObj.branch) return userObj.branch
-      if (userObj.department) return userObj.department
-      return 'Student'
+      if (userObj.graduation_year) {
+        parts.push(`Class of ${userObj.graduation_year}`)
+      }
+      return parts.length > 0 ? parts.join(' • ') : 'Student'
     }
   }
 
@@ -312,17 +324,44 @@ export const MessagesPage: React.FC = () => {
     setProfileModalUserId(null)
   }
 
-  const filteredUsers = availableUsers.filter(u => 
-    u.id !== user?.id && 
-    (u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.department?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.current_company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.current_position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.hall?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     u.branch?.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
+  const filteredUsers = availableUsers.filter(u => {
+    if (u.id === user?.id) return false
+    
+    // Search term filter
+    const searchMatch = !searchTerm || 
+      u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.department?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.current_company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.current_position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.hall?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.branch?.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    // Department filter
+    const departmentMatch = selectedDepartment === 'all' || 
+      u.department === selectedDepartment ||
+      u.branch === selectedDepartment
+    
+    // Graduation year filter
+    const yearMatch = selectedGraduationYear === 'all' || 
+      (u.graduation_year && u.graduation_year.toString() === selectedGraduationYear)
+    
+    return searchMatch && departmentMatch && yearMatch
+  })
+
+  // Get unique departments and graduation years for filter options
+  const departments = Array.from(new Set(
+    availableUsers
+      .map(u => u.department || u.branch)
+      .filter(Boolean)
+  )).sort()
+
+  const graduationYears = Array.from(new Set(
+    availableUsers
+      .map(u => u.graduation_year)
+      .filter(Boolean)
+  )).sort((a, b) => b! - a!) // Sort descending
 
   if (isLoading) {
     return (
@@ -363,14 +402,44 @@ export const MessagesPage: React.FC = () => {
               </Button>
             </div>
             {showNewChat && (
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+              <div className="space-y-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-xs text-gray-600 mb-1 block">Department</label>
+                    <select
+                      value={selectedDepartment}
+                      onChange={(e) => setSelectedDepartment(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="all">All Departments</option>
+                      {departments.map(dept => (
+                        <option key={dept} value={dept}>{dept}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-600 mb-1 block">Graduation Year</label>
+                    <select
+                      value={selectedGraduationYear}
+                      onChange={(e) => setSelectedGraduationYear(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="all">All Years</option>
+                      {graduationYears.map(year => (
+                        <option key={year} value={year?.toString()}>{year}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
             )}
           </div>
