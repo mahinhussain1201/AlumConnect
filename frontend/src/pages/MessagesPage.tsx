@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Input } from '../components/ui/input'
 import { formatDate } from '../lib/dataUtils'
-import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft, Filter } from 'lucide-react'
+import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { ProfileModal } from '../components/ProfileModal'
 
