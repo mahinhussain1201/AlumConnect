@@ -710,6 +710,69 @@ def get_profile():
     finally:
         conn.close()
 
+# Get user profile by ID (for viewing other users' profiles)
+@app.route('/api/users/<int:user_id>/profile', methods=['GET'])
+@jwt_required()
+def get_user_profile_by_id(user_id):
+    conn = sqlite3.connect('launchpad.db')
+    cursor = conn.cursor()
+    
+    try:
+        # Get basic user info
+        cursor.execute('''
+            SELECT id, name, email, role, graduation_year, department, hall, branch, bio,
+                   current_company, current_position, location, work_preference,
+                   phone, website, linkedin, github, avatar
+            FROM users WHERE id = ?
+        ''', (user_id,))
+        user_data = cursor.fetchone()
+        
+        if not user_data:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Get skills
+        cursor.execute('SELECT skill_name, skill_type, proficiency_level FROM user_skills WHERE user_id = ?', (user_id,))
+        skills_data = cursor.fetchall()
+        
+        # Get achievements
+        cursor.execute('SELECT title, description, achievement_type, date_earned, issuer FROM user_achievements WHERE user_id = ?', (user_id,))
+        achievements_data = cursor.fetchall()
+        
+        # Get languages
+        cursor.execute('SELECT language_name, proficiency_level FROM user_languages WHERE user_id = ?', (user_id,))
+        languages_data = cursor.fetchall()
+        
+        user = {
+            'id': user_data[0],
+            'name': user_data[1],
+            'email': user_data[2],
+            'role': user_data[3],
+            'graduation_year': user_data[4],
+            'department': user_data[5],
+            'hall': user_data[6],
+            'branch': user_data[7],
+            'bio': user_data[8],
+            'current_company': user_data[9],
+            'current_position': user_data[10],
+            'location': user_data[11],
+            'work_preference': user_data[12],
+            'phone': user_data[13],
+            'website': user_data[14],
+            'linkedin': user_data[15],
+            'github': user_data[16],
+            'avatar': user_data[17],
+            'skills': [{'name': s[0], 'type': s[1], 'proficiency': s[2]} for s in skills_data],
+            'achievements': [{'title': a[0], 'description': a[1], 'type': a[2], 'date_earned': a[3], 'issuer': a[4]} for a in achievements_data],
+            'languages': [{'name': l[0], 'proficiency': l[1]} for l in languages_data]
+        }
+        
+        return jsonify(user), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
+
 # Update profile endpoint
 @app.route('/api/profile', methods=['PUT'])
 @jwt_required()
@@ -1641,7 +1704,8 @@ def get_conversations():
                 END as other_user_id,
                 u.name as other_user_name,
                 u.email as other_user_email,
-                u.role as other_user_role
+                u.role as other_user_role,
+                u.avatar as other_user_avatar
             FROM conversations c
             JOIN users u ON u.id = CASE 
                 WHEN c.user1_id = ? THEN c.user2_id 
@@ -1657,6 +1721,7 @@ def get_conversations():
             other_user_name = row[1]
             other_user_email = row[2]
             other_user_role = row[3]
+            other_user_avatar = row[4]
             
             # Get last message and unread count
             cursor.execute('''
@@ -1692,6 +1757,7 @@ def get_conversations():
                 'other_user_name': other_user_name,
                 'other_user_email': other_user_email,
                 'other_user_role': other_user_role,
+                'other_user_avatar': other_user_avatar,
                 'last_message': last_message,
                 'last_message_time': last_message_time,
                 'unread_count': unread_count,
@@ -1927,7 +1993,7 @@ def get_available_users():
         cursor.execute('''
             SELECT id, name, email, role, department, graduation_year, 
                    current_company, current_position, location, bio, 
-                   linkedin, github, website, hall, branch
+                   linkedin, github, website, hall, branch, avatar
             FROM users
             WHERE role = ? AND id != ?
             ORDER BY name
@@ -1950,7 +2016,8 @@ def get_available_users():
                 'github': row[11],
                 'website': row[12],
                 'hall': row[13],
-                'branch': row[14]
+                'branch': row[14],
+                'avatar': row[15]
             })
         
         return jsonify(users), 200

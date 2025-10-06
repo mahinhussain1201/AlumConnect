@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Avatar, AvatarFallback } from '../components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Input } from '../components/ui/input'
 import { formatDate } from '../lib/dataUtils'
 import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { ProfileModal } from '../components/ProfileModal'
 
 interface Conversation {
   id: number
@@ -14,6 +15,7 @@ interface Conversation {
   other_user_name: string
   other_user_email: string
   other_user_role: string
+  other_user_avatar?: string
   last_message?: string
   last_message_time?: string
   unread_count: number
@@ -25,6 +27,7 @@ interface User {
   name: string
   email: string
   role: string
+  avatar?: string
   department?: string
   graduation_year?: number
   current_company?: string
@@ -63,6 +66,8 @@ export const MessagesPage: React.FC = () => {
   const messagesEndRef = React.useRef<HTMLDivElement>(null)
   const pollingIntervalRef = React.useRef<NodeJS.Timeout | null>(null)
   const conversationsPollingRef = React.useRef<NodeJS.Timeout | null>(null)
+  const [profileModalUserId, setProfileModalUserId] = useState<number | null>(null)
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
 
   useEffect(() => {
     if (token) {
@@ -297,6 +302,16 @@ export const MessagesPage: React.FC = () => {
     }
   }
 
+  const openProfileModal = (userId: number) => {
+    setProfileModalUserId(userId)
+    setIsProfileModalOpen(true)
+  }
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false)
+    setProfileModalUserId(null)
+  }
+
   const filteredUsers = availableUsers.filter(u => 
     u.id !== user?.id && 
     (u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -375,15 +390,19 @@ export const MessagesPage: React.FC = () => {
                     onClick={() => startNewConversation(userObj.id)}
                   >
                     <div className="flex items-center space-x-3">
-                      <Link to={`/profile/${userObj.id}`} onClick={(e) => e.stopPropagation()}>
+                      <div onClick={(e) => { e.stopPropagation(); openProfileModal(userObj.id); }}>
                         <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                          <AvatarImage 
+                            src={userObj.avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${userObj.avatar}` : undefined}
+                            alt={userObj.name}
+                          />
                           <AvatarFallback className={`${
                             userObj.role === 'alumni' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
                           } text-sm font-semibold`}>
                             {userObj.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                      </Link>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate text-sm md:text-base">{userObj.name}</p>
                         <p className="text-xs md:text-sm text-gray-500 truncate">
@@ -419,8 +438,12 @@ export const MessagesPage: React.FC = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <div className="relative">
-                        <Link to={`/profile/${conversation.other_user_id}`} onClick={(e) => e.stopPropagation()}>
+                        <div onClick={(e) => { e.stopPropagation(); openProfileModal(conversation.other_user_id); }}>
                           <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                            <AvatarImage 
+                              src={conversation.other_user_avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${conversation.other_user_avatar}` : undefined}
+                              alt={conversation.other_user_name}
+                            />
                             <AvatarFallback className={`${
                               conversation.other_user_role === 'alumni' 
                                 ? 'bg-blue-100 text-blue-700' 
@@ -429,7 +452,7 @@ export const MessagesPage: React.FC = () => {
                               {conversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
-                        </Link>
+                        </div>
                         {conversation.is_online && (
                           <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                         )}
@@ -513,8 +536,12 @@ export const MessagesPage: React.FC = () => {
                     >
                       <ArrowLeft className="h-5 w-5" />
                     </Button>
-                    <Link to={`/profile/${selectedConversation.other_user_id}`}>
+                    <div onClick={() => openProfileModal(selectedConversation.other_user_id)}>
                       <Avatar className="h-8 w-8 md:h-10 md:w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
+                        <AvatarImage 
+                          src={selectedConversation.other_user_avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${selectedConversation.other_user_avatar}` : undefined}
+                          alt={selectedConversation.other_user_name}
+                        />
                         <AvatarFallback className={`${
                           selectedConversation.other_user_role === 'alumni' 
                             ? 'bg-blue-100 text-blue-700' 
@@ -523,7 +550,7 @@ export const MessagesPage: React.FC = () => {
                           {selectedConversation.other_user_name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                    </Link>
+                    </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 text-sm md:text-base">
                         {selectedConversation.other_user_name}
@@ -649,6 +676,15 @@ export const MessagesPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {profileModalUserId && (
+        <ProfileModal
+          userId={profileModalUserId}
+          isOpen={isProfileModalOpen}
+          onClose={closeProfileModal}
+        />
+      )}
     </div>
   )
 }
