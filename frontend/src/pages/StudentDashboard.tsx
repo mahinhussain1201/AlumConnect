@@ -193,7 +193,7 @@ export const StudentDashboard: React.FC = () => {
               </Link>
             </Button>
             <Button asChild className="h-24 flex flex-col items-center justify-center bg-gradient-to-br from-green-100 to-emerald-200 hover:from-green-200 hover:to-emerald-300 text-green-700 shadow hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-              <Link to="/alumni-connect">
+              <Link to="/find-mentors">
                 <UserPlus className="h-6 w-6 mb-2" />
                 <span className="text-sm font-semibold">Find Mentors</span>
               </Link>

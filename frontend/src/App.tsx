@@ -24,6 +24,7 @@ import { AlumniProjectApplicationsPage } from './pages/AlumniProjectApplications
 import { ProjectApplicationsPage } from './pages/ProjectApplicationsPage'
 import { DashboardRouter } from './pages/DashboardRouter'
 import { MentorsPage } from './pages/MentorsPage'
+import { FindMentorsPage } from './pages/FindMentorsPage'
 import { AuthProvider } from './contexts/AuthContext'
 import Team from './pages/Team'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -42,6 +43,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
             <Route path="/mentors" element={<MentorsPage />} />
+            <Route path="/find-mentors" element={<FindMentorsPage />} />
             <Route path="/alumni-connect" element={<AlumniConnectPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
