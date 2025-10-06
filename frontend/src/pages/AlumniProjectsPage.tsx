@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Loader2, Briefcase, Plus, Users, Eye, Calendar, MapPin, DollarSign, Clock, Code } from 'lucide-react'
+import { Loader2, Plus, Users, Eye, Calendar, MapPin, DollarSign, Clock, Code } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface Project {
@@ -107,7 +107,7 @@ export const AlumniProjectsPage: React.FC = () => {
           <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Briefcase className="h-8 w-8 text-gray-400" />
+                {/* <Briefcase className="h-8 w-8 text-gray-400" /> */}
               </div>
               <CardTitle className="text-2xl font-bold text-gray-900 mb-2">No projects yet</CardTitle>
               <CardDescription className="text-gray-600 mb-6">Create your first project to start connecting with students.</CardDescription>
@@ -129,9 +129,6 @@ export const AlumniProjectsPage: React.FC = () => {
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center">
-                        <Briefcase className="h-6 w-6 text-blue-600" />
-                      </div>
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
                           <Badge variant={project.status === 'active' ? 'default' : 'secondary'} className="text-xs">

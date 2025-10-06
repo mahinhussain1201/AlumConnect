@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
   }, [user, token])
 
   const navigationItems = [
-    { label: 'Alumni Connect', href: '/alumni-connect' },
+    { label: 'Founder Connect', href: '/alumni-connect' },
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },
   ]
@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
       return [
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Messages', href: '/messages' },
-        { label: 'Alumni Connect', href: '/alumni-connect' },
+        { label: 'Founder Connect', href: '/alumni-connect' },
         { label: 'Blog', href: '/blog' },
       ]
     }
@@ -96,7 +96,7 @@ export const Header: React.FC = () => {
     }
     
     return [
-      { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+      { name: 'Founder Connect', href: '/alumni-connect', icon: Users },
       { name: 'Blog', href: '/blog', icon: BookOpen },
       { name: 'About', href: '/about', icon: GraduationCap },
     ]
