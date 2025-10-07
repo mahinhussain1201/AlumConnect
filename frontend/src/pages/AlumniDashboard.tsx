@@ -51,14 +51,45 @@ export const AlumniDashboard: React.FC = () => {
           setStats(statsData)
         }
 
-        // Load recent activity
-        const activityRes = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/recent-activity', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        if (activityRes.ok) {
-          const activityData = await activityRes.json()
-          setRecentActivity(activityData)
+        // Build recent activity from supported endpoints
+        const [mentorshipRes, applicationsRes] = await Promise.all([
+          fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch('https://alumconnect-s4c7.onrender.com/api/alumni/project-applications', { headers: { Authorization: `Bearer ${token}` } })
+        ])
+
+        const activities: RecentActivity[] = []
+
+        if (mentorshipRes.ok) {
+          const mentorshipData = await mentorshipRes.json()
+          for (const r of mentorshipData) {
+            activities.push({
+              id: r.id,
+              type: 'mentorship',
+              title: `Mentorship request from ${r.other_user_name || 'student'}`,
+              description: r.message || 'Mentorship request',
+              status: r.status || 'pending',
+              created_at: r.created_at
+            })
+          }
         }
+
+        if (applicationsRes.ok) {
+          const applicationsData = await applicationsRes.json()
+          for (const a of applicationsData) {
+            activities.push({
+              id: a.id,
+              type: 'project_application',
+              title: `${a.student_name || 'Student'} applied to ${a.project_title || 'your project'}`,
+              description: a.message || 'Project application',
+              status: a.status || 'pending',
+              created_at: a.created_at
+            })
+          }
+        }
+
+        // Sort desc by created_at and keep recent ones
+        activities.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        setRecentActivity(activities.slice(0, 10))
       } finally {
         setLoading(false)
       }
