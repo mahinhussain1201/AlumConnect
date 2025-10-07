@@ -279,32 +279,7 @@ export const MessagesPage: React.FC = () => {
     }
   }
 
-  const getUserDisplayInfo = (userObj: User) => {
-    if (userObj.role === 'alumni') {
-      const parts = []
-      if (userObj.current_position && userObj.current_company) {
-        parts.push(`${userObj.current_position} at ${userObj.current_company}`)
-      } else if (userObj.department) {
-        parts.push(userObj.department)
-      }
-      if (userObj.graduation_year) {
-        parts.push(`Class of ${userObj.graduation_year}`)
-      }
-      return parts.length > 0 ? parts.join(' • ') : 'Founder'
-    } else {
-      // Student
-      const parts = []
-      if (userObj.branch) {
-        parts.push(userObj.branch)
-      } else if (userObj.department) {
-        parts.push(userObj.department)
-      }
-      if (userObj.graduation_year) {
-        parts.push(`Class of ${userObj.graduation_year}`)
-      }
-      return parts.length > 0 ? parts.join(' • ') : 'Student'
-    }
-  }
+  // removed getUserDisplayInfo (inlined rendering below)
 
   const getRoleBadge = (role: string) => {
     if (role === 'alumni') {
@@ -474,9 +449,27 @@ export const MessagesPage: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate text-sm md:text-base">{userObj.name}</p>
-                        <p className="text-xs md:text-sm text-gray-500 truncate">
-                          {getUserDisplayInfo(userObj)}
-                        </p>
+                        {userObj.role === 'alumni' ? (
+                          <>
+                            <p className="text-xs md:text-sm text-gray-500 truncate">
+                              {userObj.current_position && userObj.current_company
+                                ? `${userObj.current_position} at ${userObj.current_company}`
+                                : (userObj.department || 'Founder')}
+                            </p>
+                            {!!userObj.graduation_year && (
+                              <p className="text-xs md:text-sm text-gray-500 truncate">Class of {userObj.graduation_year}</p>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-xs md:text-sm text-gray-500 truncate">
+                              {userObj.branch || userObj.department || 'Student'}
+                            </p>
+                            {!!userObj.graduation_year && (
+                              <p className="text-xs md:text-sm text-gray-500 truncate">Class of {userObj.graduation_year}</p>
+                            )}
+                          </>
+                        )}
                       </div>
                       {getRoleBadge(userObj.role)}
                     </div>

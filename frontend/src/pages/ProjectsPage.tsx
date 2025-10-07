@@ -233,37 +233,41 @@ export const ProjectsPage: React.FC = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
-            <Card key={project.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                <Briefcase className="h-12 w-12 text-muted-foreground" />
-              </div>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex gap-2 flex-wrap">
-                    <Badge variant={project.status === 'active' ? 'default' : 'secondary'}>
-                      {project.status}
-                    </Badge>
-                    {project.is_recruiting !== false ? (
-                      <Badge className="bg-green-100 text-green-700 border-green-300">
-                        Recruiting
+            <Card key={project.id} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
+                      <Badge 
+                        variant={project.status === 'active' ? 'default' : 'secondary'}
+                        className="px-3 py-1 text-sm"
+                      >
+                        {project.status}
                       </Badge>
-                    ) : (
-                      <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-300">
-                        Not Recruiting
+                      <Badge variant="outline" className="px-3 py-1 text-sm">
+                        {project.category}
                       </Badge>
-                    )}
-                    {user?.role === 'student' && project.has_applied && (
-                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
-                        Applied
-                      </Badge>
-                    )}
+                      {project.is_recruiting !== false ? (
+                        <Badge className="bg-green-100 text-green-700 border-green-300 px-3 py-1 text-sm">
+                          Recruiting
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-300 px-3 py-1 text-sm">
+                          Not Recruiting
+                        </Badge>
+                      )}
+                      {user?.role === 'student' && project.has_applied && (
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 px-3 py-1 text-sm">
+                          Applied
+                        </Badge>
+                      )}
+                    </div>
+                    <CardTitle className="text-xl mb-2 line-clamp-2">{project.title}</CardTitle>
+                    <CardDescription className="line-clamp-3 text-base">
+                      {project.description}
+                    </CardDescription>
                   </div>
-                  <Badge variant="outline">{project.category}</Badge>
                 </div>
-                <CardTitle className="line-clamp-2">{project.title}</CardTitle>
-                <CardDescription className="line-clamp-3">
-                  {project.description}
-                </CardDescription>
               </CardHeader>
               <CardContent>
                 {/* Tags Section */}
@@ -303,7 +307,7 @@ export const ProjectsPage: React.FC = () => {
                     </div>
                   </div>
                 )}
-                
+
                 <Button variant="ghost" size="sm" className="w-full" asChild>
                   <Link to={`/projects/${project.id}`}>
                     View Details
