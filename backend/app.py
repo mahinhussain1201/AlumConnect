@@ -2453,22 +2453,15 @@ def get_available_users():
         conn = sqlite3.connect('launchpad.db')
         cursor = conn.cursor()
         
-        # Get current user's role
-        cursor.execute('SELECT role FROM users WHERE id = ?', (user_id,))
-        user_role = cursor.fetchone()
-        if not user_role:
-            return jsonify({'error': 'User not found'}), 404
-        
-        # Get available users (opposite role)
-        target_role = 'alumni' if user_role[0] == 'student' else 'student'
+        # Return all other users regardless of role
         cursor.execute('''
             SELECT id, name, email, role, department, graduation_year, 
                    current_company, current_position, location, bio, 
                    linkedin, github, website, hall, branch, avatar
             FROM users
-            WHERE role = ? AND id != ?
+            WHERE id != ?
             ORDER BY name
-        ''', (target_role, user_id))
+        ''', (user_id,))
         
         users = []
         for row in cursor.fetchall():
