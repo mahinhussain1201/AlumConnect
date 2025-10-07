@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "../../lib/utils";
 
 interface GooeyNavItem {
@@ -32,6 +32,7 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
   const filterRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
+  const location = useLocation();
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
@@ -125,18 +126,19 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
 
   const handleClick = (e: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>, index: number) => {
     const liEl = e.currentTarget;
-    if (activeIndex === index) return;
-    
-    setActiveIndex(index);
-    updateEffectPosition(liEl);
+    // Always allow navigation, even if clicking the active tab
+    if (activeIndex !== index) {
+      setActiveIndex(index);
+      updateEffectPosition(liEl);
 
-    if (textRef.current) {
-      textRef.current.classList.remove("active");
-      void textRef.current.offsetWidth;
-      textRef.current.classList.add("active");
-    }
-    if (filterRef.current) {
-      makeParticles(filterRef.current);
+      if (textRef.current) {
+        textRef.current.classList.remove("active");
+        void textRef.current.offsetWidth;
+        textRef.current.classList.add("active");
+      }
+      if (filterRef.current) {
+        makeParticles(filterRef.current);
+      }
     }
 
     // Navigate to the selected page
@@ -197,6 +199,17 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
         }
     };
   }, [activeIndex, items]);
+
+  // Sync active tab with current route
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const idx = items.findIndex((it) => currentPath === it.href || currentPath.startsWith(it.href + "/"));
+    const nextIndex = idx >= 0 ? idx : 0;
+    if (nextIndex !== activeIndex) {
+      setActiveIndex(nextIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, items]);
 
   return (
     <>
