@@ -726,15 +726,64 @@ def update_project(project_id):
             update_fields.append('jd_pdf = ?')
             update_values.append(data.get('jd_pdf'))
 
-        if not update_fields:
+        if not update_fields and 'positions' not in data:
             return jsonify({'error': 'No fields to update'}), 400
 
-        update_values.append(project_id)
-        query = f"UPDATE projects SET {', '.join(update_fields)} WHERE id = ?"
-        
-        cursor.execute(query, update_values)
+        # Update project scalar fields
+        if update_fields:
+            update_values.append(project_id)
+            query = f"UPDATE projects SET {', '.join(update_fields)} WHERE id = ?"
+            cursor.execute(query, update_values)
+
+        # Update positions if provided
+        if 'positions' in data:
+            for position in data.get('positions') or []:
+                pos_id = position.get('id')
+                title = position.get('title')
+                description = position.get('description')
+                required_skills_json = json.dumps(position.get('required_skills', []))
+                count = position.get('count')
+                is_active = 1 if position.get('is_active', True) else 0
+
+                if pos_id:
+                    # Only update if position belongs to this project
+                    cursor.execute('SELECT id FROM project_positions WHERE id = ? AND project_id = ?', (pos_id, project_id))
+                    if cursor.fetchone():
+                        pos_fields = []
+                        pos_values = []
+                        if title is not None:
+                            pos_fields.append('title = ?')
+                            pos_values.append(title)
+                        if description is not None:
+                            pos_fields.append('description = ?')
+                            pos_values.append(description)
+                        if required_skills_json is not None:
+                            pos_fields.append('required_skills = ?')
+                            pos_values.append(required_skills_json)
+                        if count is not None:
+                            pos_fields.append('count = ?')
+                            pos_values.append(count)
+                        pos_fields.append('is_active = ?')
+                        pos_values.append(is_active)
+                        if pos_fields:
+                            pos_values.extend([pos_id, project_id])
+                            cursor.execute(f"UPDATE project_positions SET {', '.join(pos_fields)} WHERE id = ? AND project_id = ?", pos_values)
+                else:
+                    # Insert new position
+                    cursor.execute('''
+                        INSERT INTO project_positions (project_id, title, description, required_skills, count, filled_count, is_active)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        project_id,
+                        title,
+                        description,
+                        required_skills_json,
+                        count or 1,
+                        0,
+                        is_active
+                    ))
+
         conn.commit()
-        
         return jsonify({'message': 'Project updated successfully'}), 200
     except Exception as e:
         conn.rollback()

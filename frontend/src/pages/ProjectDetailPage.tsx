@@ -43,8 +43,8 @@ interface Project {
   created_by_email: string
   positions?: Position[]
   images?: string[]
-  links?: { label: string, url: string }[]
-  jd_url?: string
+  project_links?: { label: string, url: string }[]
+  jd_pdf?: string
 }
 
 export const ProjectDetailPage: React.FC = () => {
@@ -285,12 +285,12 @@ export const ProjectDetailPage: React.FC = () => {
 
                   {/* External Links & JD */}
                   <div className="flex flex-wrap gap-3 mb-8">
-                    {project.jd_url && (
-                      <a href={project.jd_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
+                    {project.jd_pdf && (
+                      <a href={project.jd_pdf} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
                         <FileText className="h-4 w-4 mr-2" /> Job Description
                       </a>
                     )}
-                    {project.links && project.links.map((l, i) => (
+                    {project.project_links && project.project_links.map((l, i) => (
                       <a key={i} href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50">
                         <LinkIcon className="h-4 w-4 mr-2" /> {l.label || 'Link'}
                       </a>

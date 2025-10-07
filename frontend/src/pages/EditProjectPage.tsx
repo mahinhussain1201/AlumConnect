@@ -38,6 +38,8 @@ export const EditProjectPage: React.FC = () => {
   const [form, setForm] = useState<ProjectForm | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imagesText, setImagesText] = useState('')
+  const [linksText, setLinksText] = useState('')
 
   useEffect(() => {
     const load = async () => {
@@ -46,7 +48,7 @@ export const EditProjectPage: React.FC = () => {
         const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
         if (res.ok) {
           const p = await res.json()
-          setForm({
+          const loadedForm: ProjectForm = {
             title: p.title,
             description: p.description,
             category: p.category,
@@ -56,10 +58,13 @@ export const EditProjectPage: React.FC = () => {
             stipend: p.stipend,
             duration: p.duration,
             images: p.images || [],
-            links: p.links || [],
-            jd_url: p.jd_url || '',
+            links: p.project_links || [],
+            jd_url: p.jd_pdf || '',
             positions: (p.positions || []).map((pos: any) => ({ id: pos.id, title: pos.title, description: pos.description, count: pos.count, is_active: pos.is_active }))
-          })
+          }
+          setForm(loadedForm)
+          setImagesText((loadedForm.images || []).join('\n'))
+          setLinksText((loadedForm.links || []).map(l => `${l.label}|${l.url}`).join('\n'))
         }
       } catch (e) {
         console.error('Failed to load project', e)
@@ -204,19 +209,54 @@ export const EditProjectPage: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>Images (comma-separated URLs)</Label>
-                <Input value={(form.images || []).join(', ')} onChange={(e) => setForm({ ...form, images: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })} />
+                <Label>Images (one per line or comma-separated)</Label>
+                <Textarea
+                  rows={3}
+                  value={imagesText}
+                  onChange={(e) => {
+                    const text = e.target.value
+                    setImagesText(text)
+                    const tokens = text
+                      .split(/[\n,]+/)
+                      .flatMap(part => part.split(/\s+/))
+                      .map(s => s.trim())
+                      .filter(Boolean)
+                    setForm({ ...form, images: tokens })
+                  }}
+                  placeholder={"https://img1.jpg\nhttps://img2.png"}
+                />
               </div>
 
               <div className="space-y-2">
-                <Label>Links (label|url per line)</Label>
+                <Label>Links (one per line: label|url, label,url, or url)</Label>
                 <Textarea
                   rows={4}
-                  value={(form.links || []).map(l => `${l.label}|${l.url}`).join('\n')}
-                  onChange={(e) => setForm({ ...form, links: e.target.value.split('\n').map(line => {
-                    const [label, url] = line.split('|')
-                    return label && url ? { label: label.trim(), url: url.trim() } : null
-                  }).filter(Boolean) as { label: string, url: string }[] })}
+                  value={linksText}
+                  onChange={(e) => {
+                    const text = e.target.value
+                    setLinksText(text)
+                    const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
+                    const parsed: { label: string, url: string }[] = []
+                    for (const line of lines) {
+                      let label: string | undefined
+                      let url: string | undefined
+                      if (line.includes('|')) {
+                        const parts = line.split('|')
+                        label = parts[0]
+                        url = parts.slice(1).join('|')
+                      } else if (line.includes(',')) {
+                        const parts = line.split(',')
+                        label = parts[0]
+                        url = parts.slice(1).join(',')
+                      } else {
+                        url = line
+                        label = 'Link'
+                      }
+                      if (url) parsed.push({ label: (label || 'Link').trim(), url: url.trim() })
+                    }
+                    setForm({ ...form, links: parsed })
+                  }}
+                  placeholder={"Website|https://example.com\nGitHub,https://github.com/org/repo\nhttps://docs.example.com"}
                 />
               </div>
 
@@ -250,6 +290,9 @@ export const EditProjectPage: React.FC = () => {
                         <Trash2 className="h-4 w-4 mr-1" /> Remove
                       </Button>
                     </div>
+                  {!pos.is_active && (
+                    <p className="text-sm text-red-600">This position is no more active.</p>
+                  )}
                   </div>
                 ))}
               </div>
