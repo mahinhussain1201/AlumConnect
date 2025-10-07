@@ -424,8 +424,8 @@ export const ProjectDetailPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Positions Section */}
-              {project.positions && project.positions.length > 0 && (
+              {/* Positions Section - show only active positions */}
+              {project.positions && project.positions.filter(p => p.is_active).length > 0 && (
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="p-8">
                     <div className="flex items-center space-x-3 mb-6">
@@ -435,7 +435,7 @@ export const ProjectDetailPage: React.FC = () => {
                       <h2 className="text-2xl font-bold text-gray-900">Open Positions</h2>
                     </div>
                     <div className="space-y-4">
-                      {project.positions.map((position) => (
+                      {project.positions.filter(p => p.is_active).map((position) => (
                         <div 
                           key={position.id}
                           className="p-5 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all"

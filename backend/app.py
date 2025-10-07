@@ -736,6 +736,15 @@ def update_project(project_id):
             cursor.execute(query, update_values)
 
         # Update positions if provided
+        def coerce_bool(value):
+            if isinstance(value, bool):
+                return value
+            if isinstance(value, int):
+                return value != 0
+            if isinstance(value, str):
+                return value.strip().lower() in ['true', '1', 'yes', 'on']
+            return bool(value)
+
         if 'positions' in data:
             for position in data.get('positions') or []:
                 pos_id = position.get('id')
@@ -743,7 +752,7 @@ def update_project(project_id):
                 description = position.get('description')
                 required_skills_json = json.dumps(position.get('required_skills', []))
                 count = position.get('count')
-                is_active = 1 if position.get('is_active', True) else 0
+                is_active = 1 if coerce_bool(position.get('is_active', True)) else 0
 
                 if pos_id:
                     # Only update if position belongs to this project
