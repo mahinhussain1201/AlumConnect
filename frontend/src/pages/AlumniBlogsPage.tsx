@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, BookOpen, Plus, Eye, Edit, Trash2, Calendar, Clock } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { excerptFromHtml } from '../lib/dataUtils'
 
 interface BlogPost {
   id: number
@@ -19,6 +20,8 @@ export const AlumniBlogsPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -62,6 +65,30 @@ export const AlumniBlogsPage: React.FC = () => {
         <p className="text-muted-foreground">Only alumni can manage blog posts.</p>
       </div>
     )
+  }
+
+  const handleEdit = (postId: number) => {
+    navigate(`/alumni/blogs/${postId}/edit`)
+  }
+
+  const handleDelete = async (postId: number) => {
+    if (!token) return
+    const ok = window.confirm('Delete this blog post? This cannot be undone.')
+    if (!ok) return
+    setDeletingId(postId)
+    try {
+      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        setPosts(prev => prev.filter(p => p.id !== postId))
+      }
+    } catch (e) {
+      // noop; could show a toast here
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   return (
@@ -133,7 +160,7 @@ export const AlumniBlogsPage: React.FC = () => {
                     </div>
                   </div>
                   <CardDescription className="text-gray-600 text-base leading-relaxed">
-                    {post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content}
+                    {excerptFromHtml(post.content, 200)}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -160,11 +187,17 @@ export const AlumniBlogsPage: React.FC = () => {
                           View
                         </Link>
                       </Button>
-                      <Button variant="outline" size="sm" disabled>
+                      <Button variant="outline" size="sm" onClick={() => handleEdit(post.id)}>
                         <Edit className="mr-1 h-3 w-3" />
                         Edit
                       </Button>
-                      <Button variant="outline" size="sm" disabled>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleDelete(post.id)}
+                        disabled={deletingId === post.id}
+                        className={deletingId === post.id ? 'opacity-60 cursor-not-allowed' : ''}
+                      >
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>

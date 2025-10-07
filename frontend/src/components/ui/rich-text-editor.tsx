@@ -15,10 +15,18 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange 
   }, [value])
 
   const exec = (command: string, arg?: string) => {
+    if (!editorRef.current) return
+    const editorEl = editorRef.current
+    editorEl.focus()
+    const before = editorEl.innerHTML
     document.execCommand(command, false, arg)
-    if (editorRef.current) {
-      onChange(editorRef.current.innerHTML)
+    const after = editorEl.innerHTML
+    if (after === before && arg) {
+      // Fallback: try alternative argument style like '<h2>' vs 'H2'
+      const altArg = arg.startsWith('<') ? arg.replace(/[<>]/g, '').toUpperCase() : `<${arg.toLowerCase()}>`
+      document.execCommand(command, false, altArg)
     }
+    onChange(editorEl.innerHTML)
   }
 
   const handleInput = () => {
@@ -35,17 +43,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange 
   return (
     <div className="border rounded-lg bg-white">
       <div className="flex flex-wrap gap-2 p-2 border-b bg-gray-50">
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('bold')}>B</button>
-        <button type="button" className="px-2 py-1 text-sm italic rounded hover:bg-gray-100" onClick={() => exec('italic')}>I</button>
-        <button type="button" className="px-2 py-1 text-sm underline rounded hover:bg-gray-100" onClick={() => exec('underline')}>U</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('formatBlock', '<h2>')}>H2</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('formatBlock', '<h3>')}>H3</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('insertUnorderedList')}>• List</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('insertOrderedList')}>1. List</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('formatBlock', '<blockquote>')}>Quote</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('createLink', window.prompt('Enter URL') || '')}>Link</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={insertImageByUrl}>Image</button>
-        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onClick={() => exec('removeFormat')}>Clear</button>
+        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onMouseDown={(e) => { e.preventDefault(); exec('bold') }}>B</button>
+        <button type="button" className="px-2 py-1 text-sm italic rounded hover:bg-gray-100" onMouseDown={(e) => { e.preventDefault(); exec('italic') }}>I</button>
+        <button type="button" className="px-2 py-1 text-sm underline rounded hover:bg-gray-100" onMouseDown={(e) => { e.preventDefault(); exec('underline') }}>U</button>
+        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onMouseDown={(e) => { e.preventDefault(); const url = window.prompt('Enter URL'); if (url) exec('createLink', url) }}>Link</button>
+        <button type="button" className="px-2 py-1 text-sm rounded hover:bg-gray-100" onMouseDown={(e) => { e.preventDefault(); insertImageByUrl() }}>Image</button>
       </div>
       <div
         ref={editorRef}

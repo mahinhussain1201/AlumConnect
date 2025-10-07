@@ -24,3 +24,19 @@ export function formatDate(dateString: string) {
     return text.slice(0, maxLength) + "..."
   }
   
+  export function stripHtml(html: string): string {
+    if (!html) return ""
+    const tmp = typeof document !== 'undefined' ? document.createElement('div') : null
+    if (tmp) {
+      tmp.innerHTML = html
+      const text = tmp.textContent || tmp.innerText || ""
+      return text.replace(/\s+/g, ' ').trim()
+    }
+    // Fallback for non-DOM environments
+    return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  }
+
+  export function excerptFromHtml(html: string, maxLength: number): string {
+    return truncateText(stripHtml(html), maxLength)
+  }
+  

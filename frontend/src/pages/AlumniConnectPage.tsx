@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { excerptFromHtml } from '../lib/dataUtils'
 import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
@@ -486,7 +487,7 @@ export const AlumniConnectPage: React.FC = () => {
                             {post.title}
                           </h3>
                           <p className="text-xs text-gray-600 line-clamp-2">
-                            {post.content.substring(0, 100)}...
+                            {excerptFromHtml(post.content, 100)}
                           </p>
                           <div className="flex items-center justify-between">
                             <div 

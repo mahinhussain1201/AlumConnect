@@ -78,44 +78,25 @@ export const EditBlogPage: React.FC = () => {
     setError(null)
     setSaving(true)
     try {
-      const payload = JSON.stringify({ title: post.title, category: post.category, content: post.content })
-
-      // Try a sequence of common update patterns to avoid 405
-      const attempts: Array<{ url: string, method: string, body?: string }> = [
-        { url: `https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, method: 'PATCH', body: payload },
-        { url: `https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, method: 'PUT', body: payload },
-        { url: `https://alumconnect-s4c7.onrender.com/api/blog/${post.id}/update`, method: 'POST', body: payload },
-        { url: `https://alumconnect-s4c7.onrender.com/api/blog/update/${post.id}`, method: 'POST', body: payload },
-      ]
-
-      let lastErrorText = ''
-      for (const attempt of attempts) {
-        try {
-          const res = await fetch(attempt.url, {
-            method: attempt.method,
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: attempt.body
-          })
-          if (res.ok) {
-            navigate(`/blog/${post.id}`)
-            return
-          }
-          const contentType = res.headers.get('content-type') || ''
-          if (contentType.includes('application/json')) {
-            const data = await res.json()
-            lastErrorText = data.error || data.msg || `${res.status} ${res.statusText}`
-          } else {
-            lastErrorText = await res.text()
-          }
-        } catch (inner) {
-          lastErrorText = 'Network error while updating blog.'
-        }
+      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ title: post.title, category: post.category, content: post.content })
+      })
+      if (res.ok) {
+        navigate(`/blog/${post.id}`)
+        return
       }
-
-      setError(lastErrorText || 'Failed to update blog post')
+      const contentType = res.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        const data = await res.json()
+        setError(data.error || data.msg || `${res.status} ${res.statusText}`)
+      } else {
+        setError(await res.text())
+      }
     } catch (e) {
       console.error('Failed to save blog', e)
       setError('Failed to update blog post')
