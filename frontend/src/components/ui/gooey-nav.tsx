@@ -52,7 +52,7 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
     d: [number, number],
     r: number
   ) => {
-    let rotate = noise(r / 10);
+    const rotate = noise(r / 10);
     return {
       start: getXY(d[0], particleCount - i, particleCount),
       end: getXY(d[1] + noise(7), particleCount - i, particleCount),
@@ -103,7 +103,9 @@ export const GooeyNav: React.FC<GooeyNavProps> = ({
             if (particle.parentElement === element) {
                  element.removeChild(particle);
             }
-          } catch {}
+          } catch {
+            /* ignore errors on particle removal */
+          }
         }, t);
       }, i * 10);
     }

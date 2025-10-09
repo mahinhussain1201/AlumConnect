@@ -36,7 +36,7 @@ const PixelTrail: React.FC<PixelTrailProps> = ({
         `${trailId.current}-pixel-${x}-${y}`
       )
       if (pixelElement) {
-        const animatePixel = (pixelElement as any).__animatePixel
+        const animatePixel = (pixelElement as unknown as { __animatePixel?: () => void }).__animatePixel
         if (animatePixel) animatePixel()
       }
     },

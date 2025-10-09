@@ -7,7 +7,7 @@ export function formatDate(dateString: string) {
     })
   }
   
-  export function parseJsonField<T = any>(value: string | null): T | null {
+  export function parseJsonField<T = unknown>(value: string | null): T | null {
     if (!value) return null
     if (typeof value === "object") return value as T
     try {
