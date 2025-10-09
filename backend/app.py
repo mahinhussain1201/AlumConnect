@@ -241,6 +241,11 @@ def init_db():
             FOREIGN KEY (author_id) REFERENCES users (id)
         )
     ''')
+    # Add blog_posts new columns for backward compatibility
+    try:
+        cursor.execute('ALTER TABLE blog_posts ADD COLUMN cover_image TEXT')
+    except:
+        pass
     
     # Conversations table
     cursor.execute('''
@@ -808,7 +813,7 @@ def get_blog_posts():
     try:
         cursor.execute('''
             SELECT b.id, b.title, b.content, b.category, b.created_at, b.updated_at,
-                   u.name as author_name, b.author_id
+                   u.name as author_name, b.author_id, b.cover_image
             FROM blog_posts b
             LEFT JOIN users u ON b.author_id = u.id
             ORDER BY b.created_at DESC
@@ -831,6 +836,7 @@ def get_blog_posts():
                 'updated_at': row[5],
                 'author_name': row[6],
                 'author_id': row[7],
+                'cover_image': row[8],
                 'likes_count': likes_count,
                 'is_liked': False  # Will be updated if user is logged in
             })
@@ -872,9 +878,9 @@ def create_blog_post():
                 return jsonify({'error': f'{field} is required'}), 400
 
         cursor.execute('''
-            INSERT INTO blog_posts (title, content, category, author_id)
-            VALUES (?, ?, ?, ?)
-        ''', (data['title'], data['content'], data.get('category'), user_id))
+            INSERT INTO blog_posts (title, content, category, author_id, cover_image)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (data['title'], data['content'], data.get('category'), user_id, data.get('cover_image')))
 
         conn.commit()
         post_id = cursor.lastrowid
@@ -893,7 +899,7 @@ def get_blog_post(post_id):
     try:
         cursor.execute('''
             SELECT b.id, b.title, b.content, b.category, b.created_at, b.updated_at,
-                   u.name as author_name, b.author_id
+                   u.name as author_name, b.author_id, b.cover_image
             FROM blog_posts b
             LEFT JOIN users u ON b.author_id = u.id
             WHERE b.id = ?
@@ -961,6 +967,9 @@ def update_blog_post(post_id):
         if 'category' in data:
             fields.append('category = ?')
             values.append(data['category'])
+        if 'cover_image' in data:
+            fields.append('cover_image = ?')
+            values.append(data['cover_image'])
         if not fields:
             return jsonify({'error': 'No fields to update'}), 400
         fields.append('updated_at = CURRENT_TIMESTAMP')

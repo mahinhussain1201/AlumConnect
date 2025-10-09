@@ -249,22 +249,33 @@ def seed_database():
         position_ids[f"{pos['project_id']}_{pos['title']}"] = cursor.lastrowid
 
     # ----------------- Blog Posts -----------------
+    blog_cover_images = [
+        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200&auto=format&fit=crop'
+    ]
+
     blog_posts = [
-        {'title': 'From IIT KGP to Building a $50M Startup', 'content': 'My journey from being a student at IIT Kharagpur to building a successful healthcare AI startup. Learn about the challenges, failures, and eventual success...', 'category': 'Career', 'author_id': user_ids['rajesh.kumar@iitkgp.ac.in']},
-        {'title': 'How IIT KGP Shaped My Vision for Sustainable Technology', 'content': 'The experiences and learnings at IIT KGP that shaped my passion for sustainable technology and renewable energy solutions...', 'category': 'Startup', 'author_id': user_ids['priya.sharma@iitkgp.ac.in']},
-        {'title': 'Transforming Healthcare with AI', 'content': 'How our ML project evolved into a global healthcare AI platform serving millions of patients. The technical and business challenges we faced...', 'category': 'Technology', 'author_id': user_ids['rajesh.kumar@iitkgp.ac.in']},
-        {'title': 'The Future of Work: How AI is Changing the Job Market', 'content': 'An in-depth analysis of how AI is transforming the job market and what skills students need to develop for future careers...', 'category': 'Career', 'author_id': user_ids['amit.singh@iitkgp.ac.in']},
-        {'title': 'Biotechnology Innovations in Agriculture', 'content': 'Exploring how biotechnology is revolutionizing agriculture and solving food security challenges in India...', 'category': 'Technology', 'author_id': user_ids['ananya.iyer@iitkgp.ac.in']},
-        {'title': 'Smart Cities: The Role of Civil Engineers', 'content': 'How civil engineers are leveraging technology to build smarter, more sustainable cities for the future...', 'category': 'Technology', 'author_id': user_ids['vikram.patel@iitkgp.ac.in']},
-        {'title': 'Green Chemistry: Sustainable Manufacturing', 'content': 'The importance of green chemistry in creating sustainable manufacturing processes and reducing environmental impact...', 'category': 'Research', 'author_id': user_ids['meera.krishnan@iitkgp.ac.in']},
-        {'title': 'Lessons from My First Year as an Entrepreneur', 'content': 'Key lessons learned during my first year of entrepreneurship after graduating from IIT KGP...', 'category': 'Startup', 'author_id': user_ids['amit.singh@iitkgp.ac.in']}
+        {'title': 'From IIT KGP to Building a $50M Startup', 'content': 'My journey from being a student at IIT Kharagpur to building a successful healthcare AI startup. Learn about the challenges, failures, and eventual success...', 'category': 'Career', 'author_id': user_ids['rajesh.kumar@iitkgp.ac.in'], 'cover_image': blog_cover_images[0]},
+        {'title': 'How IIT KGP Shaped My Vision for Sustainable Technology', 'content': 'The experiences and learnings at IIT KGP that shaped my passion for sustainable technology and renewable energy solutions...', 'category': 'Startup', 'author_id': user_ids['priya.sharma@iitkgp.ac.in'], 'cover_image': blog_cover_images[1]},
+        {'title': 'Transforming Healthcare with AI', 'content': 'How our ML project evolved into a global healthcare AI platform serving millions of patients. The technical and business challenges we faced...', 'category': 'Technology', 'author_id': user_ids['rajesh.kumar@iitkgp.ac.in'], 'cover_image': blog_cover_images[2]},
+        {'title': 'The Future of Work: How AI is Changing the Job Market', 'content': 'An in-depth analysis of how AI is transforming the job market and what skills students need to develop for future careers...', 'category': 'Career', 'author_id': user_ids['amit.singh@iitkgp.ac.in'], 'cover_image': blog_cover_images[3]},
+        {'title': 'Biotechnology Innovations in Agriculture', 'content': 'Exploring how biotechnology is revolutionizing agriculture and solving food security challenges in India...', 'category': 'Technology', 'author_id': user_ids['ananya.iyer@iitkgp.ac.in'], 'cover_image': blog_cover_images[4]},
+        {'title': 'Smart Cities: The Role of Civil Engineers', 'content': 'How civil engineers are leveraging technology to build smarter, more sustainable cities for the future...', 'category': 'Technology', 'author_id': user_ids['vikram.patel@iitkgp.ac.in'], 'cover_image': blog_cover_images[5]},
+        {'title': 'Green Chemistry: Sustainable Manufacturing', 'content': 'The importance of green chemistry in creating sustainable manufacturing processes and reducing environmental impact...', 'category': 'Research', 'author_id': user_ids['meera.krishnan@iitkgp.ac.in'], 'cover_image': blog_cover_images[6]},
+        {'title': 'Lessons from My First Year as an Entrepreneur', 'content': 'Key lessons learned during my first year of entrepreneurship after graduating from IIT KGP...', 'category': 'Startup', 'author_id': user_ids['amit.singh@iitkgp.ac.in'], 'cover_image': blog_cover_images[7]}
     ]
     
     for post in blog_posts:
         cursor.execute('''
-            INSERT INTO blog_posts (title, content, category, author_id)
-            VALUES (?, ?, ?, ?)
-        ''', (post['title'], post['content'], post['category'], post['author_id']))
+            INSERT INTO blog_posts (title, content, category, author_id, cover_image)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (post['title'], post['content'], post['category'], post['author_id'], post.get('cover_image')))
 
     # ----------------- Mentorship Requests -----------------
     mentorship_requests = [
