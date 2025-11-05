@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { X, CheckCircle, Loader2 } from 'lucide-react'
 import { Button } from './ui/button'
 import { Card } from './ui/card'
+import { getApiUrl } from '../config'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -39,7 +40,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/complete`, {
+      const response = await fetch(getApiUrl(`/api/project-applications/${applicationId}/complete`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

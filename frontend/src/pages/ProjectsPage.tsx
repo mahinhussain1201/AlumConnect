@@ -9,6 +9,7 @@ import { WavesBackground } from '../components/ui/waves-background'
 import { BGPattern } from '../components/ui/bg-pattern'
 import { Briefcase, Search, Filter, ArrowRight, Loader2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { getApiUrl } from '../config'
 
 interface Project {
   id: number
@@ -57,7 +58,7 @@ export const ProjectsPage: React.FC = () => {
         headers['Authorization'] = `Bearer ${token}`
       }
       
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/projects', {
+      const response = await fetch(getApiUrl('/api/projects'), {
         headers
       })
       if (response.ok) {

@@ -7,6 +7,7 @@ import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { Textarea } from '../components/ui/textarea'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
+import { getApiUrl } from '../config'
 
 interface PositionForm {
   id?: number
@@ -67,7 +68,7 @@ export const EditProjectPage: React.FC = () => {
     try {
       const fd = new FormData()
       fd.append('image', file)
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/images`, {
+      const res = await fetch(getApiUrl(`/api/projects/${id}/images`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: fd
@@ -89,7 +90,7 @@ export const EditProjectPage: React.FC = () => {
     try {
       const fd = new FormData()
       fd.append('jd_pdf', file)
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/jd`, {
+      const res = await fetch(getApiUrl(`/api/projects/${id}/jd`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: fd
@@ -111,7 +112,7 @@ export const EditProjectPage: React.FC = () => {
     try {
       const fd = new FormData()
       fd.append('image', file)
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/highlights/image`, {
+      const res = await fetch(getApiUrl(`/api/projects/${id}/highlights/image`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: fd
@@ -138,7 +139,7 @@ export const EditProjectPage: React.FC = () => {
     const load = async () => {
       if (!id) return
       try {
-        const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
+        const res = await fetch(getApiUrl(`/api/projects/${id}`))
         if (res.ok) {
           const p = await res.json()
           const loadedForm: ProjectForm = {
@@ -238,7 +239,7 @@ export const EditProjectPage: React.FC = () => {
     setError(null)
     setSaving(true)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`, {
+      const res = await fetch(getApiUrl(`/api/projects/${id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

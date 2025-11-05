@@ -6,6 +6,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, User, Check, X, Mail, CheckCircle, ArrowLeft } from 'lucide-react'
 import { FeedbackModal } from '../components/FeedbackModal'
+import { getApiUrl } from '../config'
 
 interface ProjectApplication {
   id: number
@@ -55,7 +56,7 @@ export const ProjectApplicationsDetailPage: React.FC = () => {
       
       try {
         // Load project details
-        const projectRes = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${projectId}`, {
+        const projectRes = await fetch(getApiUrl(`/api/projects/${projectId}`), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (projectRes.ok) {
@@ -64,7 +65,7 @@ export const ProjectApplicationsDetailPage: React.FC = () => {
         }
 
         // Load applications
-        const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${projectId}/applications`, {
+        const res = await fetch(getApiUrl(`/api/projects/${projectId}/applications`), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {
@@ -84,7 +85,7 @@ export const ProjectApplicationsDetailPage: React.FC = () => {
     
     setProcessing(applicationId)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/${action}`, {
+      const res = await fetch(getApiUrl(`/api/project-applications/${applicationId}/${action}`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -102,7 +103,7 @@ export const ProjectApplicationsDetailPage: React.FC = () => {
   const reloadApplications = async () => {
     if (!token || !projectId) return
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${projectId}/applications`, {
+      const res = await fetch(getApiUrl(`/api/projects/${projectId}/applications`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.ok) {

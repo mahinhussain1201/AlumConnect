@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, Plus, Users, Eye, Calendar, MapPin, DollarSign, Clock, Code } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { getApiUrl } from '../config'
 
 interface Project {
   id: number
@@ -33,7 +34,7 @@ export const AlumniProjectsPage: React.FC = () => {
   useEffect(() => {
     const loadProjects = async () => {
       try {
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/projects', {
+        const res = await fetch(getApiUrl('/api/alumni/projects'), {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

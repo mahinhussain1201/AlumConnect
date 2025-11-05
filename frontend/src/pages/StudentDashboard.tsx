@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button'
 import { Loader2, Briefcase, ArrowRight, BookOpen, UserPlus, Search, TrendingUp, Clock, CheckCircle, MessageCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { CompletedProjectCard } from '../components/CompletedProjectCard'
+import { getApiUrl } from '../config'
 
 interface ProjectItem {
   id: number
@@ -70,7 +71,7 @@ export const StudentDashboard: React.FC = () => {
       
       try {
         // Load applied projects
-        const projectsRes = await fetch('https://alumconnect-s4c7.onrender.com/api/students/applied-projects', {
+        const projectsRes = await fetch(getApiUrl('/api/students/applied-projects'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (projectsRes.ok) {
@@ -90,7 +91,7 @@ export const StudentDashboard: React.FC = () => {
         }
 
         // Load mentorship requests
-        const mentorshipRes = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', {
+        const mentorshipRes = await fetch(getApiUrl('/api/mentorship/requests'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (mentorshipRes.ok) {
@@ -103,7 +104,7 @@ export const StudentDashboard: React.FC = () => {
         }
 
         // Load completed projects with feedback
-        const completedRes = await fetch('https://alumconnect-s4c7.onrender.com/api/students/completed-projects', {
+        const completedRes = await fetch(getApiUrl('/api/students/completed-projects'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (completedRes.ok) {

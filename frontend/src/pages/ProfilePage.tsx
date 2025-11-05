@@ -11,6 +11,7 @@ import { Label } from '../components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { GraduationCap, Building, MapPin, Briefcase, Award, Globe, Code, MessageCircle, Edit, Save, X, Plus, Trash2, Home, Calendar, Phone, Camera, FileText, Upload, Download, ArrowRight, CheckCircle } from 'lucide-react'
 import { Loader2 } from 'lucide-react'
+import { getApiUrl } from '../config'
 
 interface Skill {
   name: string
@@ -107,7 +108,7 @@ export const ProfilePage: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+        const res = await fetch(getApiUrl('/api/profile'), {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.ok) {
@@ -158,8 +159,8 @@ export const ProfilePage: React.FC = () => {
       if (!token || user?.role !== 'student') return
       try {
         const [appliedRes, completedRes] = await Promise.all([
-          fetch('https://alumconnect-s4c7.onrender.com/api/students/applied-projects', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('https://alumconnect-s4c7.onrender.com/api/students/completed-projects', { headers: { Authorization: `Bearer ${token}` } })
+          fetch(getApiUrl('/api/students/applied-projects'), { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(getApiUrl('/api/students/completed-projects'), { headers: { Authorization: `Bearer ${token}` } })
         ])
         if (appliedRes.ok) {
           setAppliedProjects(await appliedRes.json())
@@ -189,7 +190,7 @@ export const ProfilePage: React.FC = () => {
     
     setSaving(true)
     try {
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+      const res = await fetch(getApiUrl('/api/profile'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +218,7 @@ export const ProfilePage: React.FC = () => {
       const formData = new FormData()
       formData.append('file', file)
 
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile/upload-picture', {
+      const res = await fetch(getApiUrl('/api/profile/upload-picture'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -227,7 +228,7 @@ export const ProfilePage: React.FC = () => {
 
       if (res.ok) {
         // Reload profile to get updated avatar
-        const profileRes = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+        const profileRes = await fetch(getApiUrl('/api/profile'), {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (profileRes.ok) {
@@ -257,7 +258,7 @@ export const ProfilePage: React.FC = () => {
       const formData = new FormData()
       formData.append('cv', file)
 
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile/cv', {
+      const res = await fetch(getApiUrl('/api/profile/cv'), {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -267,7 +268,7 @@ export const ProfilePage: React.FC = () => {
 
       if (res.ok) {
         // Reload profile to get updated CV
-        const profileRes = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+        const profileRes = await fetch(getApiUrl('/api/profile'), {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (profileRes.ok) {
@@ -291,7 +292,7 @@ export const ProfilePage: React.FC = () => {
     if (!token || !confirm('Are you sure you want to delete your CV?')) return
 
     try {
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile/cv', {
+      const res = await fetch(getApiUrl('/api/profile/cv'), {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`
@@ -300,7 +301,7 @@ export const ProfilePage: React.FC = () => {
 
       if (res.ok) {
         // Reload profile
-        const profileRes = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+        const profileRes = await fetch(getApiUrl('/api/profile'), {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (profileRes.ok) {
@@ -419,7 +420,7 @@ export const ProfilePage: React.FC = () => {
               <div className="relative">
                 <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                   <AvatarImage 
-                    src={currentProfile.avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${currentProfile.avatar}` : undefined} 
+                    src={currentProfile.avatar ? getApiUrl(`/api/profile/picture/${currentProfile.avatar}`) : undefined} 
                     alt={currentProfile.name} 
                   />
                   <AvatarFallback className="text-2xl bg-white text-blue-600">
@@ -683,7 +684,7 @@ export const ProfilePage: React.FC = () => {
                           size="sm"
                           variant="outline"
                           className="border-blue-300 text-blue-600 hover:bg-blue-50"
-                          onClick={() => window.open(`https://alumconnect-s4c7.onrender.com/api/profile/cv/${currentProfile.cv_pdf}`, '_blank')}
+                          onClick={() => window.open(getApiUrl(`/api/profile/cv/${currentProfile.cv_pdf}`), '_blank')}
                         >
                           <Download className="h-4 w-4 mr-2" />
                           View

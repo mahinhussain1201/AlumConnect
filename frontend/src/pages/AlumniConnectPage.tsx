@@ -8,6 +8,7 @@ import { Button } from '../components/ui/button'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { Briefcase, Clock, MapPin, DollarSign, ArrowRight, Loader2, CheckCircle, BookOpen, Building, Heart, X } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { getApiUrl } from '../config'
 
 interface Project {
   id: number
@@ -62,7 +63,7 @@ export const AlumniConnectPage: React.FC = () => {
 
   const fetchAppliedProjects = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/students/applied-projects', {
+      const response = await fetch(getApiUrl('/api/students/applied-projects'), {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (response.ok) {
@@ -82,14 +83,14 @@ export const AlumniConnectPage: React.FC = () => {
       // Fetch recommended projects for students, all projects for others
       let projectsResponse
       if (user && user.role === 'student' && token) {
-        projectsResponse = await fetch('https://alumconnect-s4c7.onrender.com/api/projects/recommended', {
+        projectsResponse = await fetch(getApiUrl('/api/projects/recommended'), {
           headers: { Authorization: `Bearer ${token}` }
         })
       } else {
-        projectsResponse = await fetch('https://alumconnect-s4c7.onrender.com/api/projects')
+        projectsResponse = await fetch(getApiUrl('/api/projects'))
       }
 
-      const blogsResponse = await fetch('https://alumconnect-s4c7.onrender.com/api/blog')
+      const blogsResponse = await fetch(getApiUrl('/api/blog'))
 
       if (projectsResponse.ok) {
         const projectsData = await projectsResponse.json()
@@ -113,7 +114,7 @@ export const AlumniConnectPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${projectId}`, {
+      const response = await fetch(getApiUrl(`/api/project-applications/${projectId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

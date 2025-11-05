@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, User, Check, X, Mail, Eye } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { getApiUrl } from '../config'
 
 interface RequestItem {
   id: number
@@ -32,7 +33,7 @@ export const AlumniMenteesPage: React.FC = () => {
     }
     // Fallback via available users endpoint by email
     try {
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
+      const res = await fetch(getApiUrl('/api/messages/available-users'), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.ok) {
@@ -60,7 +61,7 @@ export const AlumniMenteesPage: React.FC = () => {
       
       try {
         // console.log('Fetching mentorship requests...')
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', {
+        const res = await fetch(getApiUrl('/api/mentorship/requests'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         // console.log('Response status:', res.status)
@@ -95,7 +96,7 @@ export const AlumniMenteesPage: React.FC = () => {
     
     setProcessing(requestId)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/mentorship/${requestId}/${action}`, {
+      const res = await fetch(getApiUrl(`/api/mentorship/${requestId}/${action}`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })

@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button'
 import { Loader2, User, Check, X, Mail, ArrowLeft, Eye, CheckCircle } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
 import { FeedbackModal } from '../components/FeedbackModal'
+import { getApiUrl } from '../config'
 
 interface ProjectApplication {
   id: number
@@ -19,6 +20,7 @@ interface ProjectApplication {
   is_completed?: boolean
   completed_at?: string
   feedback?: string
+  has_team?: boolean
 }
 
 interface Project {
@@ -57,7 +59,7 @@ export const ProjectApplicationsPage: React.FC = () => {
 
     // Fallback: fetch available users and match by email to get the user id
     try {
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
+      const res = await fetch(getApiUrl('/api/messages/available-users'), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.ok) {
@@ -82,14 +84,14 @@ export const ProjectApplicationsPage: React.FC = () => {
       
       try {
         // Load project details
-        const projectRes = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
+        const projectRes = await fetch(getApiUrl(`/api/projects/${id}`))
         if (projectRes.ok) {
           const projectData = await projectRes.json()
           setProject(projectData)
         }
 
         // Load applications for this specific project
-        const appsRes = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/applications`, {
+        const appsRes = await fetch(getApiUrl(`/api/projects/${id}/applications`), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (appsRes.ok) {
@@ -109,7 +111,7 @@ export const ProjectApplicationsPage: React.FC = () => {
     
     setProcessing(applicationId)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/${action}`, {
+      const res = await fetch(getApiUrl(`/api/project-applications/${applicationId}/${action}`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -188,7 +190,12 @@ export const ProjectApplicationsPage: React.FC = () => {
                           <CardTitle className="text-lg">Application from {application.student_name}</CardTitle>
                           <CardDescription>{application.student_email}</CardDescription>
                         </div>
-                        <Badge variant="outline" className="capitalize">{application.status}</Badge>
+                        <div className="flex gap-2">
+                          <Badge variant="secondary" className={application.has_team ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-gray-100 text-gray-700 border-gray-200"}>
+                            {application.has_team ? "Has Team" : "Individual"}
+                          </Badge>
+                          <Badge variant="outline" className="capitalize">{application.status}</Badge>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -273,7 +280,10 @@ export const ProjectApplicationsPage: React.FC = () => {
                           <CardDescription>{application.student_email}</CardDescription>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge 
+                          <Badge variant="secondary" className={application.has_team ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-gray-100 text-gray-700 border-gray-200"}>
+                            {application.has_team ? "Has Team" : "Individual"}
+                          </Badge>
+                          <Badge
                             variant={application.status === 'accepted' ? 'default' : 'secondary'}
                             className="capitalize"
                           >
@@ -389,7 +399,7 @@ export const ProjectApplicationsPage: React.FC = () => {
             // Reload applications to show updated status
             if (!token || !id) return
             try {
-              const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/applications`, {
+              const res = await fetch(getApiUrl(`/api/projects/${id}/applications`), {
                 headers: { Authorization: `Bearer ${token}` },
               })
               if (res.ok) {

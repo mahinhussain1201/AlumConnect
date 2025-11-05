@@ -22,6 +22,7 @@ import {
   Github
 } from 'lucide-react'
 import { Textarea } from '../components/ui/textarea'
+import { getApiUrl } from '../config'
 
 interface Alumni {
   id: number
@@ -69,7 +70,7 @@ export const FindMentorsPage: React.FC = () => {
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni', {
+        const res = await fetch(getApiUrl('/api/alumni'), {
           headers: { Authorization: `Bearer ${token}` }
         })
         if (res.ok) {
@@ -178,7 +179,7 @@ export const FindMentorsPage: React.FC = () => {
 
     setSendingRequest(true)
     try {
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/request', {
+      const res = await fetch(getApiUrl('/api/mentorship/request'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -345,7 +346,7 @@ export const FindMentorsPage: React.FC = () => {
                   <div className="flex items-start gap-4">
                     <Avatar className="h-16 w-16 border-2 border-purple-200">
                       <AvatarImage 
-                        src={alumnus.email ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${alumnus.email}` : undefined}
+                        src={alumnus.email ? getApiUrl(`/api/profile/picture/${alumnus.email}`) : undefined}
                         alt={alumnus.name}
                       />
                       <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white font-semibold">

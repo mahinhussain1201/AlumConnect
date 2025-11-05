@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, Briefcase, Clock, CheckCircle, X, ArrowLeft, Calendar } from 'lucide-react'
+import { getApiUrl } from '../config'
 
 interface ProjectApplication {
   id: number
@@ -32,7 +33,7 @@ export const StudentApplicationsPage: React.FC = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/students/applications', {
+      const response = await fetch(getApiUrl('/api/students/applications'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }

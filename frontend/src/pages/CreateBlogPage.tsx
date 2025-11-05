@@ -8,6 +8,7 @@ import { Button } from '../components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { getApiUrl } from '../config'
 
 export const CreateBlogPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
@@ -47,7 +48,7 @@ export const CreateBlogPage: React.FC = () => {
         content: form.content
       }
       console.log('Sending blog data:', requestData)
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/blog', {
+      const res = await fetch(getApiUrl('/api/blog'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +63,7 @@ export const CreateBlogPage: React.FC = () => {
         for (const f of imageFiles) {
           const fd = new FormData()
           fd.append('image', f)
-          await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}/images`, {
+          await fetch(getApiUrl(`/api/blog/${postId}/images`), {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: fd
@@ -72,7 +73,7 @@ export const CreateBlogPage: React.FC = () => {
         for (const f of pdfFiles) {
           const fd = new FormData()
           fd.append('pdf', f)
-          await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}/pdfs`, {
+          await fetch(getApiUrl(`/api/blog/${postId}/pdfs`), {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: fd

@@ -8,6 +8,7 @@ import { Button } from '../components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 import { Loader2 } from 'lucide-react'
 import { RichTextEditor } from '../components/ui/rich-text-editor'
+import { getApiUrl } from '../config'
 
 interface BlogPost {
   id: number
@@ -33,7 +34,7 @@ export const EditBlogPage: React.FC = () => {
     const load = async () => {
       if (!id) return
       try {
-        const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${id}`)
+        const res = await fetch(getApiUrl(`/api/blog/${id}`))
         if (res.ok) {
           const data = await res.json()
           setPost({ id: data.id, title: data.title, content: data.content, category: data.category, author_id: data.author_id, images: data.images || [], pdfs: data.pdfs || [] })
@@ -82,7 +83,7 @@ export const EditBlogPage: React.FC = () => {
     setError(null)
     setSaving(true)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, {
+      const res = await fetch(getApiUrl(`/api/blog/${post.id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +189,7 @@ export const EditBlogPage: React.FC = () => {
                     try {
                       const fd = new FormData()
                       fd.append('image', e.target.files[0])
-                      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${id}/images`, {
+                      const res = await fetch(getApiUrl(`/api/blog/${id}/images`), {
                         method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd
                       })
                       if (res.ok) {
@@ -221,7 +222,7 @@ export const EditBlogPage: React.FC = () => {
                     try {
                       const fd = new FormData()
                       fd.append('pdf', e.target.files[0])
-                      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${id}/pdfs`, {
+                      const res = await fetch(getApiUrl(`/api/blog/${id}/pdfs`), {
                         method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd
                       })
                       if (res.ok) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext'
+import { getApiUrl } from '../config'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
@@ -89,7 +90,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ userId, isOpen, onCl
   const fetchProfile = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/users/${userId}/profile`, {
+      const res = await fetch(getApiUrl(`/api/users/${userId}/profile`), {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.ok) {
@@ -116,8 +117,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ userId, isOpen, onCl
     if (!token) return
     try {
       const [appliedRes, completedRes] = await Promise.all([
-        fetch(`https://alumconnect-s4c7.onrender.com/api/users/${userId}/applied-projects`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`https://alumconnect-s4c7.onrender.com/api/users/${userId}/completed-projects`, { headers: { Authorization: `Bearer ${token}` } })
+        fetch(getApiUrl(`/api/users/${userId}/applied-projects`), { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(getApiUrl(`/api/users/${userId}/completed-projects`), { headers: { Authorization: `Bearer ${token}` } })
       ])
       if (appliedRes.ok) {
         const data = await appliedRes.json()
@@ -167,7 +168,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ userId, isOpen, onCl
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                     <AvatarImage
-                      src={profile.avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${profile.avatar}` : undefined}
+                      src={profile.avatar ? getApiUrl(`/api/profile/picture/${profile.avatar}`) : undefined}
                       alt={profile.name}
                     />
                     <AvatarFallback className="text-2xl bg-white text-blue-600">
@@ -271,7 +272,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ userId, isOpen, onCl
                               size="sm"
                               variant="outline"
                               className="border-blue-300 text-blue-600 hover:bg-blue-50"
-                              onClick={() => window.open(`https://alumconnect-s4c7.onrender.com/api/profile/cv/${profile.cv_pdf}`, '_blank')}
+                              onClick={() => window.open(getApiUrl(`/api/profile/cv/${profile.cv_pdf}`), '_blank')}
                             >
                               <Download className="h-4 w-4 mr-2" />
                               Download

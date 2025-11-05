@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Users, BookOpen, Bell, Plus, FilePlus2, Briefcase, Loader2, TrendingUp, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { getApiUrl } from '../config'
 
 interface DashboardStats {
   active_projects: number
@@ -43,7 +44,7 @@ export const AlumniDashboard: React.FC = () => {
       
       try {
         // Load dashboard stats
-        const statsRes = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/dashboard-stats', {
+        const statsRes = await fetch(getApiUrl('/api/alumni/dashboard-stats'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (statsRes.ok) {
@@ -53,9 +54,9 @@ export const AlumniDashboard: React.FC = () => {
 
         // Build recent activity from supported endpoints
         const [mentorshipRes, applicationsRes, projectsRes] = await Promise.all([
-          fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/requests', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('https://alumconnect-s4c7.onrender.com/api/alumni/project-applications', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('https://alumconnect-s4c7.onrender.com/api/alumni/projects', { headers: { Authorization: `Bearer ${token}` } })
+          fetch(getApiUrl('/api/mentorship/requests'), { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(getApiUrl('/api/alumni/project-applications'), { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(getApiUrl('/api/alumni/projects'), { headers: { Authorization: `Bearer ${token}` } })
         ])
 
         const activities: RecentActivity[] = []

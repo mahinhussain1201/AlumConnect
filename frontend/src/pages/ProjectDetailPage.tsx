@@ -5,9 +5,11 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Textarea } from '../components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
+import { Label } from '../components/ui/label'
 import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { Briefcase, Users, Loader2, Send, CheckCircle, ArrowLeft, MapPin, Clock, DollarSign, UserCheck, Link as LinkIcon, FileText, ChevronLeft, ChevronRight, Edit, Mail, Phone, Globe, Award, TrendingUp, Handshake, Star, ChevronDown, Calendar, Heart, X, ChevronUp } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { API_BASE_URL, getApiUrl } from '../config'
 
 interface Position {
   id: number
@@ -66,6 +68,7 @@ export const ProjectDetailPage: React.FC = () => {
   const [project, setProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [applicationMessage, setApplicationMessage] = useState('')
+  const [hasTeam, setHasTeam] = useState(false)
   const [isApplying, setIsApplying] = useState(false)
   const [applicationSubmitted, setApplicationSubmitted] = useState(false)
   const [positionApplications, setPositionApplications] = useState<Record<string, { application_id: number, status: string, applied_at: string, is_legacy?: boolean }>>({})
@@ -80,11 +83,10 @@ export const ProjectDetailPage: React.FC = () => {
   const [isTeamExpanded, setIsTeamExpanded] = useState(false)
   const [isPositionsExpanded, setIsPositionsExpanded] = useState(false)
   const [expandedPositions, setExpandedPositions] = useState<Record<number, boolean>>({})
-  const API_BASE = 'https://alumconnect-s4c7.onrender.com'
   const abs = (url?: string) => {
     if (!url) return ''
     if (url.startsWith('http://') || url.startsWith('https://')) return url
-    if (url.startsWith('/')) return `${API_BASE}${url}`
+    if (url.startsWith('/')) return `${API_BASE_URL}${url}`
     return url
   }
 
@@ -140,14 +142,14 @@ export const ProjectDetailPage: React.FC = () => {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}`)
+      const response = await fetch(getApiUrl(`/api/projects/${id}`))
       if (response.ok) {
         const data = await response.json()
         console.log('Project data:', data)
         console.log('Project positions:', data.positions)
         setProject(data)
         try {
-          const rel = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects?category=${encodeURIComponent(data.category)}`)
+          const rel = await fetch(getApiUrl(`/api/projects?category=${encodeURIComponent(data.category)}`))
           if (rel.ok) {
             const relData = await rel.json()
             setRelated(relData.filter((p: any) => p.id !== data.id).slice(0, 6))
@@ -172,7 +174,7 @@ export const ProjectDetailPage: React.FC = () => {
     }
     try {
       console.log('🔍 Fetching application status for project:', id)
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${id}/application-status`, {
+      const response = await fetch(getApiUrl(`/api/projects/${id}/application-status`), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -231,14 +233,15 @@ export const ProjectDetailPage: React.FC = () => {
     const requestBody = {
       project_id: project.id,
       position_id: selectedPosition,
-      message: applicationMessage
+      message: applicationMessage,
+      has_team: hasTeam
     }
     
     console.log('📤 Submitting application:', requestBody)
 
     setIsApplying(true)
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/project-applications', {
+      const response = await fetch(getApiUrl('/api/project-applications'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -264,6 +267,7 @@ export const ProjectDetailPage: React.FC = () => {
         }))
         setApplicationSubmitted(true)
         setApplicationMessage('')
+        setHasTeam(false)
         setIsApplyDialogOpen(false)
         setSelectedPosition(null)
         // Refetch to get the actual application data from server
@@ -855,6 +859,7 @@ export const ProjectDetailPage: React.FC = () => {
                                   if (!open) {
                                     setSelectedPosition(null)
                                     setApplicationMessage('')
+                                    setHasTeam(false)
                                   }
                                 }}>
                                   <DialogTrigger asChild>
@@ -883,8 +888,20 @@ export const ProjectDetailPage: React.FC = () => {
                                         onChange={(e) => setApplicationMessage(e.target.value)}
                                         rows={4}
                                       />
-                                      <Button 
-                                        onClick={handleApply} 
+                                      <div className="flex items-center space-x-2">
+                                        <input
+                                          type="checkbox"
+                                          id="hasTeam"
+                                          checked={hasTeam}
+                                          onChange={(e) => setHasTeam(e.target.checked)}
+                                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <Label htmlFor="hasTeam" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                          I have a team
+                                        </Label>
+                                      </div>
+                                      <Button
+                                        onClick={handleApply}
                                         disabled={isApplying || !applicationMessage.trim()}
                                         className="w-full"
                                       >

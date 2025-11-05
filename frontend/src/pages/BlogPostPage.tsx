@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { formatDate } from '../lib/dataUtils'
 import { BookOpen, Share2, Heart, Loader2, ArrowLeft, Clock, Check } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { API_BASE_URL, getApiUrl } from '../config'
 
 interface BlogPost {
   id: number
@@ -36,11 +37,10 @@ export const BlogPostPage: React.FC = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  const API_BASE = 'https://alumconnect-s4c7.onrender.com'
   const abs = (url?: string) => {
     if (!url) return ''
     if (url.startsWith('http://') || url.startsWith('https://')) return url
-    if (url.startsWith('/')) return `${API_BASE}${url}`
+    if (url.startsWith('/')) return `${API_BASE_URL}${url}`
     return url
   }
 
@@ -54,7 +54,7 @@ export const BlogPostPage: React.FC = () => {
 
   const fetchBlogPost = async () => {
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${id}`)
+      const response = await fetch(getApiUrl(`/api/blog/${id}`))
       if (response.ok) {
         const data = await response.json()
         setPost(data)
@@ -75,7 +75,7 @@ export const BlogPostPage: React.FC = () => {
     
     setLiking(true)
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${post.id}/like`, {
+      const response = await fetch(getApiUrl(`/api/blog/${post.id}/like`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -126,7 +126,7 @@ export const BlogPostPage: React.FC = () => {
     if (!confirmed) return
     setDeleting(true)
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${post.id}`, {
+      const response = await fetch(getApiUrl(`/api/blog/${post.id}`), {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })

@@ -9,6 +9,7 @@ import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { BookOpen, ArrowRight, Loader2, Heart, Share2, Clock, Check, Search, Filter } from 'lucide-react';
 import { ProfileModal } from '../components/ProfileModal';
+import { getApiUrl } from '../config'
 
 interface BlogPost {
   id: number;
@@ -67,7 +68,7 @@ export const BlogPage: React.FC = () => {
 
   const fetchBlogPosts = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/blog');
+      const response = await fetch(getApiUrl('/api/blog'));
       if (response.ok) {
         const data = await response.json();
         setPosts(data);
@@ -109,7 +110,7 @@ export const BlogPage: React.FC = () => {
   const handleLike = async (postId: number) => {
     if (!token) return;
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}/like`, {
+      const response = await fetch(getApiUrl(`/api/blog/${postId}/like`), {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

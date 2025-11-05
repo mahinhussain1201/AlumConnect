@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button'
 import { Loader2, BookOpen, Plus, Eye, Edit, Trash2, Calendar, Clock } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { excerptFromHtml } from '../lib/dataUtils'
+import { getApiUrl } from '../config'
 
 interface BlogPost {
   id: number
@@ -28,7 +29,7 @@ export const AlumniBlogsPage: React.FC = () => {
       if (!token) return
       
       try {
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/blog-posts', {
+        const res = await fetch(getApiUrl('/api/alumni/blog-posts'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {
@@ -77,7 +78,7 @@ export const AlumniBlogsPage: React.FC = () => {
     if (!ok) return
     setDeletingId(postId)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/blog/${postId}`, {
+      const res = await fetch(getApiUrl(`/api/blog/${postId}`), {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })

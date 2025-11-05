@@ -14,6 +14,7 @@ import carouselImage3 from "../images/carousel-3.webp";
 import carouselImage4 from "../images/carousel-4.webp";
 import { useAuth } from '../contexts/AuthContext';
 import { ProfileModal } from '../components/ProfileModal';
+import { getApiUrl } from '../config'
 import {
   ArrowRight,
   BookOpen,
@@ -104,8 +105,8 @@ export const LandingPage: React.FC = () => {
     try {
       // Fetch projects and alumni in parallel
       const [projectsResponse, alumniResponse] = await Promise.all([
-        fetch('https://alumconnect-s4c7.onrender.com/api/projects'),
-        fetch('https://alumconnect-s4c7.onrender.com/api/alumni')
+        fetch(getApiUrl('/api/projects')),
+        fetch(getApiUrl('/api/alumni'))
       ])
 
       if (projectsResponse.ok) {

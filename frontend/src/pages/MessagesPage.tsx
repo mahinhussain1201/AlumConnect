@@ -8,6 +8,7 @@ import { formatDate } from '../lib/dataUtils'
 import { MessageCircle, Search, Plus, Loader2, Send, ArrowLeft } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { ProfileModal } from '../components/ProfileModal'
+import { getApiUrl } from '../config'
 
 interface Conversation {
   id: number
@@ -90,7 +91,7 @@ export const MessagesPage: React.FC = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
+      const response = await fetch(getApiUrl('/api/messages/conversations'), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.ok) {
@@ -122,7 +123,7 @@ export const MessagesPage: React.FC = () => {
 
       pollingIntervalRef.current = setInterval(async () => {
         try {
-          const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${selectedConversation.id}/messages`, {
+          const response = await fetch(getApiUrl(`/api/messages/conversations/${selectedConversation.id}/messages`), {
             headers: { Authorization: `Bearer ${token}` },
           })
           if (response.ok) {
@@ -148,10 +149,10 @@ export const MessagesPage: React.FC = () => {
       // console.log('Fetching messages data...')
       // Fetch conversations and available users in parallel
       const [conversationsRes, usersRes] = await Promise.all([
-        fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
+        fetch(getApiUrl('/api/messages/conversations'), {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('https://alumconnect-s4c7.onrender.com/api/messages/available-users', {
+        fetch(getApiUrl('/api/messages/available-users'), {
           headers: { Authorization: `Bearer ${token}` },
         })
       ])
@@ -184,7 +185,7 @@ export const MessagesPage: React.FC = () => {
   const startNewConversation = async (otherUserId: number) => {
     try {
       console.log('Starting conversation with user:', otherUserId)
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/messages/conversations', {
+      const response = await fetch(getApiUrl('/api/messages/conversations'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -228,7 +229,7 @@ export const MessagesPage: React.FC = () => {
     setSelectedConversation(conversation)
     setMessagesLoading(true)
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${conversation.id}/messages`, {
+      const response = await fetch(getApiUrl(`/api/messages/conversations/${conversation.id}/messages`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.ok) {
@@ -249,7 +250,7 @@ export const MessagesPage: React.FC = () => {
 
     setSending(true)
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${selectedConversation.id}/messages`, {
+      const response = await fetch(getApiUrl(`/api/messages/conversations/${selectedConversation.id}/messages`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -435,7 +436,7 @@ export const MessagesPage: React.FC = () => {
                       <div onClick={(e) => { e.stopPropagation(); openProfileModal(userObj.id); }}>
                         <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
                           <AvatarImage 
-                            src={userObj.avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${userObj.avatar}` : undefined}
+                            src={userObj.avatar ? getApiUrl(`/api/profile/picture/${userObj.avatar}`) : undefined}
                             alt={userObj.name}
                           />
                           <AvatarFallback className={`${
@@ -501,7 +502,7 @@ export const MessagesPage: React.FC = () => {
                         <div onClick={(e) => { e.stopPropagation(); openProfileModal(conversation.other_user_id); }}>
                           <Avatar className="h-10 w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
                             <AvatarImage 
-                              src={conversation.other_user_avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${conversation.other_user_avatar}` : undefined}
+                              src={conversation.other_user_avatar ? getApiUrl(`/api/profile/picture/${conversation.other_user_avatar}`) : undefined}
                               alt={conversation.other_user_name}
                             />
                             <AvatarFallback className={`${
@@ -605,7 +606,7 @@ export const MessagesPage: React.FC = () => {
                     <div onClick={() => openProfileModal(selectedConversation.other_user_id)}>
                       <Avatar className="h-8 w-8 md:h-10 md:w-10 hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer">
                         <AvatarImage 
-                          src={selectedConversation.other_user_avatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${selectedConversation.other_user_avatar}` : undefined}
+                          src={selectedConversation.other_user_avatar ? getApiUrl(`/api/profile/picture/${selectedConversation.other_user_avatar}`) : undefined}
                           alt={selectedConversation.other_user_name}
                         />
                         <AvatarFallback className={`${

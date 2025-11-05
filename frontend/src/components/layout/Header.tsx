@@ -7,6 +7,7 @@ import { GooeyNav } from '../../components/ui/gooey-nav'
 import { Sheet, SheetContent, SheetTrigger } from '../../components/ui/sheet'
 import { Menu, GraduationCap, Users, BookOpen, MessageCircle, LogOut, User, ChevronDown } from 'lucide-react'
 import logoImage from '../../images/name.png'
+import { getApiUrl } from '../../config'
 
 export const Header: React.FC = () => {
   const { user, logout, token } = useAuth()
@@ -20,7 +21,7 @@ export const Header: React.FC = () => {
     const fetchAvatar = async () => {
       if (user && token) {
         try {
-          const res = await fetch('https://alumconnect-s4c7.onrender.com/api/profile', {
+          const res = await fetch(getApiUrl('/api/profile'), {
             headers: { Authorization: `Bearer ${token}` }
           })
           if (res.ok) {
@@ -150,7 +151,7 @@ export const Header: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8">
                       <AvatarImage 
-                        src={profileAvatar ? `https://alumconnect-s4c7.onrender.com/api/profile/picture/${profileAvatar}` : undefined} 
+                        src={profileAvatar ? getApiUrl(`/api/profile/picture/${profileAvatar}`) : undefined} 
                         alt={user.name} 
                       />
                       <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>

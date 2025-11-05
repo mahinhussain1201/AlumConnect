@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { Input } from '../components/ui/input'
 import { Badge } from '../components/ui/badge'
 import { ArrowLeft, Send, Loader2, MessageCircle, Clock } from 'lucide-react'
+import { getApiUrl } from '../config'
 
 interface Message {
   id: number
@@ -55,10 +56,10 @@ export const ChatPage: React.FC = () => {
   const fetchConversationData = async () => {
     try {
       const [messagesRes, conversationRes] = await Promise.all([
-        fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}/messages`, {
+        fetch(getApiUrl(`/api/messages/conversations/${id}/messages`), {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}`, {
+        fetch(getApiUrl(`/api/messages/conversations/${id}`), {
           headers: { Authorization: `Bearer ${token}` },
         })
       ])
@@ -84,7 +85,7 @@ export const ChatPage: React.FC = () => {
 
     setSending(true)
     try {
-      const response = await fetch(`https://alumconnect-s4c7.onrender.com/api/messages/conversations/${id}/messages`, {
+      const response = await fetch(getApiUrl(`/api/messages/conversations/${id}/messages`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

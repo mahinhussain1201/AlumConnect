@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Loader2, User, Check, X, Mail, CheckCircle } from 'lucide-react'
 import { FeedbackModal } from '../components/FeedbackModal'
+import { getApiUrl } from '../config'
 
 interface ProjectApplication {
   id: number
@@ -18,6 +19,7 @@ interface ProjectApplication {
   is_completed?: boolean
   completed_at?: string
   feedback?: string
+  has_team?: boolean
 }
 
 export const AlumniProjectApplicationsPage: React.FC = () => {
@@ -40,9 +42,9 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
   useEffect(() => {
     const loadApplications = async () => {
       if (!token) return
-      
+
       try {
-        const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/project-applications', {
+        const res = await fetch(getApiUrl('/api/alumni/project-applications'), {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (res.ok) {
@@ -70,7 +72,7 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
     
     setProcessing(applicationId)
     try {
-      const res = await fetch(`https://alumconnect-s4c7.onrender.com/api/project-applications/${applicationId}/${action}`, {
+      const res = await fetch(getApiUrl(`/api/project-applications/${applicationId}/${action}`), {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -132,7 +134,12 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
                             <CardTitle className="text-lg">{application.project_title}</CardTitle>
                             <CardDescription>Application from {application.student_name}</CardDescription>
                           </div>
-                          <Badge variant="outline" className="capitalize">{application.status}</Badge>
+                          <div className="flex gap-2">
+                            <Badge variant="secondary" className={application.has_team ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-gray-100 text-gray-700 border-gray-200"}>
+                              {application.has_team ? "Has Team" : "Individual"}
+                            </Badge>
+                            <Badge variant="outline" className="capitalize">{application.status}</Badge>
+                          </div>
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -207,12 +214,17 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
                             <CardTitle className="text-lg">{application.project_title}</CardTitle>
                             <CardDescription>Application from {application.student_name}</CardDescription>
                           </div>
-                          <Badge 
-                            variant={application.status === 'accepted' ? 'default' : 'secondary'}
-                            className="capitalize"
-                          >
-                            {application.status}
-                          </Badge>
+                          <div className="flex gap-2">
+                            <Badge variant="secondary" className={application.has_team ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-gray-100 text-gray-700 border-gray-200"}>
+                              {application.has_team ? "Has Team" : "Individual"}
+                            </Badge>
+                            <Badge
+                              variant={application.status === 'accepted' ? 'default' : 'secondary'}
+                              className="capitalize"
+                            >
+                              {application.status}
+                            </Badge>
+                          </div>
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -300,7 +312,7 @@ export const AlumniProjectApplicationsPage: React.FC = () => {
             const loadApplications = async () => {
               if (!token) return
               try {
-                const res = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni/project-applications', {
+                const res = await fetch(getApiUrl('/api/alumni/project-applications'), {
                   headers: { Authorization: `Bearer ${token}` },
                 })
                 if (res.ok) {

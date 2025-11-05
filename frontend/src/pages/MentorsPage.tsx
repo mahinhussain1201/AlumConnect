@@ -12,6 +12,7 @@ import { WavesBackground } from '../components/ui/waves-background'
 import { BGPattern } from '../components/ui/bg-pattern'
 import { Search, MapPin, Briefcase, GraduationCap, Building2, Loader2, Send, CheckCircle, Linkedin, Github, Home } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { getApiUrl } from '../config'
 
 interface Mentor {
   id: number
@@ -61,7 +62,7 @@ export const MentorsPage: React.FC = () => {
 
   const fetchMentors = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/alumni')
+      const response = await fetch(getApiUrl('/api/alumni'))
       if (response.ok) {
         const data = await response.json()
         setMentors(data)
@@ -148,7 +149,7 @@ export const MentorsPage: React.FC = () => {
     
     setIsSubmitting(true)
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/mentorship/request', {
+      const response = await fetch(getApiUrl('/api/mentorship/request'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

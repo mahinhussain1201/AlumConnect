@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../components/ui/badge'
+import { getApiUrl } from '../config'
 
 export const CreateProjectPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
@@ -84,7 +85,7 @@ export const CreateProjectPage: React.FC = () => {
         }))
       }
       console.log('Sending project data:', requestData)
-      const res = await fetch('https://alumconnect-s4c7.onrender.com/api/projects', {
+      const res = await fetch(getApiUrl('/api/projects'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ export const CreateProjectPage: React.FC = () => {
           for (const f of imageFiles) {
             const fd = new FormData()
             fd.append('image', f)
-            await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${projectId}/images`, {
+            await fetch(getApiUrl(`/api/projects/${projectId}/images`), {
               method: 'POST',
               headers: { Authorization: `Bearer ${token}` },
               body: fd
@@ -111,7 +112,7 @@ export const CreateProjectPage: React.FC = () => {
         if (jdFile) {
           const fd = new FormData()
           fd.append('jd_pdf', jdFile)
-          await fetch(`https://alumconnect-s4c7.onrender.com/api/projects/${projectId}/jd`, {
+          await fetch(getApiUrl(`/api/projects/${projectId}/jd`), {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: fd

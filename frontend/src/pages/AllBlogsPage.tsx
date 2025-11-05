@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar'
 import { formatDate, truncateText } from '../lib/dataUtils'
 import { BookOpen, ArrowRight, Loader2, Heart, Share2, Clock, Check } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
+import { getApiUrl } from '../config'
 
 interface BlogPost {
   id: number
@@ -39,7 +40,7 @@ export const AllBlogsPage: React.FC = () => {
 
   const fetchBlogPosts = async () => {
     try {
-      const response = await fetch('https://alumconnect-s4c7.onrender.com/api/blog-posts')
+      const response = await fetch(getApiUrl('/api/blog-posts'))
       if (response.ok) {
         const data = await response.json()
         setPosts(data)

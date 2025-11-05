@@ -1278,53 +1278,59 @@ The journey is hard, but incredibly rewarding. Would I do it again? Absolutely.
          'status': 'accepted'},
         
         # Smart Agriculture - Full Stack Developer position
-        {'project_id': project_ids['Smart Agriculture Monitoring'], 
-         'position_id': position_ids[f"{project_ids['Smart Agriculture Monitoring']}_Full Stack Developer"], 
-         'student_id': user_ids['sneha.reddy@iitkgp.ac.in'], 
-         'message': 'Experienced with MERN stack through multiple projects. Built a real-time dashboard for our robotics team that displays sensor data using Chart.js and Socket.io. I am excited about using technology to help farmers. Creating intuitive interfaces that farmers can easily use is a challenge I would love to tackle. Agriculture needs better technology solutions and I want to be part of that change.', 
-         'status': 'pending'},
+        {'project_id': project_ids['Smart Agriculture Monitoring'],
+         'position_id': position_ids[f"{project_ids['Smart Agriculture Monitoring']}_Full Stack Developer"],
+         'student_id': user_ids['sneha.reddy@iitkgp.ac.in'],
+         'message': 'Experienced with MERN stack through multiple projects. Built a real-time dashboard for our robotics team that displays sensor data using Chart.js and Socket.io. I am excited about using technology to help farmers. Creating intuitive interfaces that farmers can easily use is a challenge I would love to tackle. Agriculture needs better technology solutions and I want to be part of that change.',
+         'status': 'pending',
+         'has_team': True},
         
         # Urban Infrastructure - GIS Specialist position
-        {'project_id': project_ids['Urban Infrastructure Planning Tool'], 
-         'position_id': position_ids[f"{project_ids['Urban Infrastructure Planning Tool']}_GIS Specialist"], 
-         'student_id': user_ids['rohan.desai@iitkgp.ac.in'], 
-         'message': 'I am a civil engineering student with experience in GIS and AutoCAD from my coursework. I have worked on urban traffic flow simulation using SUMO and GIS tools. I am passionate about smart cities and sustainable urban development. India\'s urbanization presents unique challenges and I want to be part of building cities that are livable, sustainable, and inclusive.', 
-         'status': 'pending'},
+        {'project_id': project_ids['Urban Infrastructure Planning Tool'],
+         'position_id': position_ids[f"{project_ids['Urban Infrastructure Planning Tool']}_GIS Specialist"],
+         'student_id': user_ids['rohan.desai@iitkgp.ac.in'],
+         'message': 'I am a civil engineering student with experience in GIS and AutoCAD from my coursework. I have worked on urban traffic flow simulation using SUMO and GIS tools. I am passionate about smart cities and sustainable urban development. India\'s urbanization presents unique challenges and I want to be part of building cities that are livable, sustainable, and inclusive.',
+         'status': 'pending',
+         'has_team': False},
         
         # Chemical Process - Process Engineer position (filled)
-        {'project_id': project_ids['Chemical Process Optimization Platform'], 
-         'position_id': position_ids[f"{project_ids['Chemical Process Optimization Platform']}_Process Engineer"], 
-         'student_id': user_ids['divya.nair@iitkgp.ac.in'], 
-         'message': 'I have strong background in chemical engineering and Python. Worked with ASPEN for process simulation in multiple course projects. I am passionate about sustainable manufacturing and green chemistry. Built an optimization model for waste water treatment that reduced chemical usage by 25%. Excited about using AI to make chemical processes more efficient and sustainable.', 
-         'status': 'accepted'},
+        {'project_id': project_ids['Chemical Process Optimization Platform'],
+         'position_id': position_ids[f"{project_ids['Chemical Process Optimization Platform']}_Process Engineer"],
+         'student_id': user_ids['divya.nair@iitkgp.ac.in'],
+         'message': 'I have strong background in chemical engineering and Python. Worked with ASPEN for process simulation in multiple course projects. I am passionate about sustainable manufacturing and green chemistry. Built an optimization model for waste water treatment that reduced chemical usage by 25%. Excited about using AI to make chemical processes more efficient and sustainable.',
+         'status': 'accepted',
+         'has_team': True},
         
         # Robotics - Robotics Engineer position
-        {'project_id': project_ids['Robotics for Manufacturing Automation'], 
-         'position_id': position_ids[f"{project_ids['Robotics for Manufacturing Automation']}_Robotics Engineer"], 
-         'student_id': user_ids['arjun.mehta@iitkgp.ac.in'], 
-         'message': 'I have extensive experience with ROS and robotics through KGP Robotics Team (where I am captain). Built multiple autonomous robots including a line-following robot and a 6-DOF robotic arm. I am very passionate about automation and manufacturing. Understanding inverse kinematics, PID control, and sensor integration. This project is exactly what I want to work on.', 
-         'status': 'pending'},
+        {'project_id': project_ids['Robotics for Manufacturing Automation'],
+         'position_id': position_ids[f"{project_ids['Robotics for Manufacturing Automation']}_Robotics Engineer"],
+         'student_id': user_ids['arjun.mehta@iitkgp.ac.in'],
+         'message': 'I have extensive experience with ROS and robotics through KGP Robotics Team (where I am captain). Built multiple autonomous robots including a line-following robot and a 6-DOF robotic arm. I am very passionate about automation and manufacturing. Understanding inverse kinematics, PID control, and sensor integration. This project is exactly what I want to work on.',
+         'status': 'pending',
+         'has_team': False},
         
         # Robotics - Computer Vision Engineer position
-        {'project_id': project_ids['Robotics for Manufacturing Automation'], 
-         'position_id': position_ids[f"{project_ids['Robotics for Manufacturing Automation']}_Computer Vision Engineer"], 
-         'student_id': user_ids['sneha.reddy@iitkgp.ac.in'], 
-         'message': 'Worked on multiple OpenCV projects including object detection, facial recognition, and defect detection systems. Built a quality inspection system for my course project that achieved 97% accuracy in detecting defects. I am excited about applying computer vision to manufacturing and quality control. Manufacturing automation is the future and I want to contribute to building it.', 
-         'status': 'pending'},
+        {'project_id': project_ids['Robotics for Manufacturing Automation'],
+         'position_id': position_ids[f"{project_ids['Robotics for Manufacturing Automation']}_Computer Vision Engineer"],
+         'student_id': user_ids['sneha.reddy@iitkgp.ac.in'],
+         'message': 'Worked on multiple OpenCV projects including object detection, facial recognition, and defect detection systems. Built a quality inspection system for my course project that achieved 97% accuracy in detecting defects. I am excited about applying computer vision to manufacturing and quality control. Manufacturing automation is the future and I want to contribute to building it.',
+         'status': 'pending',
+         'has_team': True},
         
         # Additional applications for diversity
-        {'project_id': project_ids['Sustainable Energy Management System'], 
-         'position_id': position_ids[f"{project_ids['Sustainable Energy Management System']}_Data Analyst"], 
-         'student_id': user_ids['divya.nair@iitkgp.ac.in'], 
-         'message': 'Strong Python and data analytics skills. Built multiple dashboards using Power BI and Python for process data visualization. Interested in renewable energy and sustainability. Would love to analyze energy patterns and help optimize grid performance.', 
-         'status': 'pending'},
+        {'project_id': project_ids['Sustainable Energy Management System'],
+         'position_id': position_ids[f"{project_ids['Sustainable Energy Management System']}_Data Analyst"],
+         'student_id': user_ids['divya.nair@iitkgp.ac.in'],
+         'message': 'Strong Python and data analytics skills. Built multiple dashboards using Power BI and Python for process data visualization. Interested in renewable energy and sustainability. Would love to analyze energy patterns and help optimize grid performance.',
+         'status': 'pending',
+         'has_team': False},
     ]
     
     for app in project_applications:
         cursor.execute('''
-            INSERT INTO project_applications (project_id, position_id, student_id, message, status)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (app['project_id'], app['position_id'], app['student_id'], app['message'], app['status']))
+            INSERT INTO project_applications (project_id, position_id, student_id, message, status, has_team)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (app['project_id'], app['position_id'], app['student_id'], app['message'], app['status'], app.get('has_team', False)))
 
     # ----------------- Conversations & Messages -----------------
     conversation_pairs = [
