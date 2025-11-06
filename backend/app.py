@@ -3783,5 +3783,7 @@ def update_student_dashboard():
 
 
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 5000))
     init_db()
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0', port=port, debug=True)
