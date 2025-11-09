@@ -61,7 +61,7 @@ export function AboutPage() {
     },
     {
       icon: Users,
-      title: "Alumni Connect",
+      title: "Founder Connect",
       description: "Connect with successful alumni for mentorship, internships, and career guidance.",
       color: "from-pink-50 to-pink-100",
       iconColor: "text-pink-600"

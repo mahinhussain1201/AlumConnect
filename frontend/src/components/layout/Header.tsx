@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
   const getMobileNavigationItems = () => {
     if (!user) {
       return [
-        { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+        { name: 'Founder Connect', href: '/alumni-connect', icon: Users },
         { name: 'Blog', href: '/blog', icon: BookOpen },
         { name: 'About', href: '/about', icon: GraduationCap },
       ]
@@ -91,7 +91,7 @@ export const Header: React.FC = () => {
       return [
         { name: 'Dashboard', href: '/dashboard', icon: GraduationCap },
         { name: 'Messages', href: '/messages', icon: MessageCircle },
-        { name: 'Alumni Connect', href: '/alumni-connect', icon: Users },
+        { name: 'Founder Connect', href: '/alumni-connect', icon: Users },
         { name: 'Blog', href: '/blog', icon: BookOpen },
       ]
     }
