@@ -4,7 +4,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Loader2, User, Check, X, Mail, ArrowLeft, Eye, CheckCircle } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
+import { Loader2, User, Check, X, Mail, ArrowLeft, Eye, CheckCircle, Users, User as UserIcon, Filter } from 'lucide-react'
 import { ProfileModal } from '../components/ProfileModal'
 import { FeedbackModal } from '../components/FeedbackModal'
 import { getApiUrl } from '../config'
@@ -34,8 +35,12 @@ export const ProjectApplicationsPage: React.FC = () => {
   const { token, user, isLoading } = useAuth()
   const [project, setProject] = useState<Project | null>(null)
   const [applications, setApplications] = useState<ProjectApplication[]>([])
+  const [filteredApplications, setFilteredApplications] = useState<ProjectApplication[]>([])
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<number | null>(null)
+  const [founderType, setFounderType] = useState<'all' | 'team' | 'individual'>('all')
+  const [pendingApplications, setPendingApplications] = useState<ProjectApplication[]>([])
+  const [processedApplications, setProcessedApplications] = useState<ProjectApplication[]>([])
   const [profileUserId, setProfileUserId] = useState<number | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [feedbackModal, setFeedbackModal] = useState<{
@@ -97,6 +102,7 @@ export const ProjectApplicationsPage: React.FC = () => {
         if (appsRes.ok) {
           const appsData = await appsRes.json()
           setApplications(appsData)
+          setFilteredApplications(appsData) // Initialize filtered applications with all applications
         }
       } finally {
         setLoading(false)
@@ -127,6 +133,23 @@ export const ProjectApplicationsPage: React.FC = () => {
     }
   }
 
+  // Filter applications based on founder type and status
+  useEffect(() => {
+    if (!applications.length) return;
+    
+    let result = [...applications]
+    
+    if (founderType === 'team') {
+      result = result.filter(app => app.has_team === true)
+    } else if (founderType === 'individual') {
+      result = result.filter(app => !app.has_team)
+    }
+    
+    setFilteredApplications(result)
+    setPendingApplications(result.filter(app => app.status === 'pending'))
+    setProcessedApplications(result.filter(app => app.status !== 'pending'))
+  }, [founderType, applications])
+
   if (isLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -146,7 +169,11 @@ export const ProjectApplicationsPage: React.FC = () => {
   if (user.role !== 'alumni') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Only alumni can view project applications.</p>
+        <p className="text-muted-foreground">
+          {applications.length === 0 
+            ? "Applications for this project will appear here."
+            : "No applications match the current filter."}
+        </p>
       </div>
     )
   }
@@ -159,8 +186,6 @@ export const ProjectApplicationsPage: React.FC = () => {
     )
   }
 
-  const pendingApplications = applications.filter(app => app.status === 'pending')
-  const processedApplications = applications.filter(app => app.status !== 'pending')
 
   return (
     <div className="min-h-screen py-12">
@@ -172,8 +197,43 @@ export const ProjectApplicationsPage: React.FC = () => {
               Back to Projects
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold mb-2">Applications for {project.title}</h1>
-          <p className="text-muted-foreground">{project.description}</p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Applications for {project.title}</h1>
+              <p className="text-muted-foreground">{project.description}</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Select 
+                value={founderType}
+                onValueChange={(value: 'all' | 'team' | 'individual') => setFounderType(value)}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by founder type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    <div className="flex items-center">
+                      <Users className="mr-2 h-4 w-4" />
+                      <span>All Applicants</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="team">
+                    <div className="flex items-center">
+                      <Users className="mr-2 h-4 w-4 text-blue-600" />
+                      <span>Team</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="individual">
+                    <div className="flex items-center">
+                      <UserIcon className="mr-2 h-4 w-4 text-purple-600" />
+                      <span>Individual</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-8">
@@ -364,7 +424,7 @@ export const ProjectApplicationsPage: React.FC = () => {
             </div>
           )}
 
-          {applications.length === 0 && (
+          {filteredApplications.length === 0 && (
             <Card>
               <CardHeader>
                 <CardTitle>No applications yet</CardTitle>
