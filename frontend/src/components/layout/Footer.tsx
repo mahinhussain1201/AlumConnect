@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import logo from "../../images/logo.png";
+import kgp_logo from "../../images/kgp_logo.png"
 
 export const Footer: React.FC = () => {
   return (
@@ -12,11 +13,16 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
             <img
+              src={kgp_logo}
+              alt="IIT KGP"
+              className="h-12 w-12 object-contain"
+            />
+            <img
               src={logo}
-              alt="Logo"
+              alt="KGP Forge"
               className="h-16 w-16 object-cover rounded-full"
             />
-              <span className="text-lg font-bold">IIT KGP Launchpad</span>
+            <span className="text-lg font-bold">KGP Forge</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Connecting students with alumni, showcasing innovation, and building the future of IIT Kharagpur's startup ecosystem.
@@ -90,7 +96,7 @@ export const Footer: React.FC = () => {
 
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} IIT KGP Launchpad. All rights reserved.
+            © {new Date().getFullYear()} KGP Forge. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">

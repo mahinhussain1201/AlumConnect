@@ -202,7 +202,7 @@ export const RegisterPage = () => {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Join KGP Launchpad
+            Join KGP Forge
           </h1>
           <p className="text-gray-600">
             Create your account to get started

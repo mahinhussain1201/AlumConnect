@@ -37,7 +37,7 @@ const PrivacyPolicy = () => (
                     </CardHeader>
                     <CardContent className="text-gray-700 leading-relaxed space-y-4">
                         <p>
-                            At IIT Kharagpur LaunchPad ("we," "our," or "us"), we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+                            At Kharagpur Forge ("we," "our," or "us"), we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
                         </p>
                         <p className="font-semibold">
                             By using our Service, you agree to the collection and use of information in accordance with this Privacy Policy.
@@ -317,7 +317,7 @@ const PrivacyPolicy = () => (
                             If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
                         </p>
                         <div className="bg-blue-50 p-6 rounded-lg mt-4">
-                            <p className="font-semibold text-gray-900 mb-3">IIT Kharagpur LaunchPad</p>
+                            <p className="font-semibold text-gray-900 mb-3">KGP Forge</p>
                             <div className="space-y-2 text-gray-700">
                                 <p><strong>Privacy Officer:</strong> privacy@iitkgplaunchpad.in</p>
                                 <p><strong>General Support:</strong> support@iitkgplaunchpad.in</p>

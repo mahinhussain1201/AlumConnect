@@ -103,7 +103,7 @@ export function AboutPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent px-2">
               About KGP{' '}
-              <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">Launchpad</span>
+              <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">Forge</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4">
               Empowering the next generation of innovators and connecting them with the wisdom of our accomplished alumni community.
@@ -248,7 +248,7 @@ export function AboutPage() {
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Platform Features</h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
-              Discover the powerful tools that make KGP Launchpad the ultimate platform for innovation.
+              Discover the powerful tools that make KGP Forge the ultimate platform for innovation.
             </p>
           </div>
           
