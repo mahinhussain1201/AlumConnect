@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
-import logo from "../../images/logo.png";
 import kgp_logo from "../../images/kgp_logo.png"
 
 export const Footer: React.FC = () => {
@@ -18,9 +17,9 @@ export const Footer: React.FC = () => {
               className="h-12 w-12 object-contain"
             />
             <img
-              src={logo}
+              src="/e_cell.png"
               alt="KGP Forge"
-              className="h-16 w-16 object-cover rounded-full"
+              className="h-12 w-12 object-cover rounded-full"
             />
             <span className="text-lg font-bold">KGP Forge</span>
             </div>

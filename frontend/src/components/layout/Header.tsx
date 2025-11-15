@@ -117,13 +117,31 @@ export const Header: React.FC = () => {
         <div className="flex h-18 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="p-2 rounded-xl bg-gradient-to-br shadow-sm">
+          <div className="min-h-20 p-4 rounded-xl bg-gradient-to-br shadow-sm flex gap-4 items-center">
+
+            {/* Visible only on medium and large screens */}
+            <img
+              src="/e_cell_long.png"
+              alt="Logo"
+              className="h-8 object-contain hidden md:block"
+            />
+
+            <img
+              src="/z21.png"
+              alt="Logo"
+              className="h-8 object-contain hidden md:block"
+            />
+
+            {/* Always visible */}
             <img
               src={logoImage}
               alt="Logo"
-              className="h-16 w-64 object-cover rounded-full"
+              className="h-8 object-contain"
             />
+
+
             </div>
+
           </Link>
 
           {/* Desktop Navigation with GooeyNav */}
